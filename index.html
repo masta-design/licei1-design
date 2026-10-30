@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Лицей №1 им. М.В. Карамаева — демо главной (v1)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=PT+Serif:wght@400;700&display=swap" rel="stylesheet">
+
+  <script>/* настройки внешнего вида — до отрисовки, без мигания */ try { const a = JSON.parse(localStorage.getItem('look2') || '{}'), st = document.documentElement.style; if (a.accent) st.setProperty('--brand', a.accent); if (a.text) st.setProperty('--text-accent', a.text); if (a.nh != null) { st.setProperty('--nh', a.nh); st.setProperty('--nc', a.nc); } if (a.radius) document.documentElement.dataset.radius = a.radius; } catch (e) {}</script>
+  <link rel="stylesheet" href="site.css">
+</head>
+<body>
+
+<!-- ====== Иконки (спрайт) ====== -->
+
+<!-- Соцсети: один и тот же блок используется в шапке и подвале -->
+<template id="tpl-socials">
+  <a href="#" aria-label="ВКонтакте"><img src="images/vk.svg" alt=""></a>
+  <a href="#" aria-label="Rutube"><img src="images/rutube.svg" alt=""></a>
+  <a href="#" aria-label="Одноклассники"><img src="images/ok.svg" alt=""></a>
+  <a href="#" aria-label="Макс"><img src="images/max.svg" alt=""></a>
+</template>
+
+<div class="app">
+
+  <!-- ================= САЙДБАР: основная навигация ================= -->
+  <aside class="sidebar" id="sidebar" aria-label="Основная навигация">
+    <div class="brand-wrap">
+      <a class="brand" href="./" title="На главную" style="border:0;flex:1">
+        <img src="images/logo-licey-1.png" alt="Логотип Лицея №1">
+        <span>
+          <span class="brand-name">МБОУ&nbsp;«Лицей&nbsp;№1 им.&nbsp;М.В.&nbsp;Карамаева» г.&nbsp;Горно&#8209;Алтайска</span>
+        </span>
+      </a>
+    </div>
+    <nav class="nav" id="nav"><!-- строится из NAV ниже --></nav>
+    <!-- мобильный сайдбар: кнопки из шапки — внизу, закреплены от прокрутки -->
+    <div class="side-tools">
+      <button class="btn btn-lg btn-a11y" type="button" role="switch" aria-checked="false" data-a11y><span class="switch" aria-hidden="true"></span><span>Версия для<br>слабовидящих</span></button>
+      <a class="btn btn-secondary" href="#"><i class="i i-login" aria-hidden="true"></i>Войти</a>
+    </div>
+  </aside>
+  <div class="scrim" data-nav-close></div>
+  <!-- закрытие мобильного меню — снаружи, справа от сайдбара -->
+  <button class="btn btn-lg btn-icon nav-close" type="button" aria-label="Закрыть меню" data-nav-close><i class="i i-x" aria-hidden="true"></i></button>
+
+  <div class="main">
+
+    <!-- ================= ВЕРХНЯЯ ПАНЕЛЬ ================= -->
+    <header class="topbar">
+      <div class="tb-main">
+      <a class="mini-brand" href="./" title="На главную">
+        <img src="images/logo-licey-1.png" alt="">
+        <span class="brand-name">МБОУ&nbsp;«Лицей&nbsp;№1 им.&nbsp;М.В.&nbsp;Карамаева» г.&nbsp;Горно&#8209;Алтайска</span>
+      </a>
+
+      <form class="search" role="search" onsubmit="return false">
+        <label class="sr-only" for="q">Поиск по сайту</label>
+        <i class="i i-search" aria-hidden="true"></i>
+        <input id="q" type="search" placeholder="Поиск по сайту и документам">
+      </form>
+      <button class="btn btn-lg btn-icon btn-secondary search-toggle" type="button" aria-label="Открыть поиск" aria-controls="q" aria-expanded="false" data-search-toggle>
+        <i class="i ico-open i-search" aria-hidden="true"></i><i class="i ico-close i-x" aria-hidden="true"></i>
+      </button>
+      </div>
+
+      <div class="tb-tools">
+      <button class="btn btn-lg btn-primary burger" type="button" aria-controls="sidebar" aria-expanded="false" data-nav-open>
+        <i class="i i-menu" aria-hidden="true"></i>Меню
+      </button>
+
+      <button class="btn btn-lg btn-a11y" type="button" role="switch" aria-checked="false" data-a11y><span class="switch" aria-hidden="true"></span><span>Версия для<br>слабовидящих</span></button>
+
+      <!-- Контакты: кнопка и панель собираются скриптом из данных школы (CONTACTS ниже) -->
+      <div class="contacts" data-contacts>
+        <button class="contacts-btn" type="button" aria-expanded="false" aria-controls="contacts-panel">
+          <span class="cb-main"></span><span class="cb-alt">Контакты</span><i class="i chev i-down" aria-hidden="true"></i>
+        </button>
+        <address class="contacts-panel" id="contacts-panel"></address>
+      </div>
+
+      <a class="btn btn-lg btn-secondary btn-login" href="#"><i class="i i-login" aria-hidden="true"></i>Войти</a>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <!-- ================= СЛАЙДЕР: главные новости на всю ширину ================= -->
+      <section class="slider" data-slider aria-roledescription="карусель" aria-label="Главные новости">
+        <div class="slides">
+          <a class="slide is-active" href="#" aria-roledescription="слайд" aria-label="1 из 3">
+            <div class="slide-media"><img class="bg" src="prototype/slider3.jpg" alt=""><img class="fg" src="prototype/slider3.jpg" alt="Плакат: сроки подачи заявлений на итоговое сочинение"></div>
+            <div class="slide-caption"><time class="slide-date">13 октября 2026</time><h3>Определены сроки подачи заявлений на итоговое сочинение в 2026–2027 учебном году</h3></div>
+          </a>
+          <a class="slide" href="#" aria-roledescription="слайд" aria-label="2 из 3">
+            <div class="slide-media"><img class="bg" src="prototype/slider2.jpg" alt=""><img class="fg" src="prototype/slider2.jpg" alt="Открытка ко Дню учителя"></div>
+            <div class="slide-caption"><time class="slide-date">5 октября 2026</time><h3>С Днём учителя! Поздравляем педагогов лицея</h3></div>
+          </a>
+          <a class="slide" href="#" aria-roledescription="слайд" aria-label="3 из 3">
+            <div class="slide-media"><img class="bg" src="prototype/slider1.jpg" alt=""><img class="fg" src="prototype/slider1.jpg" alt="Логотип Года единства народов России"></div>
+            <div class="slide-caption"><time class="slide-date">2026</time><h3>2026 — Год единства народов России</h3></div>
+          </a>
+        </div>
+        <button class="btn btn-lg btn-icon btn-white slider-arrow prev" type="button" aria-label="Предыдущий слайд"><i class="i i-left" aria-hidden="true"></i></button>
+        <button class="btn btn-lg btn-icon btn-white slider-arrow next" type="button" aria-label="Следующий слайд"><i class="i i-right" aria-hidden="true"></i></button>
+        <div class="slider-dots" role="group" aria-label="Выбор слайда"></div>
+      </section>
+
+      <!-- ================= БЫСТРЫЙ ДОСТУП ================= -->
+      <nav class="quick" aria-label="Быстрый доступ">
+        <a class="card" href="#"><span class="ico"><i class="i i-calendar" aria-hidden="true"></i></span><span class="label">Расписание уроков</span></a>
+        <a class="card" href="#"><span class="ico"><i class="i i-food" aria-hidden="true"></i></span><span class="label">Меню питания</span></a>
+        <a class="card" href="#"><span class="ico"><i class="i i-userplus" aria-hidden="true"></i></span><span class="label">Приём в 1&nbsp;класс</span></a>
+        <a class="card" href="#"><span class="ico"><i class="i i-cap" aria-hidden="true"></i></span><span class="label">ГИА-9 и ГИА-11</span></a>
+        <a class="card" href="#"><span class="ico"><i class="i i-star" aria-hidden="true"></i></span><span class="label">Кружки и секции</span></a>
+        <a class="card" href="#"><span class="ico"><i class="i i-building" aria-hidden="true"></i></span><span class="label">Сведения об&nbsp;ОО</span></a>
+      </nav>
+
+      <!-- ================= ОБЪЯВЛЕНИЯ ================= -->
+      <!-- Секция скрывается целиком, если объявлений нет -->
+      <section class="section ann" id="ann" aria-labelledby="ann-title">
+        <div class="section-head">
+          <h2 id="ann-title">Объявления</h2>
+          <a class="more" href="#">Все объявления <i class="i i-right" aria-hidden="true"></i></a>
+        </div>
+        <!-- последние 3 объявления, самое свежее — крупнее; карточка — ссылка целиком; текста может не быть (только файл); пометка — если есть вложения -->
+        <ul class="ann-list">
+          <li class="ann-main">
+            <a class="ann-card" href="#">
+              <time class="ann-date" datetime="2026-10-22T12:10"><span class="d">22</span><span class="m">октября 2026<span class="t">12:10</span></span></time>
+              <h3 class="ann-title">«Школа доверия»</h3>
+              <p class="ann-text">«Школа доверия» — это всероссийская линия психологической помощи, которую запустило Минпросвещения России 11 сентября 2026 года. Её цель — дать школьникам, их родителям и педагогам единый бесплатный канал, чтобы получить поддержку в сложных ситуациях, которые возникают в образовательной среде.</p>
+            </a>
+          </li>
+          <li>
+            <a class="ann-card" href="#">
+              <time class="ann-date" datetime="2026-02-12T12:02"><span class="d">12</span><span class="m">февраля 2026<span class="t">12:02</span></span></time>
+              <h3 class="ann-title">Психолого-педагогическая помощь для детей и родителей</h3>
+              <span class="ann-file"><i class="i i-file" aria-hidden="true"></i>ЦИФРОВОЙ_<wbr>ПСИХОЛОГ.pdf</span>
+            </a>
+          </li>
+          <li>
+            <a class="ann-card" href="#">
+              <time class="ann-date" datetime="2026-02-06T12:02"><span class="d">6</span><span class="m">февраля 2026<span class="t">12:02</span></span></time>
+              <h3 class="ann-title">Логопедическая олимпиада среди обучающихся с ограниченными возможностями здоровья</h3>
+              <p class="ann-text">С 11 по 18 марта 2026 года в Лицее № 1 г. Горно-Алтайска проводится Логопедическая олимпиада среди обучающихся с ограниченными возможностями здоровья в целях развития интеллектуального и творческого потенциала личности учащегося, повышения уровня мотивации к познавательной деятельности.</p>
+            </a>
+          </li>
+          <li>
+            <a class="ann-card" href="#">
+              <time class="ann-date" datetime="2026-01-28T09:30"><span class="d">28</span><span class="m">января 2026<span class="t">09:30</span></span></time>
+              <h3 class="ann-title">Запись в первый класс на 2026–2027 учебный год</h3>
+              <p class="ann-text">Приём заявлений о зачислении в первый класс начинается 1 апреля 2026 года. Подать заявление можно через портал Госуслуг или лично в приёмной лицея с понедельника по пятницу с 9:00 до 17:00.</p>
+            </a>
+          </li>
+          <li>
+            <a class="ann-card" href="#">
+              <time class="ann-date" datetime="2026-01-15T14:00"><span class="d">15</span><span class="m">января 2026<span class="t">14:00</span></span></time>
+              <h3 class="ann-title">График консультаций по подготовке к ГИА</h3>
+              <span class="ann-file"><i class="i i-file" aria-hidden="true"></i>График_<wbr>консультаций_<wbr>ГИА.pdf</span>
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <!-- ================= НОВОСТИ ================= -->
+      <section class="section news-main" aria-labelledby="news-title">
+        <div class="section-head">
+          <h2 id="news-title">Новости</h2>
+          <a class="more" href="news.html">Все новости <i class="i i-right" aria-hidden="true"></i></a>
+        </div>
+        <div class="news-grid">
+          <a class="news-card news-card--featured card" href="news-item.html?id=753590">
+            <div class="thumb"><img src="images/news/753590.jpg" alt=""></div>
+            <div class="body">
+              <h3>Сроки подачи заявлений на итоговое сочинение в 2026-2027 учебном году</h3>
+              <p>Выпускники, внимание! Чтобы допустили к ЕГЭ, нужно написать итоговое сочинение. Главное — успеть! Заявление нужно подать за 2 недели до даты. На 2 декабря — до 18 ноября. На 3 февраля — до 20 января. На 14 апреля — до 1 апреля. Результаты: Узнаете примерно через 2 недели. Школьники — в своей школе. Выпускники прошлых лет — там, где подавали заявление. Можно проверить онлайн на сайте…</p>
+              <time datetime="2026-10-13">13 октября 2026</time>
+            </div>
+          </a>
+          <a class="news-card card" href="news-item.html?id=753585"><div class="thumb"><img src="images/news/753585.jpg" alt=""></div><div class="body"><h3>Блестящий триумф Лицея №1 на муниципальном этапе конкурса «Ученик года 2026»!</h3><time datetime="2026-10-12">12 октября 2026</time></div></a>
+          <a class="news-card card" href="news-item.html?id=753582"><div class="thumb"><img src="images/news/753582.jpg" alt=""></div><div class="body"><h3>Общешкольное родительское собрание для родителей учащихся 11‑х классов</h3><time datetime="2026-10-11">11 октября 2026</time></div></a>
+          <a class="news-card card" href="news-item.html?id=752337"><div class="thumb"><img src="images/news/752337.jpg" alt=""></div><div class="body"><h3>5 Октября - День Учителя.</h3><time datetime="2026-10-05">5 октября 2026</time></div></a>
+          <a class="news-card card" href="news-item.html?id=752335"><div class="thumb"><img src="images/news/752335.jpg" alt=""></div><div class="body"><h3>Стартовал школьный этап Всероссийской олимпиады школьников!</h3><time datetime="2026-09-15">15 сентября 2026</time></div></a>
+          <a class="news-card card" href="news-item.html?id=752334"><div class="thumb"><img src="images/news/752334.jpg" alt=""></div><div class="body"><h3>ПЕРВОЕ МЕСТО! ЛИЦЕЙ №1 — ЧЕМПИОН ТУРСЛЁТА–2026!</h3><time datetime="2026-09-12">12 сентября 2026</time></div></a>
+          <a class="news-card card" href="news-item.html?id=752333"><div class="thumb"><img src="images/news/752333.jpg" alt=""></div><div class="body"><h3>Межрегиональные соревнования «Приз памяти чемпиона мира Александра Гризмана» прошли в г. Красноярске с 27-31 августа.</h3><time datetime="2026-09-04">4 сентября 2026</time></div></a>
+          <a class="news-card card" href="news-item.html?id=737033"><div class="thumb"><img src="images/news/737033.jpg" alt=""></div><div class="body"><h3>ТОР «Моя школа»</h3><time datetime="2026-08-13">13 августа 2026</time></div></a>
+          <a class="news-card card" href="news-item.html?id=732645"><div class="thumb"><img src="images/news/732645.webp" alt=""></div><div class="body"><h3>Торжественное награждение учащихся, достигших успехов в разных сферах деятельности.</h3><time datetime="2026-07-01">1 июля 2026</time></div></a>
+        </div>
+      </section>
+
+      <!-- ================= ГОСУСЛУГИ: РЕШАЕМ ВМЕСТЕ ================= -->
+      <section class="section gos-section" aria-label="Госуслуги. Решаем вместе">
+      <!-- Виджет «Госуслуги. Решаем вместе» — код из прототипа без изменений -->
+      <div class="gos">
+        <script src="https://pos.gosuslugi.ru/bin/script.min.js"></script>
+        <style>
+          #js-show-iframe-wrapper{position:relative;display:flex;align-items:center;justify-content:center;width:100%;min-width:293px;max-width:100%;background:linear-gradient(138.4deg,#38bafe 26.49%,#2d73bc 79.45%);color:#fff;cursor:pointer}#js-show-iframe-wrapper .pos-banner-fluid *{box-sizing:border-box}#js-show-iframe-wrapper .pos-banner-fluid .pos-banner-btn_2{display:block;width:240px;min-height:56px;font-size:18px;line-height:24px;cursor:pointer;background:#0d4cd3;color:#fff;border:none;border-radius:8px;outline:0}#js-show-iframe-wrapper .pos-banner-fluid .pos-banner-btn_2:hover{background:#1d5deb}#js-show-iframe-wrapper .pos-banner-fluid .pos-banner-btn_2:focus{background:#2a63ad}#js-show-iframe-wrapper .pos-banner-fluid .pos-banner-btn_2:active{background:#2a63ad}@-webkit-keyframes fadeInFromNone{0%{display:none;opacity:0}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fadeInFromNone{0%{display:none;opacity:0}1%{display:block;opacity:0}100%{display:block;opacity:1}}@font-face{font-family:LatoWebLight;src:url(https://pos.gosuslugi.ru/bin/fonts/Lato/fonts/Lato-Light.woff2) format("woff2"),url(https://pos.gosuslugi.ru/bin/fonts/Lato/fonts/Lato-Light.woff) format("woff"),url(https://pos.gosuslugi.ru/bin/fonts/Lato/fonts/Lato-Light.ttf) format("truetype");font-style:normal;font-weight:400}@font-face{font-family:LatoWeb;src:url(https://pos.gosuslugi.ru/bin/fonts/Lato/fonts/Lato-Regular.woff2) format("woff2"),url(https://pos.gosuslugi.ru/bin/fonts/Lato/fonts/Lato-Regular.woff) format("woff"),url(https://pos.gosuslugi.ru/bin/fonts/Lato/fonts/Lato-Regular.ttf) format("truetype");font-style:normal;font-weight:400}@font-face{font-family:LatoWebBold;src:url(https://pos.gosuslugi.ru/bin/fonts/Lato/fonts/Lato-Bold.woff2) format("woff2"),url(https://pos.gosuslugi.ru/bin/fonts/Lato/fonts/Lato-Bold.woff) format("woff"),url(https://pos.gosuslugi.ru/bin/fonts/Lato/fonts/Lato-Bold.ttf) format("truetype");font-style:normal;font-weight:400}
+        </style>
+        <style>
+          #js-show-iframe-wrapper .bf-2{position:relative;display:grid;grid-template-columns:var(--pos-banner-fluid-2__grid-template-columns);grid-template-rows:var(--pos-banner-fluid-2__grid-template-rows);width:100%;max-width:1060px;font-family:LatoWeb,sans-serif;box-sizing:border-box}#js-show-iframe-wrapper .bf-2__decor{grid-column:var(--pos-banner-fluid-2__decor-grid-column);grid-row:var(--pos-banner-fluid-2__decor-grid-row);padding:var(--pos-banner-fluid-2__decor-padding);background:var(--pos-banner-fluid-2__bg-url) var(--pos-banner-fluid-2__bg-position) no-repeat;background-size:var(--pos-banner-fluid-2__bg-size)}#js-show-iframe-wrapper .bf-2__logo-wrap{position:absolute;top:var(--pos-banner-fluid-2__logo-wrap-top);bottom:var(--pos-banner-fluid-2__logo-wrap-bottom);right:0;display:flex;flex-direction:column;align-items:flex-end;padding:var(--pos-banner-fluid-2__logo-wrap-padding);background:#2d73bc;border-radius:var(--pos-banner-fluid-2__logo-wrap-border-radius)}#js-show-iframe-wrapper .bf-2__logo{width:128px}#js-show-iframe-wrapper .bf-2__slogan{font-family:LatoWebBold,sans-serif;font-size:var(--pos-banner-fluid-2__slogan-font-size);line-height:var(--pos-banner-fluid-2__slogan-line-height);color:#fff}#js-show-iframe-wrapper .bf-2__content{padding:var(--pos-banner-fluid-2__content-padding)}#js-show-iframe-wrapper .bf-2__description{display:flex;flex-direction:column;margin-bottom:24px}#js-show-iframe-wrapper .bf-2__text{margin-bottom:12px;font-size:24px;line-height:32px;font-family:LatoWebBold,sans-serif;color:#fff}#js-show-iframe-wrapper .bf-2__text_small{margin-bottom:0;font-size:16px;line-height:24px;font-family:LatoWeb,sans-serif}#js-show-iframe-wrapper .bf-2__btn-wrap{display:flex;align-items:center;justify-content:center}
+        </style>
+        <div id="js-show-iframe-wrapper">
+          <div class="pos-banner-fluid bf-2">
+            <div class="bf-2__decor">
+              <div class="bf-2__logo-wrap">
+                <img class="bf-2__logo" src="https://pos.gosuslugi.ru/bin/banner-fluid/gosuslugi-logo.svg" alt="Госуслуги" />
+                <div class="bf-2__slogan">Решаем вместе</div>
+              </div>
+            </div>
+            <div class="bf-2__content">
+              <div class="bf-2__description">
+                <span class="bf-2__text">Не убран мусор, яма на дороге, не горит фонарь?</span>
+                <span class="bf-2__text bf-2__text_small">Столкнулись с проблемой — сообщите о ней!</span>
+              </div>
+              <div class="bf-2__btn-wrap">
+                <button class="pos-banner-btn_2" type="button">Сообщить о проблеме</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <script>
+          (function(){
+            "use strict";
+            function ownKeys(e,t){var o=Object.keys(e);if(Object.getOwnPropertySymbols){var n=Object.getOwnPropertySymbols(e);if(t)n=n.filter(function(t){return Object.getOwnPropertyDescriptor(e,t).enumerable});o.push.apply(o,n)}return o}
+            function _objectSpread(e){for(var t=1;t<arguments.length;t++){var o=null!=arguments[t]?arguments[t]:{};if(t%2)ownKeys(Object(o),true).forEach(function(t){_defineProperty(e,t,o[t])});else if(Object.getOwnPropertyDescriptors)Object.defineProperties(e,Object.getOwnPropertyDescriptors(o));else ownKeys(Object(o)).forEach(function(t){Object.defineProperty(e,t,Object.getOwnPropertyDescriptor(o,t))})}return e}
+            function _defineProperty(e,t,o){if(t in e)Object.defineProperty(e,t,{value:o,enumerable:true,configurable:true,writable:true});else e[t]=o;return e}
+            var POS_PREFIX_2="--pos-banner-fluid-2__",posOptionsInitial={"grid-template-columns":"100%","grid-template-rows":"310px auto","decor-grid-column":"initial","decor-grid-row":"initial","decor-padding":"30px 30px 0 30px","bg-url":"url('https://pos.gosuslugi.ru/bin/banner-fluid/2/banner-fluid-bg-2-small.svg')","bg-position":"calc(10% + 64px) calc(100% - 20px)","bg-size":"cover","content-padding":"0 30px 30px 30px","slogan-font-size":"20px","slogan-line-height":"32px","logo-wrap-padding":"20px 30px 30px 40px","logo-wrap-top":"0","logo-wrap-bottom":"initial","logo-wrap-border-radius":"0 0 0 80px"},setStyles=function(e,t){Object.keys(e).forEach(function(o){t.style.setProperty(POS_PREFIX_2+o,e[o])})},removeStyles=function(e,t){Object.keys(e).forEach(function(e){t.style.removeProperty(POS_PREFIX_2+e)})};
+            function changePosBannerOnResize(){var e=document.documentElement,t=_objectSpread({},posOptionsInitial),o=document.getElementById("js-show-iframe-wrapper"),n=o?o.offsetWidth:document.body.offsetWidth;if(n>405)t["slogan-font-size"]="24px",t["logo-wrap-padding"]="30px 50px 30px 70px";if(n>500)t["grid-template-columns"]="min-content 1fr",t["grid-template-rows"]="100%",t["decor-grid-column"]="2",t["decor-grid-row"]="1",t["decor-padding"]="30px 30px 30px 0",t["content-padding"]="30px",t["bg-position"]="0% calc(100% - 70px)",t["logo-wrap-padding"]="30px 30px 24px 40px",t["logo-wrap-top"]="initial",t["logo-wrap-bottom"]="0",t["logo-wrap-border-radius"]="80px 0 0 0";if(n>585)t["bg-position"]="0% calc(100% - 6px)";if(n>800)t["bg-url"]="url('https://pos.gosuslugi.ru/bin/banner-fluid/2/banner-fluid-bg-2.svg')",t["bg-position"]="0% center";if(n>1020)t["slogan-font-size"]="32px",t["line-height"]="40px",t["logo-wrap-padding"]="30px 30px 24px 50px";setStyles(t,e)}
+            changePosBannerOnResize(),window.addEventListener("resize",changePosBannerOnResize),window.onunload=function(){var e=document.documentElement;window.removeEventListener("resize",changePosBannerOnResize),removeStyles(posOptionsInitial,e)};
+          })()
+        </script>
+        <script>try { Widget("https://pos.gosuslugi.ru/form", 230204) } catch (e) {}</script>
+      </div>
+      </section>
+
+      <!-- ================= ФОТО И ВИДЕО ================= -->
+      <section class="section" aria-labelledby="media-title">
+        <div class="section-head">
+          <h2 id="media-title" class="title-tabs"><span role="tablist" aria-label="Фото и видео"><button role="tab" id="tab-photo" aria-controls="panel-photo" aria-selected="true" data-more="Все фотоальбомы">Фото</button><span class="sep" aria-hidden="true"> / </span><button role="tab" id="tab-video" aria-controls="panel-video" aria-selected="false" data-more="Все видео" tabindex="-1">Видео</button></span></h2>
+          <a class="more" href="#" id="media-more">Все фотоальбомы <i class="i i-right" aria-hidden="true"></i></a>
+        </div>
+
+        <div class="media-grid" id="panel-photo" role="tabpanel" aria-labelledby="tab-photo">
+          <a class="media-card card" href="#"><div class="thumb"><img src="images/turslet.jpg" alt="" loading="lazy"><span class="badge"><i class="i i-camera" aria-hidden="true"></i>34</span></div><div class="body"><h3>Турслет-2026</h3><div class="meta">1 сентября 2026</div></div></a>
+          <a class="media-card card" href="#"><div class="thumb"><img src="images/licey.jpg" alt="" loading="lazy"><span class="badge"><i class="i i-camera" aria-hidden="true"></i>66</span></div><div class="body"><h3>Лицей</h3><div class="meta">24 сентября 2026</div></div></a>
+          <a class="media-card card" href="#"><div class="thumb"><img src="images/meropriyatiya-2.jpg" alt="" loading="lazy"><span class="badge"><i class="i i-camera" aria-hidden="true"></i>1359</span></div><div class="body"><h3>Разное 2</h3><div class="meta">20 сентября 2026</div></div></a>
+          <a class="media-card card" href="#"><div class="thumb"><img src="images/meropriyatia.jpg" alt="" loading="lazy"><span class="badge"><i class="i i-camera" aria-hidden="true"></i>792</span></div><div class="body"><h3>Разное</h3><div class="meta">5 октября 2026</div></div></a>
+          <a class="media-card card" href="#"><div class="thumb"><img src="images/nou.jpg" alt="" loading="lazy"><span class="badge"><i class="i i-camera" aria-hidden="true"></i>58</span></div><div class="body"><h3>НОУ — 2026</h3><div class="meta">28 сентября 2026</div></div></a>
+          <a class="media-card card" href="#"><div class="thumb"><img src="images/otrkritie.jpg" alt="" loading="lazy"><span class="badge"><i class="i i-camera" aria-hidden="true"></i>166</span></div><div class="body"><h3>Открытие лицея</h3><div class="meta">15 июня 2026</div></div></a>
+        </div>
+
+        <div class="media-grid" id="panel-video" role="tabpanel" aria-labelledby="tab-video" hidden>
+          <a class="media-card video card" href="#"><div class="thumb"><img src="prototype/video1.jpeg" alt="" loading="lazy"><span class="play"><i class="i i-play" aria-hidden="true"></i></span><span class="badge duration">3:24</span></div><div class="body"><h3>Добро пожаловать в лицей</h3><div class="meta">2 сентября 2026</div></div></a>
+          <a class="media-card video card" href="#"><div class="thumb"><img src="prototype/video2.jpeg" alt="" loading="lazy"><span class="play"><i class="i i-play" aria-hidden="true"></i></span><span class="badge duration">5:10</span></div><div class="body"><h3>Безопасность в интернете</h3><div class="meta">18 сентября 2026</div></div></a>
+          <a class="media-card video card" href="#"><div class="thumb"><img src="prototype/video3.jpeg" alt="" loading="lazy"><span class="play"><i class="i i-play" aria-hidden="true"></i></span><span class="badge duration">12:47</span></div><div class="body"><h3>Открытый урок</h3><div class="meta">25 сентября 2026</div></div></a>
+          <a class="media-card video card" href="#"><div class="thumb"><img src="prototype/video4.jpeg" alt="" loading="lazy"><span class="play"><i class="i i-play" aria-hidden="true"></i></span><span class="badge duration">4:02</span></div><div class="body"><h3>Наставничество</h3><div class="meta">30 сентября 2026</div></div></a>
+          <a class="media-card video card" href="#"><div class="thumb"><img src="prototype/video5.jpeg" alt="" loading="lazy"><span class="play"><i class="i i-play" aria-hidden="true"></i></span><span class="badge duration">2:58</span></div><div class="body"><h3>Творческая мастерская</h3><div class="meta">3 октября 2026</div></div></a>
+          <a class="media-card video card" href="#"><div class="thumb"><img src="prototype/video6.jpeg" alt="" loading="lazy"><span class="play"><i class="i i-play" aria-hidden="true"></i></span><span class="badge duration">6:31</span></div><div class="body"><h3>Робототехника в «Точке роста»</h3><div class="meta">8 октября 2026</div></div></a>
+          <a class="media-card video card" href="#"><div class="thumb"><img src="prototype/video7.jpeg" alt="" loading="lazy"><span class="play"><i class="i i-play" aria-hidden="true"></i></span><span class="badge duration">3:45</span></div><div class="body"><h3>Турнир школьного спортклуба</h3><div class="meta">14 октября 2026</div></div></a>
+          <a class="media-card video card" href="#"><div class="thumb"><img src="prototype/video8.jpeg" alt="" loading="lazy"><span class="play"><i class="i i-play" aria-hidden="true"></i></span><span class="badge duration">8:20</span></div><div class="body"><h3>Классный час</h3><div class="meta">20 октября 2026</div></div></a>
+        </div>
+      </section>
+
+      <!-- ================= О ЛИЦЕЕ ================= -->
+      <section class="section about-section" aria-labelledby="about-title">
+        <div class="section-head">
+          <h2 id="about-title">Об учреждении</h2>
+        </div>
+        <div class="about">
+          <!-- Текст об учреждении: только абзацы одного стиля (без колонок, фото, видео и кнопок), под ними ссылка «Подробнее». Факты: licei1.obr04.ru/sveden/common/ -->
+          <div class="about-text">
+            <p>Мы рады видеть вас в Лицее №1 имени М.В.&nbsp;Карамаева! Наша история началась 1&nbsp;сентября 1923&nbsp;года. Больше ста лет здесь звенят звонки, открываются новые таланты и завязывается дружба на всю жизнь.</p>
+            <p>Сегодня у лицея два здания в Горно-Алтайске. Самые младшие, с&nbsp;1 по&nbsp;4 класс, учатся на проспекте Коммунистическом, 44. Здесь всё устроено так, чтобы первые школьные шаги были уверенными и радостными. С&nbsp;5 класса ребята переходят в основное здание на улице Чорос-Гуркина, 14. Там их ждут профильное обучение, олимпиады, интересные проекты и подготовка к взрослой жизни.</p>
+            <p>Хорошую школу делают люди. У нас это внимательные учителя, любознательные ученики и родители, которые всегда рядом. Администрация работает по будням с&nbsp;8 до&nbsp;19 часов, а по понедельникам, средам и пятницам с&nbsp;9 до&nbsp;13 часов мы особенно ждём всех, у кого есть вопросы или идеи.</p>
+            <a class="more" href="#">Подробнее <i class="i i-right" aria-hidden="true"></i></a>
+          </div>
+
+          <!-- Фото и имя ведут на страницу директора; контакты — отдельные ссылки (вложенные ссылки недопустимы) -->
+          <div class="director">
+            <a class="photo" href="#" tabindex="-1" aria-hidden="true"><img src="images/director.png" alt=""></a>
+            <div class="body">
+              <a class="name" href="#">Старикова Елена Михайловна</a>
+              <div class="role">Директор</div>
+              <ul class="director-contacts">
+                <li><a href="tel:+73882224565">8 (38822) 2-45-65</a></li>
+                <li><a href="mailto:Starikova1975.75@mail.ru">Starikova1975.75@mail.ru</a></li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ================= ПОЛЕЗНЫЕ РЕСУРСЫ ================= -->
+      <section class="section" aria-labelledby="res-title">
+        <div class="section-head">
+          <h2 id="res-title">Полезные ресурсы</h2>
+        </div>
+        <div class="banners">
+
+          <!-- Баннеры госорганов: макеты не меняем. Обёртка на ПК «прозрачна» (display: contents), на телефоне — горизонтальная лента -->
+          <div class="banner-strip" role="group" aria-label="Баннеры">
+            <a class="banner card" href="#"><img src="prototype/banner1.jpeg" alt="Детский телефон доверия 8-800-2000-122" loading="lazy"></a>
+            <a class="banner card" href="#"><img src="prototype/banner2.png" alt="Народный фронт: недовольны качеством питания в школе?" loading="lazy"></a>
+            <a class="banner card" href="#"><img src="prototype/banner3.png" alt="Голосование за объекты благоустройства на Госуслугах" loading="lazy"></a>
+            <a class="banner card" href="#"><img src="prototype/banner4.jpg" alt="Приложение «Госуслуги. Моя школа»" loading="lazy"></a>
+            <a class="banner card" href="#"><img src="prototype/banner5.jpg" alt="О ВПР для вас" loading="lazy"></a>
+            <a class="banner card" href="#"><img src="prototype/banner6.jpg" alt="Школьная служба примирения" loading="lazy"></a>
+            <a class="banner card" href="#"><img src="prototype/banner7.jpg" alt="2026 — Год единства народов России" loading="lazy"></a>
+            <a class="banner card" href="#"><img src="prototype/banner8.jpg" alt="Телефон доверия для детей и подростков" loading="lazy"></a>
+            <a class="banner card" href="#"><img src="prototype/banner9.png" alt="Навигатор дополнительного образования" loading="lazy"></a>
+            <a class="banner card" href="#"><img src="prototype/banner10.png" alt="Национальные проекты России: образование" loading="lazy"></a>
+            <a class="banner card" href="#"><img src="prototype/banner11.jpg" alt="Оцените нашу работу — независимая оценка качества" loading="lazy"></a>
+            <a class="banner card" href="#"><img src="prototype/banner12.jpg" alt="День Победы" loading="lazy"></a>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ================= ПОДВАЛ ================= -->
+    <footer class="footer">
+      <div class="footer-main">
+        <!-- слева: логотип, адрес и контакты -->
+        <div class="f-about">
+          <div class="f-brand">
+            <img src="images/logo-licey-1.png" alt="">
+            <div class="n">МБОУ «Лицей №1 имени М.В. Карамаева города Горно-Алтайска»</div>
+          </div>
+          <ul class="f-list f-address">
+            <li><small>Адрес</small><a href="https://yandex.ru/maps/-/CXb2AT3K" target="_blank" rel="noopener">649000, Республика Алтай, г.&nbsp;Горно-Алтайск, ул.&nbsp;Чорос-Гуркина,&nbsp;14</a></li>
+          </ul>
+          <ul class="f-list f-contacts">
+            <li><small>Секретарь</small><a href="tel:+73882224381">8 (38822) 2-43-81</a></li>
+            <li><small>Директор</small><a href="tel:+73882224565">8 (38822) 2-45-65</a></li>
+            <li><small>E-mail</small><a href="mailto:licei1K@yandex.ru">licei1K@yandex.ru</a></li>
+          </ul>
+        </div>
+
+        <!-- справа: те же разделы и группы, что в сайдбаре, кроме «Безопасность и контроль»; строится из NAV -->
+        <nav class="footer-nav" id="footer-nav" aria-label="Разделы сайта"></nav>
+      </div>
+
+      <!-- снизу: всё остальное -->
+      <div class="footer-bottom">
+        <span>© 1923–2026 МБОУ «Лицей №1 г. Горно-Алтайска»</span>
+        <nav>
+          <a href="#">Карта сайта</a>
+        </nav>
+        <div class="socials" data-socials aria-label="Мы в соцсетях" role="group"></div>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<!-- ================= НАСТРОЙКИ ВНЕШНЕГО ВИДА ================= -->
+<button class="look-fab" type="button" aria-expanded="false" aria-controls="look" aria-label="Настройки внешнего вида"><i class="i i-sliders" aria-hidden="true"></i></button>
+<div class="look" id="look" role="dialog" aria-labelledby="look-title" hidden>
+  <div class="look-head">
+    <h2 id="look-title">Внешний вид</h2>
+    <button class="look-close" type="button" aria-label="Закрыть"><i class="i i-x" aria-hidden="true"></i></button>
+  </div>
+  <form class="look-form">
+    <fieldset>
+      <legend>Цвет темы</legend>
+      <div class="mode">
+        <label><input type="radio" name="accent" value="default" checked><span data-swatch="accent-default">По умолчанию</span></label>
+        <label><input type="radio" name="accent" value="hue"><span data-swatch="accent-hue">Свой оттенок</span></label>
+      </div>
+      <input class="hue is-off" type="range" min="0" max="359" step="1" value="257" data-hue="accent" aria-label="Оттенок цвета темы">
+    </fieldset>
+    <fieldset>
+      <legend>Нейтральные цвета</legend>
+      <div class="mode">
+        <label><input type="radio" name="neutral" value="default" checked><span data-swatch="neutral-default">По умолчанию</span></label>
+        <label><input type="radio" name="neutral" value="hue"><span data-swatch="neutral-hue">Свой оттенок</span></label>
+      </div>
+      <input class="hue is-off" type="range" min="0" max="359" step="1" value="257" data-hue="neutral" aria-label="Оттенок нейтральных цветов">
+    </fieldset>
+    <fieldset>
+      <legend>Цвет текста</legend>
+      <div class="mode">
+        <label><input type="radio" name="text" value="default" checked><span data-swatch="text-default">Как тема</span></label>
+        <label><input type="radio" name="text" value="hue"><span data-swatch="text-hue">Свой оттенок</span></label>
+      </div>
+      <input class="hue is-off" type="range" min="0" max="359" step="1" value="257" data-hue="text" aria-label="Оттенок цвета текста">
+    </fieldset>
+    <fieldset>
+      <legend>Скругления</legend>
+      <div class="segs">
+          <label class="seg"><input type="radio" name="radius" value="lg"><span class="seg-box" style="--r: 14px">Большие</span></label>
+          <label class="seg"><input type="radio" name="radius" value="md" checked><span class="seg-box" style="--r: 8px">Средние</span></label>
+          <label class="seg"><input type="radio" name="radius" value="sm"><span class="seg-box" style="--r: 3px">Малые</span></label>
+      </div>
+    </fieldset>
+    <button class="btn btn-secondary look-reset" type="reset">Сбросить</button>
+  </form>
+</div>
+
+<script src="site.js"></script>
+</body>
+</html>

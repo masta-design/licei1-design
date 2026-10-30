@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Новости — Лицей №1 им. М.В. Карамаева (v1)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=PT+Serif:wght@400;700&display=swap" rel="stylesheet">
+
+  <script>/* настройки внешнего вида — до отрисовки, без мигания */ try { const a = JSON.parse(localStorage.getItem('look2') || '{}'), st = document.documentElement.style; if (a.accent) st.setProperty('--brand', a.accent); if (a.text) st.setProperty('--text-accent', a.text); if (a.nh != null) { st.setProperty('--nh', a.nh); st.setProperty('--nc', a.nc); } if (a.radius) document.documentElement.dataset.radius = a.radius; } catch (e) {}</script>
+  <link rel="stylesheet" href="site.css">
+</head>
+<body data-nav="Наша жизнь/Новости">
+
+<!-- ====== Иконки (спрайт) ====== -->
+
+<!-- Соцсети: один и тот же блок используется в шапке и подвале -->
+<template id="tpl-socials">
+  <a href="#" aria-label="ВКонтакте"><img src="images/vk.svg" alt=""></a>
+  <a href="#" aria-label="Rutube"><img src="images/rutube.svg" alt=""></a>
+  <a href="#" aria-label="Одноклассники"><img src="images/ok.svg" alt=""></a>
+  <a href="#" aria-label="Макс"><img src="images/max.svg" alt=""></a>
+</template>
+
+<div class="app">
+
+  <!-- ================= САЙДБАР: основная навигация ================= -->
+  <aside class="sidebar" id="sidebar" aria-label="Основная навигация">
+    <div class="brand-wrap">
+      <a class="brand" href="./" title="На главную" style="border:0;flex:1">
+        <img src="images/logo-licey-1.png" alt="Логотип Лицея №1">
+        <span>
+          <span class="brand-name">МБОУ&nbsp;«Лицей&nbsp;№1 им.&nbsp;М.В.&nbsp;Карамаева» г.&nbsp;Горно&#8209;Алтайска</span>
+        </span>
+      </a>
+    </div>
+    <nav class="nav" id="nav"><!-- строится из NAV ниже --></nav>
+    <!-- мобильный сайдбар: кнопки из шапки — внизу, закреплены от прокрутки -->
+    <div class="side-tools">
+      <button class="btn btn-lg btn-a11y" type="button" role="switch" aria-checked="false" data-a11y><span class="switch" aria-hidden="true"></span><span>Версия для<br>слабовидящих</span></button>
+      <a class="btn btn-secondary" href="#"><i class="i i-login" aria-hidden="true"></i>Войти</a>
+    </div>
+  </aside>
+  <div class="scrim" data-nav-close></div>
+  <!-- закрытие мобильного меню — снаружи, справа от сайдбара -->
+  <button class="btn btn-lg btn-icon nav-close" type="button" aria-label="Закрыть меню" data-nav-close><i class="i i-x" aria-hidden="true"></i></button>
+
+  <div class="main">
+
+    <!-- ================= ВЕРХНЯЯ ПАНЕЛЬ ================= -->
+    <header class="topbar">
+      <div class="tb-main">
+      <a class="mini-brand" href="./" title="На главную">
+        <img src="images/logo-licey-1.png" alt="">
+        <span class="brand-name">МБОУ&nbsp;«Лицей&nbsp;№1 им.&nbsp;М.В.&nbsp;Карамаева» г.&nbsp;Горно&#8209;Алтайска</span>
+      </a>
+
+      <form class="search" role="search" onsubmit="return false">
+        <label class="sr-only" for="q">Поиск по сайту</label>
+        <i class="i i-search" aria-hidden="true"></i>
+        <input id="q" type="search" placeholder="Поиск по сайту и документам">
+      </form>
+      <button class="btn btn-lg btn-icon btn-secondary search-toggle" type="button" aria-label="Открыть поиск" aria-controls="q" aria-expanded="false" data-search-toggle>
+        <i class="i ico-open i-search" aria-hidden="true"></i><i class="i ico-close i-x" aria-hidden="true"></i>
+      </button>
+      </div>
+
+      <div class="tb-tools">
+      <button class="btn btn-lg btn-primary burger" type="button" aria-controls="sidebar" aria-expanded="false" data-nav-open>
+        <i class="i i-menu" aria-hidden="true"></i>Меню
+      </button>
+
+      <button class="btn btn-lg btn-a11y" type="button" role="switch" aria-checked="false" data-a11y><span class="switch" aria-hidden="true"></span><span>Версия для<br>слабовидящих</span></button>
+
+      <!-- Контакты: кнопка и панель собираются скриптом из данных школы (CONTACTS ниже) -->
+      <div class="contacts" data-contacts>
+        <button class="contacts-btn" type="button" aria-expanded="false" aria-controls="contacts-panel">
+          <span class="cb-main"></span><span class="cb-alt">Контакты</span><i class="i chev i-down" aria-hidden="true"></i>
+        </button>
+        <address class="contacts-panel" id="contacts-panel"></address>
+      </div>
+
+      <a class="btn btn-lg btn-secondary btn-login" href="#"><i class="i i-login" aria-hidden="true"></i>Войти</a>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <!-- ================= ЗАГОЛОВОК СТРАНИЦЫ: хлебные крошки + h1 ================= -->
+      <div class="page-head">
+        <nav class="crumbs" aria-label="Хлебные крошки">
+          <ol>
+            <li><a href="./">Главная</a></li>
+            <li><a href="#">Наша жизнь</a></li>
+            <li><span aria-current="page">Новости</span></li>
+          </ol>
+        </nav>
+        <h1 class="page-title">Новости</h1>
+      </div>
+
+      <!-- ================= СПИСОК НОВОСТЕЙ: карточки как на главной ================= -->
+      <section class="news-list" aria-label="Список новостей">
+        <div class="news-grid" id="news-grid"><!-- строится из NEWS (news-data.js) --></div>
+        <nav class="pager" id="pager" aria-label="Страницы новостей"></nav>
+      </section>
+
+    </main>
+
+    <!-- ================= ПОДВАЛ ================= -->
+    <footer class="footer">
+      <div class="footer-main">
+        <!-- слева: логотип, адрес и контакты -->
+        <div class="f-about">
+          <div class="f-brand">
+            <img src="images/logo-licey-1.png" alt="">
+            <div class="n">МБОУ «Лицей №1 имени М.В. Карамаева города Горно-Алтайска»</div>
+          </div>
+          <ul class="f-list f-address">
+            <li><small>Адрес</small><a href="https://yandex.ru/maps/-/CXb2AT3K" target="_blank" rel="noopener">649000, Республика Алтай, г.&nbsp;Горно-Алтайск, ул.&nbsp;Чорос-Гуркина,&nbsp;14</a></li>
+          </ul>
+          <ul class="f-list f-contacts">
+            <li><small>Секретарь</small><a href="tel:+73882224381">8 (38822) 2-43-81</a></li>
+            <li><small>Директор</small><a href="tel:+73882224565">8 (38822) 2-45-65</a></li>
+            <li><small>E-mail</small><a href="mailto:licei1K@yandex.ru">licei1K@yandex.ru</a></li>
+          </ul>
+        </div>
+
+        <!-- справа: те же разделы и группы, что в сайдбаре, кроме «Безопасность и контроль»; строится из NAV -->
+        <nav class="footer-nav" id="footer-nav" aria-label="Разделы сайта"></nav>
+      </div>
+
+      <!-- снизу: всё остальное -->
+      <div class="footer-bottom">
+        <span>© 1923–2026 МБОУ «Лицей №1 г. Горно-Алтайска»</span>
+        <nav>
+          <a href="#">Карта сайта</a>
+        </nav>
+        <div class="socials" data-socials aria-label="Мы в соцсетях" role="group"></div>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<!-- ================= НАСТРОЙКИ ВНЕШНЕГО ВИДА ================= -->
+<button class="look-fab" type="button" aria-expanded="false" aria-controls="look" aria-label="Настройки внешнего вида"><i class="i i-sliders" aria-hidden="true"></i></button>
+<div class="look" id="look" role="dialog" aria-labelledby="look-title" hidden>
+  <div class="look-head">
+    <h2 id="look-title">Внешний вид</h2>
+    <button class="look-close" type="button" aria-label="Закрыть"><i class="i i-x" aria-hidden="true"></i></button>
+  </div>
+  <form class="look-form">
+    <fieldset>
+      <legend>Цвет темы</legend>
+      <div class="mode">
+        <label><input type="radio" name="accent" value="default" checked><span data-swatch="accent-default">По умолчанию</span></label>
+        <label><input type="radio" name="accent" value="hue"><span data-swatch="accent-hue">Свой оттенок</span></label>
+      </div>
+      <input class="hue is-off" type="range" min="0" max="359" step="1" value="257" data-hue="accent" aria-label="Оттенок цвета темы">
+    </fieldset>
+    <fieldset>
+      <legend>Нейтральные цвета</legend>
+      <div class="mode">
+        <label><input type="radio" name="neutral" value="default" checked><span data-swatch="neutral-default">По умолчанию</span></label>
+        <label><input type="radio" name="neutral" value="hue"><span data-swatch="neutral-hue">Свой оттенок</span></label>
+      </div>
+      <input class="hue is-off" type="range" min="0" max="359" step="1" value="257" data-hue="neutral" aria-label="Оттенок нейтральных цветов">
+    </fieldset>
+    <fieldset>
+      <legend>Цвет текста</legend>
+      <div class="mode">
+        <label><input type="radio" name="text" value="default" checked><span data-swatch="text-default">Как тема</span></label>
+        <label><input type="radio" name="text" value="hue"><span data-swatch="text-hue">Свой оттенок</span></label>
+      </div>
+      <input class="hue is-off" type="range" min="0" max="359" step="1" value="257" data-hue="text" aria-label="Оттенок цвета текста">
+    </fieldset>
+    <fieldset>
+      <legend>Скругления</legend>
+      <div class="segs">
+          <label class="seg"><input type="radio" name="radius" value="lg"><span class="seg-box" style="--r: 14px">Большие</span></label>
+          <label class="seg"><input type="radio" name="radius" value="md" checked><span class="seg-box" style="--r: 8px">Средние</span></label>
+          <label class="seg"><input type="radio" name="radius" value="sm"><span class="seg-box" style="--r: 3px">Малые</span></label>
+      </div>
+    </fieldset>
+    <button class="btn btn-secondary look-reset" type="reset">Сбросить</button>
+  </form>
+</div>
+
+<script src="news-data.js"></script>
+<script src="news-articles.js"></script>
+<script>
+/* --- Страница «Новости» (в news-data.js к реальным новостям добавлены 100 пустых — для демо пагинации): по 14 на страницу, номер страницы — в ?page=N (в CMS это делает сервер).
+       Какие карточки крупные — решает скрипт в site.js по числу колонок, поэтому анонс выводится у всех (у маленьких скрыт).
+       14 — блоки «крупная + маленькие» и хвост заполняют ряды целиком на 1, 2, 4 и 5 колонках (на 6 — последний ряд из 5) --- */
+(function () {
+  const PER_PAGE = 14;
+  const MONTHS = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+  const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const fmt = iso => { const [y, m, d] = iso.split('-').map(Number); return `${d} ${MONTHS[m - 1]} ${y}`; };
+  const pages = Math.max(1, Math.ceil(NEWS.length / PER_PAGE));
+  const page = Math.min(Math.max(parseInt(new URLSearchParams(location.search).get('page'), 10) || 1, 1), pages);
+  const href = p => p === 1 ? 'news.html' : `news.html?page=${p}`;
+
+  const link = n => ARTICLES[n.id] ? `news-item.html?id=${n.id}` : '#';   // страницы есть пока у первых 10 новостей
+  const card = (n, i) => `<a class="news-card card" href="${link(n)}">
+    <div class="thumb">${n.img ? `<img src="${n.img}" alt=""${i ? ' loading="lazy"' : ''}>` : ''}</div>
+    <div class="body"><h3>${esc(n.title)}</h3>${n.text ? `<p>${esc(n.text)}</p>` : ''}<time datetime="${n.date}">${fmt(n.date)}</time></div>
+  </a>`;
+  const list = NEWS.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+  document.getElementById('news-grid').innerHTML = list.length
+    ? list.map(card).join('')
+    : '<p>Новостей пока нет.</p>';
+  if (page > 1) document.title = `Новости — страница ${page} — Лицей №1 им. М.В. Карамаева`;
+
+  /* Пейджинг по Контур.Гайдам (guides.kontur.ru/components/navigation/paging/):
+     — одна страница — пейджинг не показываем;
+     — до 7 страниц — все номера; больше — первая и последняя плюс по две соседние с текущей, пропуски — «…»;
+     — многоточие никогда не прячет одну страницу (поэтому на 5-й с начала/конца — 1–7 … 30, а при 8 страницах на 4-й — все 8);
+     — «Назад» нет, «Дальше» — в конце, на последней странице неактивна; на первых трёх страницах «Дальше» стоит на месте;
+     — под текущей — подсказка о горячих клавишах Ctrl ← / Ctrl → (на Mac — ⌥) */
+  const pager = document.getElementById('pager');
+  if (pages < 2) { pager.remove(); return; }
+  const left = Math.max(Math.min(page - 2, pages - 4), 1);
+  const right = Math.min(Math.max(5, page + 2), pages);
+  const from = left > 3 ? left : 1, to = right < pages - 2 ? right : pages;   // «…» — только если за ним хотя бы 2 страницы
+  const nums = [];
+  if (from > 1) nums.push(1, 0);
+  for (let p = from; p <= to; p++) nums.push(p);
+  if (to < pages) nums.push(0, pages);
+
+  const mac = /Mac|iPhone|iPad/.test(navigator.platform);
+  const key = mac ? '⌥' : 'Ctrl';
+  const hint = (page > 1 ? '← ' : '') + key + (page < pages ? ' →' : '');
+  pager.innerHTML = '<ol>'
+    + nums.map(p => !p ? '<li class="pager-gap" aria-hidden="true">…</li>'
+      : p === page ? `<li class="pager-current"><a class="pager-item" href="${href(p)}" aria-current="page" aria-label="Страница ${p}, текущая">${p}</a><span class="pager-hint" aria-hidden="true">${hint}</span></li>`
+      : `<li><a class="pager-item" href="${href(p)}" aria-label="Страница ${p}">${p}</a></li>`).join('')
+    + (page < pages
+      ? `<li><a class="btn btn-secondary pager-next" href="${href(page + 1)}" rel="next"><span class="pager-next-label">Дальше</span><i class="i i-right" aria-hidden="true"></i></a></li>`
+      : `<li><a class="btn btn-secondary pager-next" role="link" aria-disabled="true"><span class="pager-next-label">Дальше</span><i class="i i-right" aria-hidden="true"></i></a></li>`)
+    + '</ol>';
+
+  // клавиатура: Tab попадает на текущую страницу (одна точка в порядке табуляции), ← → двигают фокус по ссылкам, Tab уводит дальше
+  const items = [...pager.querySelectorAll('a[href]')];
+  items.forEach(a => { a.tabIndex = a.getAttribute('aria-current') ? 0 : -1; });
+  pager.addEventListener('keydown', e => {
+    if (e.ctrlKey || e.altKey || e.metaKey || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight')) return;
+    const i = items.indexOf(document.activeElement);
+    if (i < 0) return;
+    e.preventDefault();
+    items[Math.min(Math.max(i + (e.key === 'ArrowRight' ? 1 : -1), 0), items.length - 1)].focus();
+  });
+  // горячие клавиши — на всей странице (пейджинг на ней один), кроме полей ввода
+  document.addEventListener('keydown', e => {
+    if (!(mac ? e.altKey : e.ctrlKey) || e.shiftKey || e.metaKey || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight')) return;
+    if (e.target.closest('input, textarea, select, [contenteditable]')) return;
+    const p = page + (e.key === 'ArrowRight' ? 1 : -1);
+    if (p < 1 || p > pages) return;
+    e.preventDefault();
+    location.href = href(p);
+  });
+})();
+</script>
+<script src="site.js"></script>
+</body>
+</html>
