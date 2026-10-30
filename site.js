@@ -1,84 +1,11 @@
 /* ============================================================
-   Структура навигации. Все разделы текущего сайта сохранены и
-   сгруппированы по смыслу; «Главной» в меню нет — на главную ведёт логотип.
-   Сайдбар и подвал строятся из этих данных, поэтому всегда совпадают.
+   ПОВЕДЕНИЕ КОМПОНЕНТОВ. Подключается последним, в конце <body>: вся разметка (в том числе от layout.js и скриптов страниц) уже есть.
+   Каждый блок ищет свои элементы и молча выходит, если их на странице нет.
+   Правило: поведение, которое должно работать и у дорисованных позже элементов (карточки, плитки), —
+   через делегирование на document, а не обработчиками на каждом элементе
    ============================================================ */
-const NAV = [
-  { group: 'Участникам', items: [
-    { t: 'Родителям', c: [{ t: 'Приём в 1 класс', c: ['Приказы о зачислении'] }, 'Кружки, секции', 'Объявления', 'Новости', { t: 'Статьи', c: ['Буллинг'] }, 'Цены на платные образовательные услуги', 'Профилактика правонарушений', 'Обращения граждан', 'Разное', 'Психологическая служба', 'Социальный педагог', 'ПМПК', 'Охрана здоровья учащихся', 'Родной язык'] },
-    { t: 'Ученикам', c: ['Новости', 'Объявления', 'Профориентация', 'Олимпиады и конкурсы', 'Кружки, секции', 'Расписание уроков', { t: 'Библиотека', c: ['Наша библиотека', 'Новости', 'Изучаем родной язык, историю и культуру Горного Алтая', 'Информационная культура', 'Нашим читателям (информация для учащихся)', 'Наши достижения', 'Полезные ссылки', 'Родителям', 'Педагогам', 'Противодействие экстремизму', 'Фотоальбом «Читай, играй и познавай»'] }, { t: 'Цифровая образовательная среда', c: ['Полезные ссылки', 'Сайты для создания интерактивных заданий, опроса, анкетирования', 'Сайты и порталы педагогической направленности', 'Школьный медиацентр', 'Применение геймификации в образовательном процессе', 'Облачные сервисы и технологии'] }, 'Интересно с интересом', 'Противодействие идеологии терроризма и экстремизма'] },
-    { t: 'Учителям', c: ['Аттестации', 'Новости', 'Объявления', 'Правила внутреннего распорядка', 'Методические материалы', { t: 'Вакансии', c: ['Заполнить анкету'] }, 'Стажировочные площадки', 'Школа Минпросвещения России', 'Наставничество', 'Охрана труда', 'Система оплаты труда', 'Стажерские площадки'] },
-  ]},
-  { group: 'Жизнь лицея', items: [
-    { t: 'Наша жизнь', c: ['Воспитательная работа', { t: 'Новости', href: 'news.html' }, 'Объявления', 'Фотогалерея', 'Видео', 'Поздравления и благодарности', { t: 'Вопрос-ответ', c: ['Задать вопрос'] }, 'Помещения', 'Школьный спортивный клуб (ШСК)', 'Самбо в школе', { t: 'Наши учителя', c: ['Учителя естественно-научных дисциплин', 'Учителя начальных классов', 'Учителя общественных наук', 'Учителя иностранных языков', 'Учителя гуманитарных наук', 'Учителя физико-математических дисциплин'] }, { t: 'Сведения об организации отдыха детей и их оздоровления', c: ['Об организации отдыха детей и их оздоровления', 'Материально-техническое обеспечение и оснащённость организации отдыха детей и их оздоровления', 'Услуги, в том числе платные, предоставляемые организацией отдыха детей и их оздоровления', 'Доступная среда'] }, { t: 'Страничка психолога', c: ['Рекомендации учителям', 'Рекомендации ученикам', 'Рекомендации родителям'] }, 'Служба примирения лицея', 'Проект «Функциональная грамотность»', 'Театральная студия', 'Музей', 'Вклад в будущее', 'ПДД, безопасность', 'Управляющий совет'] },
-    { t: 'Воспитательная работа', c: ['Оценка за поведение 2026–2027 уч. год'] },
-    { t: 'Меню питания' },
-    { t: 'Школьный музей', c: ['Документы', 'Мероприятия', 'Фотогалерея'] },
-  ]},
-  { group: 'Обучение', items: [
-    { t: 'ГИА', c: ['ЕГЭ', 'ОГЭ', 'Итоговое сочинение в рамках ГИА', 'Информационные плакаты для выпускников', 'Информационные порталы', 'Советы психолога', 'Горячая линия', 'Расписание ГИА-11', 'Расписание ГИА-9'] },
-    { t: 'Предпрофильное обучение', c: ['Документы', 'Профильный естественно-научный (медицинский) 10 класс'] },
-    { t: 'Профориентация', c: ['Документы', 'Педагогам', 'Информация педагога-психолога', 'Родителям', 'Учащимся', 'Приглашаем к участию', 'Конкурс педагогов-навигаторов «Мои горизонты»'] },
-    { t: 'Цифровизация', c: ['ФГИС «Моя школа»', 'Цифровая (электронная) библиотека и электронные образовательные ресурсы'] },
-    { t: 'Приём иностранных граждан' },
-  ]},
-  { group: 'О лицее', items: [
-    { t: 'Сведения об образовательной организации', c: ['Основные сведения', 'Структура и органы управления', { t: 'Документы', c: ['Документы (устав, лицензия и т.д.)', 'Правоустанавливающие документы', 'График оценочных процедур'] }, 'Образование', 'Руководство', 'Педагогический состав', 'Материально-техническое обеспечение. Доступная среда', 'Стипендии и меры поддержки обучающихся', 'Международное сотрудничество', 'Организация питания', 'Образовательные стандарты и требования', 'Платные образовательные услуги', { t: 'Финансово-хозяйственная деятельность', c: ['Поступление и расходование финансовых и материальных средств по итогам финансового года'] }, 'Вакантные места для приёма (перевода)', 'Законодательная карта', { t: 'Центр «Точка роста»', c: ['Новости', 'Общая информация о центре «Точка роста»', 'Документы', 'Программы', 'Педагоги', 'Материально-техническая база', 'Режим занятий', 'Мероприятия', 'Дополнительная информация', 'Обратная связь (контакты)', 'Галерея', 'Центр образования цифрового и гуманитарного профилей'] }, 'Прокуратура информирует', 'Доступная среда', { t: 'Информационная безопасность', c: ['Локальные акты', 'Нормативное регулирование', 'Педагогам', 'Ученикам', 'Родителям', 'Детские безопасные сайты'] }, 'Приём в образовательную организацию', 'Федеральный закон № 44', 'Антикоррупционная политика'] },
-    { t: 'Национальный проект «Образование»' },
-    { t: 'Региональная инновационная площадка', c: ['Нормативно-правовые документы', 'Мероприятия'] },
-    { t: 'Стажировочные площадки' },
-    { t: 'Контакты', c: ['Контакты контролирующих организаций'] },
-  ]},
-  { group: 'Безопасность и контроль', items: [
-    { t: 'Информационная безопасность', c: ['Детские безопасные сайты', 'Нормативное регулирование', 'Обучающимся', 'Педагогическим работникам', 'Родителям', 'Мероприятия по информационной грамотности педагогов'] },
-    { t: 'ТВОЯ Безопасность', c: ['ПДД', 'Противодействие экстремизму и терроризму', 'Профилактика мошенничества', 'Пожарная безопасность'] },
-    { t: 'Противодействие коррупции', c: ['Нормативно-правовые и иные акты', 'Антикоррупционная экспертиза', 'Методические материалы', 'Формы документов для заполнения', 'Сведения о доходах, расходах, об имуществе', 'Комиссия по урегулированию конфликта интересов', 'Обратная связь для сообщений о фактах коррупции'] },
-    { t: 'НОКО. Независимая оценка качества образования', c: ['Независимая оценка качества условий образовательной деятельности'] },
-  ]},
-];
 
-/* --- Сайдбар --- */
-// Пункт: строка-ссылка или { t, hint?, c: [...] }; в c снова строки или объекты — так задаётся третий уровень
-const navItem = (it, id, top) => {
-  const hasSub = it.c && it.c.length;
-  const label = `<span>${it.t}${it.hint ? ` <span class="hint">· ${it.hint}</span>` : ''}</span>`;
-  if (!hasSub && !top) return `<li><a href="${it.href || '#'}">${it.t}</a></li>`;
-  // Раздел раскрывает список, первая ссылка в нём — страница самого раздела (как на текущем сайте)
-  const sub = [`<li><a href="#" class="nav-self">${it.t}</a></li>`]
-    .concat((it.c || []).map((s, si) => navItem(typeof s === 'string' ? { t: s } : s, `${id}-${si}`, false)));
-  return `<li class="nav-item">
-    <div class="nav-row">
-      ${hasSub
-        ? `<button type="button" aria-expanded="false" aria-controls="${id}">${label}<i class="i chev i-down" aria-hidden="true"></i></button>`
-        : `<a href="#">${label}</a>`}
-    </div>
-    ${hasSub ? `<div class="nav-sub-wrap"><ul class="nav-sub" id="${id}">${sub.join('')}</ul></div>` : ''}
-  </li>`;
-};
-document.getElementById('nav').innerHTML = NAV.map((g, gi) => `
-  ${g.group ? `<div class="nav-group-label">${g.group}</div>` : ''}
-  <ul>${g.items.map((it, ii) => navItem(it, `sub-${gi}-${ii}`, true)).join('')}</ul>`).join('');
-
-// Текущая страница: путь в меню — в <body data-nav="Раздел/Подраздел/Страница">. Разделы на пути раскрыты, сама страница подсвечена
-(function () {
-  const path = (document.body.dataset.nav || '').split('/').filter(Boolean);
-  let scope = document.getElementById('nav');
-  path.forEach((name, i) => {
-    const last = i === path.length - 1;
-    const item = [...scope.querySelectorAll(':scope > ul > .nav-item, :scope > .nav-item')]
-      .find(li => li.querySelector(':scope > .nav-row > button > span')?.textContent === name);
-    if (item && !last) {
-      item.classList.add('is-open');
-      item.querySelector(':scope > .nav-row > button').setAttribute('aria-expanded', 'true');
-      scope = item.querySelector('.nav-sub');
-      return;
-    }
-    const link = [...scope.querySelectorAll(':scope > li > a:not(.nav-self)')].find(a => a.textContent === name);
-    if (link) link.setAttribute('aria-current', 'page');
-  });
-})();
-
-// Аккордеон: на каждом уровне открыт один раздел, соседние сворачиваются вместе с вложенными
+/* --- Сайдбар: аккордеон — на каждом уровне открыт один раздел, соседние сворачиваются вместе с вложенными --- */
 document.getElementById('nav').addEventListener('click', e => {
   const btn = e.target.closest('.nav-row > button');
   if (!btn) return;
@@ -96,54 +23,6 @@ document.getElementById('nav').addEventListener('click', e => {
   btn.setAttribute('aria-expanded', open);
   if (open) setTimeout(() => item.scrollIntoView({ block: 'nearest', behavior: 'smooth' }), 260);
 });
-
-/* --- Подвал: те же группы и разделы --- */
-document.getElementById('footer-nav').innerHTML = '<div class="fn-grid">' + NAV.filter(g => g.group && g.group !== 'Безопасность и контроль').map(g => `
-  <div><h3>${g.group}</h3><ul>${g.items.map(it => `<li><a href="#">${it.t}</a></li>`).join('')}</ul></div>`).join('') + '</div>';
-
-/* --- Соцсети (уникальные id для градиентов в каждой копии) --- */
-const tpl = document.getElementById('tpl-socials').innerHTML;
-document.querySelectorAll('[data-socials]').forEach(el => { el.innerHTML = tpl; });
-
-
-/* --- Контакты школы. Это поля, которые школа заполняет в системе управления; любое может быть пустым.
-       main — основной номер для кнопки в шапке (необязателен); phones/emails — списки любой длины;
-       socials — названия соцсетей из шаблона tpl-socials --- */
-const CONTACTS = {
-  main: '8 (38822) 2-43-81',
-  phones: [{ t: 'Секретарь', v: '8 (38822) 2-43-81' }, { t: 'Директор', v: '8 (38822) 2-45-65' }],
-  emails: [{ v: 'licei1K@yandex.ru' }],
-  address: { v: '649000, Республика Алтай, г.\u00a0Горно-Алтайск, ул.\u00a0Чорос-Гуркина, д.\u00a014', href: 'https://yandex.ru/maps/-/CXb2AT3K' },
-  socials: ['ВКонтакте', 'Rutube', 'Одноклассники', 'Макс']
-};
-const CP_LIMIT = { phones: 4, emails: 3 };   /* сверх лимита — ссылка «Все контакты» */
-const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-const telHref = v => { let d = v.replace(/\D/g, ''); if (d[0] === '8') d = '7' + d.slice(1); return 'tel:+' + d; };
-
-function renderContacts(c) {
-  const btn = document.querySelector('[data-contacts] .contacts-btn');
-  btn.querySelector('.cb-main').textContent = c.main || '';
-  btn.classList.toggle('no-main', !c.main);
-
-  const item = (x, href, cls = '') =>
-    `<div class="cp-item ${cls}">${x.t ? `<span>${esc(x.t)}</span>` : ''}<a href="${href}">${esc(x.v)}</a></div>`;
-  const phones = c.phones || [], emails = c.emails || [];
-  let html = '';
-  html += phones.slice(0, CP_LIMIT.phones).map(x => item(x, telHref(x.v), 'cp-phone')).join('');
-  html += emails.slice(0, CP_LIMIT.emails).map(x => item({ t: x.t || 'E-mail', v: x.v }, 'mailto:' + x.v)).join('');
-  if (c.address) html += `<div class="cp-item"><span>Адрес</span>${c.address.href
-    ? `<a href="${c.address.href}" target="_blank" rel="noopener">${esc(c.address.v)}</a>` : esc(c.address.v)}</div>`;
-  if ((c.socials || []).length) {
-    const box = document.createElement('div');
-    box.innerHTML = tpl.replace(/(rt|mx)-(CLIP|GRAD)/g, '$1-$2-cp');
-    [...box.children].forEach(a => { if (!c.socials.includes(a.getAttribute('aria-label'))) a.remove(); });
-    html += `<div class="cp-item"><span>Мы в соцсетях</span><div class="socials">${box.innerHTML}</div></div>`;
-  }
-  if (phones.length > CP_LIMIT.phones || emails.length > CP_LIMIT.emails)
-    html += `<a class="cp-all" href="#">Все контакты<i class="i i-right" aria-hidden="true"></i></a>`;
-  document.getElementById('contacts-panel').innerHTML = html;
-}
-renderContacts(CONTACTS);
 
 /* --- Контакты (шапка и мобильный сайдбар): нажатие открывает/закрывает панель (на тач-экранах), клик вне панели и Esc — закрывают --- */
 document.querySelectorAll('[data-contacts]').forEach(box => {
@@ -183,8 +62,7 @@ burger.addEventListener('click', () => setNav(true));
 document.querySelectorAll('[data-nav-close]').forEach(el => el.addEventListener('click', () => setNav(false)));
 document.addEventListener('keydown', e => { if (e.key === 'Escape') setNav(false); });
 
-/* --- Слайдер: автопрокрутка останавливается после первого
-       ручного переключения (стрелки, точки, свайп) до перезагрузки --- */
+/* --- Слайдер (только на главной): листается только вручную — стрелки, точки, свайп; автопрокрутки нет --- */
 (function () {
   const root = document.querySelector('[data-slider]');
   if (!root) return;   // слайдер только на главной
@@ -305,10 +183,11 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') setNav(false
     });
   }).observe(grid);
 })();
-// плитки быстрого доступа, новости и обложки фото/видео за курсором (эксперимент «объём»): координаты курсора → CSS-переменные.
-// У новостей и обложек координаты считаются по картинке — наклоняется и бликует только она.
-// Слушаем на документе, а не на каждой карточке: так эффект есть и у карточек, которые страница дорисовывает скриптом
-// (список новостей, «Читай также» — он пересобирается при смене ширины)
+
+/* --- «Лёгкий объём»: плитки быстрого доступа, новости и обложки фото/видео за курсором: координаты курсора → CSS-переменные --mx/--my/--px/--py/--glow.
+   У новостей и обложек координаты считаются по картинке — наклоняется и бликует только она.
+   Слушаем на документе, а не на каждой карточке: так эффект есть и у карточек, которые страница дорисовывает скриптом
+   (список новостей, «Читайте также» — он пересобирается при смене ширины) --- */
 (function () {
   const TILT = '.quick a, .news-card, .media-card';
   const reset = a => ['--px', '--py', '--glow'].forEach(v => a.style.removeProperty(v));
@@ -329,7 +208,8 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') setNav(false
   // курсор ушёл с карточки (в том числе за окно) — возвращаем её на место
   document.addEventListener('pointerout', e => { if (cur && !cur.contains(e.relatedTarget)) { reset(cur); cur = null; } });
 })();
-// Баннеры: увеличение ×1.5 при наведении — точка роста так, чтобы картинка оставалась в пределах сетки (не наезжала на заголовок и края)
+
+/* --- Баннеры: увеличение ×1.5 при наведении — точка роста так, чтобы картинка оставалась в пределах сетки (не наезжала на заголовок и края) --- */
 document.querySelectorAll('.banner').forEach(b => {
   b.addEventListener('pointerenter', () => {
     const grid = b.closest('.banners').getBoundingClientRect(), r = b.getBoundingClientRect(), w = r.width, h = r.height;
@@ -339,99 +219,3 @@ document.querySelectorAll('.banner').forEach(b => {
     b.querySelector('img').style.transformOrigin = `${ox}px ${oy}px`;
   });
 });
-// Настройки внешнего вида: цвета → переменные на <html>, скругления → data-radius; всё — в localStorage «look2».
-// Цвет — либо по умолчанию, либо свой оттенок (hue): светлота и насыщенность фиксированы, поэтому любой оттенок остаётся читаемым
-(() => {
-  const fab = document.querySelector('.look-fab'), panel = document.getElementById('look'), form = panel.querySelector('.look-form');
-  const root = document.documentElement;
-  const DEF = { accent: '#1d4f91', text: null, nh: 257, nc: .04, radius: 'md' };
-  const NEU_C = .03;   // насыщенность нейтральных при своём оттенке
-
-  // --- OKLCH → hex с подгонкой в sRGB, контраст с белым ---
-  const lin = c => (c /= 255) <= .04045 ? c / 12.92 : ((c + .055) / 1.055) ** 2.4;
-  const enc = x => { x = Math.min(Math.max(x, 0), 1); return Math.round(255 * (x <= .0031308 ? 12.92 * x : 1.055 * x ** (1 / 2.4) - .055)); };
-  const fromLch = (L, C, H) => {   // уменьшаем насыщенность, пока цвет не влезет в sRGB
-    for (let c = C; ; c -= .005) {
-      const a = Math.max(c, 0) * Math.cos(H * Math.PI / 180), b = Math.max(c, 0) * Math.sin(H * Math.PI / 180);
-      const l = (L + .3963377774 * a + .2158037573 * b) ** 3, m = (L - .1055613458 * a - .0638541728 * b) ** 3, s = (L - .0894841775 * a - 1.2914855480 * b) ** 3;
-      const v = [4.0767416621 * l - 3.3077115913 * m + .2309699292 * s, -1.2684380046 * l + 2.6097574011 * m - .3413193965 * s, -.0041960863 * l - .7034186147 * m + 1.7076147010 * s];
-      if (c <= 0 || v.every(x => x >= -.001 && x <= 1.001)) return '#' + v.map(x => enc(x).toString(16).padStart(2, '0')).join('');
-    }
-  };
-  const contrast = h => { const [r, g, b] = [1, 3, 5].map(i => lin(parseInt(h.slice(i, i + 2), 16))); return 1.05 / (.2126 * r + .7152 * g + .0722 * b + .05); };
-  // цвет темы/текста из оттенка: L .5, C .15, затемняем до контраста с белым ≥ 4.5 (WCAG AA)
-  const hueColor = h => { let l = .5, out = fromLch(l, .15, h); while (contrast(out) < 4.5) out = fromLch(l -= .01, .15, h); return out; };
-  const neuPreview = h => `oklch(.55 ${NEU_C * 2} ${h})`;   // для образца и дорожки — заметнее, чем сами серые
-  const grad = f => `linear-gradient(90deg, ${Array.from({ length: 13 }, (_, i) => f(i * 30)).join(', ')})`;
-
-  // --- состояние ---
-  let st = { ...DEF };
-  try { st = { ...DEF, ...JSON.parse(localStorage.getItem('look2') || '{}') }; } catch (e) {}
-  const sliders = {}; panel.querySelectorAll('[data-hue]').forEach(r => sliders[r.dataset.hue] = r);
-  sliders.accent.style.setProperty('--g', grad(hueColor));
-  sliders.text.style.setProperty('--g', grad(hueColor));
-  sliders.neutral.style.setProperty('--g', grad(neuPreview));
-  panel.querySelector('[data-swatch="accent-default"]').style.setProperty('--c', DEF.accent);
-  panel.querySelector('[data-swatch="neutral-default"]').style.setProperty('--c', `oklch(.55 ${DEF.nc * 1.5} ${DEF.nh})`);
-
-  const apply = () => {
-    const set = (k, v, d) => v != null && v !== d ? root.style.setProperty(k, v) : root.style.removeProperty(k);
-    set('--brand', st.accent, DEF.accent);
-    set('--text-accent', st.text, null);
-    if (st.nh !== DEF.nh || st.nc !== DEF.nc) { root.style.setProperty('--nh', st.nh); root.style.setProperty('--nc', st.nc); }
-    else { root.style.removeProperty('--nh'); root.style.removeProperty('--nc'); }
-    if (st.radius !== DEF.radius) root.dataset.radius = st.radius; else delete root.dataset.radius;
-    const save = {};
-    for (const k of ['accent', 'text', 'radius', 'ah', 'th']) if (st[k] != null && st[k] !== DEF[k]) save[k] = st[k];
-    if (st.nh !== DEF.nh || st.nc !== DEF.nc) { save.nh = st.nh; save.nc = st.nc; }
-    try { localStorage.setItem('look2', JSON.stringify(save)); } catch (e) {}
-  };
-  // панель по состоянию: какой режим выбран, где ползунки, цвет образцов
-  const sync = () => {
-    const mode = { accent: st.accent !== DEF.accent, text: st.text != null, neutral: st.nh !== DEF.nh || st.nc !== DEF.nc };
-    const hue = { accent: st.ah ?? DEF.nh, text: st.th ?? DEF.nh, neutral: mode.neutral ? st.nh : DEF.nh };
-    for (const k in mode) {
-      form.querySelector(`input[name="${k}"][value="${mode[k] ? 'hue' : 'default'}"]`).checked = true;
-      sliders[k].value = hue[k];
-      sliders[k].classList.toggle('is-off', !mode[k]);
-      const c = k === 'neutral' ? neuPreview(hue[k]) : hueColor(hue[k]);
-      sliders[k].style.setProperty('--c', c);
-      panel.querySelector(`[data-swatch="${k}-hue"]`).style.setProperty('--c', c);
-    }
-    panel.querySelector('[data-swatch="text-default"]').style.setProperty('--c', st.accent);
-    form.querySelector(`input[name="radius"][value="${st.radius}"]`).checked = true;
-  };
-  // свой оттенок группы → значения в состояние
-  const setHue = (k, h) => {
-    if (k === 'accent') { st.ah = h; st.accent = hueColor(h); }
-    if (k === 'text') { st.th = h; st.text = hueColor(h); }
-    if (k === 'neutral') { st.nh = h; st.nc = NEU_C; }
-  };
-  const setDefault = k => {
-    if (k === 'accent') { st.accent = DEF.accent; delete st.ah; }
-    if (k === 'text') { st.text = null; delete st.th; }
-    if (k === 'neutral') { st.nh = DEF.nh; st.nc = DEF.nc; }
-  };
-
-  form.addEventListener('change', e => {
-    const t = e.target;
-    if (t.type !== 'radio') return;
-    if (t.name === 'radius') st.radius = t.value;
-    else if (t.value === 'hue') setHue(t.name, +sliders[t.name].value);
-    else setDefault(t.name);
-    apply(); sync();
-  });
-  form.addEventListener('input', e => {   // ползунок — сразу, пока его двигают; трогать его — значит выбрать «Свой оттенок»
-    const k = e.target.dataset.hue; if (!k) return;
-    setHue(k, +e.target.value);
-    apply(); sync();
-  });
-  form.addEventListener('reset', e => { e.preventDefault(); st = { ...DEF }; apply(); sync(); });
-  sync();
-
-  const toggle = open => { panel.hidden = !open; fab.setAttribute('aria-expanded', open); if (open) panel.querySelector('input:checked').focus({ preventScroll: true }); };
-  fab.addEventListener('click', () => toggle(panel.hidden));
-  panel.querySelector('.look-close').addEventListener('click', () => { toggle(false); fab.focus(); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !panel.hidden) { toggle(false); fab.focus(); } });
-  document.addEventListener('pointerdown', e => { if (!panel.hidden && !panel.contains(e.target) && !fab.contains(e.target)) toggle(false); });
-})();

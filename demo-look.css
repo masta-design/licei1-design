@@ -1,0 +1,72 @@
+/* ============================================================
+   ТОЛЬКО ДЛЯ ДЕМО: панель «Внешний вид» (плавающая кнопка справа внизу).
+   Нужна, чтобы на согласовании подобрать цвета и скругления. На настоящий сайт не переносится:
+   при переносе удалить demo-look.css, demo-look.js и элемент <demo-look> на страницах.
+   Цвета скрипт ставит переменными на <html> (--brand, --text-brand, --nh, --nc), скругления — атрибутом data-radius
+   ============================================================ */
+
+/* наборы скруглений; по умолчанию — средние, из tokens.css */
+:root[data-radius="lg"] { --radius-md: 16px; --radius-lg: 22px; }
+:root[data-radius="sm"] { --radius-md: 6px;  --radius-lg: 8px; }
+
+.look-fab {
+  position: fixed; right: 24px; bottom: 24px; z-index: 60; width: 56px; height: 56px;
+  display: inline-flex; align-items: center; justify-content: center; border: 0; cursor: pointer;
+  border-radius: var(--radius-lg); background: var(--sheen), var(--action); color: var(--text-on-brand);
+  box-shadow: 0 2px 4px rgb(var(--shadow-rgb) / .16), 0 10px 28px -4px rgb(var(--shadow-rgb) / .4);
+  transition: background-color .2s, transform .2s;
+}
+.look-fab .i { --i-size: var(--size-icon-xl); }
+.look-fab:hover { background: var(--sheen), var(--action-hover); transition-duration: 0s; }
+.look-fab:active { transform: translateY(1px); filter: brightness(.92); }
+.look {
+  position: fixed; right: 24px; bottom: 92px; z-index: 61; width: min(340px, calc(100vw - 32px));
+  max-height: calc(100vh - 116px); overflow-y: auto; overscroll-behavior: contain;
+  padding: var(--space-20); background: var(--bg-surface); color: var(--text-primary); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-panel);
+}
+.look[hidden] { display: none; }
+.look-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-12); margin-bottom: var(--space-4); }
+.look-head h2 { font: var(--type-h4); letter-spacing: normal; }   /* h2 со стилем h4 */
+.look-close { width: var(--size-control); height: var(--size-control); margin-right: -8px; border: 0; background: none; color: var(--text-secondary); border-radius: var(--radius-md); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+.look-close:hover { background: var(--fill-subtle); color: var(--text-primary); }
+.look fieldset { margin: 0; padding: var(--space-20) 0 0; border: 0; min-width: 0; }
+.look legend { float: left; width: 100%; padding: 0; margin-bottom: var(--space-12); font-size: var(--fs-14); font-weight: 600; color: var(--text-primary); }   /* float — иначе legend сидит в рамке fieldset и отступы не работают */
+.look legend + * { clear: both; }
+.look input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+/* цвет: «По умолчанию» или «Свой оттенок» со слайдером hue; дорожка слайдера — цвета, которые получатся при каждом оттенке */
+.mode { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-8); }
+.mode label { cursor: pointer; }
+.mode span {
+  display: flex; align-items: center; justify-content: center; gap: var(--space-8); height: var(--size-control); padding: 0 var(--space-12);
+  background: var(--fill-subtle); border-radius: var(--radius-md); font-size: var(--fs-14); font-weight: 500; color: var(--text-secondary);
+  transition: background-color .2s, color .2s;
+}
+.mode span::before { content: ""; width: 14px; height: 14px; flex-shrink: 0; border-radius: 50%; background: var(--c); box-shadow: inset 0 0 0 1px rgb(var(--shadow-rgb) / .12); }
+.mode label:hover span { background: var(--fill-muted); color: var(--text-primary); transition-duration: 0s; }
+.mode input:checked + span { background: var(--action-subtle); color: var(--action); box-shadow: inset 0 0 0 2px var(--action); }
+.mode input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
+.look .hue { position: static; opacity: 1; pointer-events: auto; display: block; width: 100%; height: 36px; margin: var(--space-12) 0 0; background: none; cursor: pointer; -webkit-appearance: none; appearance: none; }
+.hue::-webkit-slider-runnable-track { height: 28px; border-radius: var(--radius-full); background: var(--g); box-shadow: inset 0 0 0 1px rgb(var(--shadow-rgb) / .1); }
+.hue::-moz-range-track { height: 28px; border-radius: var(--radius-full); background: var(--g); box-shadow: inset 0 0 0 1px rgb(var(--shadow-rgb) / .1); }
+.hue::-webkit-slider-thumb { -webkit-appearance: none; width: 36px; height: 36px; margin-top: -4px; border-radius: 50%; background: var(--c); border: 3px solid var(--bg-surface); box-shadow: 0 1px 4px rgb(var(--shadow-rgb) / .35); }
+.hue::-moz-range-thumb { width: 30px; height: 30px; border-radius: 50%; background: var(--c); border: 3px solid var(--bg-surface); box-shadow: 0 1px 4px rgb(var(--shadow-rgb) / .35); }
+.hue:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: var(--radius-full); }
+.hue.is-off { opacity: .45; }
+/* скругления — 3 кнопки с превью угла */
+.segs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-8); }
+.seg { cursor: pointer; }
+.seg-box {
+  display: flex; flex-direction: column; align-items: center; gap: var(--space-8); padding: var(--space-12) var(--space-4);
+  background: var(--fill-subtle); border-radius: var(--radius-md); font-size: var(--fs-12); font-weight: 500; color: var(--text-secondary); text-align: center;
+  transition: background-color .2s, color .2s;
+}
+.seg-box::before { content: ""; width: 24px; height: 24px; border: solid currentColor; border-width: 2px 2px 0 0; border-top-right-radius: var(--r); }
+.seg:hover .seg-box { background: var(--fill-muted); color: var(--text-primary); transition-duration: 0s; }
+.seg input:checked + .seg-box { background: var(--action-subtle); color: var(--action); box-shadow: inset 0 0 0 2px var(--action); }
+.seg input:focus-visible + .seg-box { outline: 3px solid var(--focus); outline-offset: 2px; }
+.look-reset { margin-top: var(--space-20); width: 100%; }
+@media (max-width: 767px) {
+  .look-fab { right: 16px; bottom: 16px; width: 48px; height: 48px; }
+  .look { right: 16px; bottom: 76px; max-height: calc(100vh - 96px); }
+}
