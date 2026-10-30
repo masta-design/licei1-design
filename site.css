@@ -609,10 +609,11 @@ a.card { color: inherit; text-decoration: none !important; }
   .article-layout .page-head { grid-column: 1 / -1; }
   .article-layout .article-main { grid-column: 1; }
   .article-layout .related {
-    grid-column: 2; grid-row: 2; margin-top: 0;
+    grid-column: 2; grid-row: 2;
+    margin-top: -54px;   /* фото первой карточки — вровень с фото статьи, заголовок над ним: строка 30px + отступ 24px */
     container-type: normal;   /* не контейнер «news»: правила узкой ширины (лента, карточки в строку) к колонке не относятся */
   }
-  .article-layout .related .section-head { margin-bottom: clamp(12px, 1vw, 20px); }   /* вдвое меньше, чем у заголовка секции */
+  .article-layout .related .section-head { margin-bottom: 24px; }
   .article-layout .related .section-head h2 { font-size: 24px; line-height: 1.25; }   /* в узкой колонке — мелкий заголовок, не кегль секции */
   .article-layout .related .news-grid { grid-template-columns: minmax(0, 1fr); row-gap: 40px; }
 }
