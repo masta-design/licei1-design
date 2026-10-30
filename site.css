@@ -601,18 +601,19 @@ a.card { color: inherit; text-decoration: none !important; }
 
 /* «Читайте также» — одна строка карточек: сколько колонок, столько и новостей (2/4/5/6; число ставит скрипт); на телефоне — лента со свайпом */
 .related { container: news / inline-size; }
-.related .section-head { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; margin: 0; }   /* заголовка «Читайте также» не видно — остаётся только для экранных чтецов */
-/* большие экраны: «Читайте также» — колонка справа от фото и текста (3 новости), начинается вровень с фото.
-   Сетка — на обёртке, статья «прозрачна»: шапка новости во всю ширину, ниже две колонки */
+/* большие экраны: «Читайте также» — колонка справа (3 новости), заголовок колонки — на уровне хлебных крошек.
+   Сетка — на обёртке, статья «прозрачна»: слева шапка новости, фото и текст, справа — колонка на обе строки */
 @container content (min-width: 1300px) {
   .article-layout { display: grid; grid-template-columns: minmax(0, 1fr) clamp(300px, 22cqi, 420px); column-gap: clamp(48px, 4.4vw, 112px); align-items: start; }
   .article-layout .article { display: contents; }
-  .article-layout .page-head { grid-column: 1 / -1; }
+  .article-layout .page-head { grid-column: 1; }
   .article-layout .article-main { grid-column: 1; }
   .article-layout .related {
-    grid-column: 2; grid-row: 2; margin-top: 0;
+    grid-column: 2; grid-row: 1 / span 2; margin-top: 0;
+    padding-top: calc(clamp(24px, 2.2vw, 48px) - 5px);   /* отступ шапки страницы; −5px — строка заголовка (30px) центрована по строке крошек (20px) */
     container-type: normal;   /* не контейнер «news»: правила узкой ширины (лента, карточки в строку) к колонке не относятся */
   }
+  .article-layout .related .section-head h2 { font-size: 24px; line-height: 1.25; }   /* в узкой колонке — мелкий заголовок, не кегль секции */
   .article-layout .related .news-grid { grid-template-columns: minmax(0, 1fr); row-gap: 40px; }
 }
 @container news (max-width: 559px) {
