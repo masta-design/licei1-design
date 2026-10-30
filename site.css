@@ -601,6 +601,7 @@ a.card { color: inherit; text-decoration: none !important; }
 
 /* «Читайте также» — одна строка карточек: сколько колонок, столько и новостей (2/4/5/6; число ставит скрипт); на телефоне — лента со свайпом */
 .related { container: news / inline-size; }
+.related .section-head { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; margin: 0; }   /* заголовка «Читайте также» не видно — остаётся только для экранных чтецов */
 /* большие экраны: «Читайте также» — колонка справа от фото и текста (3 новости), начинается вровень с фото.
    Сетка — на обёртке, статья «прозрачна»: шапка новости во всю ширину, ниже две колонки */
 @container content (min-width: 1300px) {
@@ -612,7 +613,6 @@ a.card { color: inherit; text-decoration: none !important; }
     grid-column: 2; grid-row: 2; margin-top: 0;
     container-type: normal;   /* не контейнер «news»: правила узкой ширины (лента, карточки в строку) к колонке не относятся */
   }
-  .article-layout .related .section-head { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; margin: 0; }   /* в правой колонке заголовка не видно — остаётся только для экранных чтецов */
   .article-layout .related .news-grid { grid-template-columns: minmax(0, 1fr); row-gap: 40px; }
 }
 @container news (max-width: 559px) {
