@@ -186,6 +186,9 @@ button { font: inherit; color: inherit; }
 .nav-row .hint { color: var(--muted); font-weight: 400; font-size: var(--fs-sm); }
 .nav-row .chev { margin-left: auto; --i-size: var(--i-sm); color: var(--icon-muted); transition: transform .2s, color .2s; }
 .nav-row:hover .chev { color: var(--text-accent); transition: transform .2s, color 0s; }
+/* без шлейфа: пока курсор над меню, пункт, с которого ушли, гаснет сразу; плавно (200ms) — только когда курсор уходит из меню целиком */
+.nav:hover :is(.nav-row, .nav-row > a, .nav-row > button, .nav-sub a):not(:hover) { transition-duration: 0s; }
+.nav:hover .nav-row:not(:hover) .chev { transition: transform .2s, color 0s; }   /* поворот шеврона при раскрытии оставляем анимированным */
 .nav-item.is-open > .nav-row { background: #fff; }
 .nav-item.is-open > .nav-row > button { color: var(--text-accent); font-weight: 600; }
 .nav-item.is-open > .nav-row .chev { transform: rotate(180deg); color: var(--text-accent); }
