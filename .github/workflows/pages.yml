@@ -1,0 +1,40 @@
+# Сборка сайта для GitHub Pages: Pages напрямую показывает только одну ветку,
+# поэтому ветка main (первая версия) кладётся в корень сайта, а ветка v2 — в папку /v2/
+name: Публикация
+
+on:
+  push:
+    branches: [main, v2]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: site
+      - uses: actions/checkout@v4
+        with:
+          ref: v2
+          path: site/v2
+      - name: Убрать служебные файлы
+        run: rm -rf site/.git site/.github site/v2/.git site/v2/.github
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4
