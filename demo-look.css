@@ -1,8 +1,8 @@
 /* ============================================================
    ТОЛЬКО ДЛЯ ДЕМО: панель «Внешний вид» (плавающая кнопка справа внизу).
-   Нужна, чтобы на согласовании подобрать цвета и скругления. На настоящий сайт не переносится:
+   Нужна, чтобы на согласовании подобрать тему, шрифт заголовков и скругления. На настоящий сайт не переносится:
    при переносе удалить demo-look.css, demo-look.js и элемент <demo-look> на страницах.
-   Цвета скрипт ставит переменными на <html> (--brand, --text-brand, --nh, --nc), скругления — атрибутом data-radius
+   Тему скрипт ставит атрибутом data-theme на <html> (значения — в tokens.css), шрифт — переменной, скругления — атрибутом data-radius
    ============================================================ */
 
 /* наборы скруглений; по умолчанию — средние, из tokens.css */
@@ -20,7 +20,7 @@
 .look-fab:hover { background: var(--sheen), var(--action-hover); transition-duration: 0s; }
 .look-fab:active { transform: translateY(1px); filter: brightness(.92); }
 .look {
-  position: fixed; right: 24px; bottom: 92px; z-index: 61; width: min(340px, calc(100vw - 32px));
+  position: fixed; right: 24px; bottom: 92px; z-index: 61; width: min(380px, calc(100vw - 32px));
   max-height: calc(100vh - 116px); overflow-y: auto; overscroll-behavior: contain;
   padding: var(--space-20); background: var(--bg-surface); color: var(--text-primary); border-radius: var(--radius-lg);
   box-shadow: var(--shadow-panel);
@@ -34,25 +34,30 @@
 .look legend { float: left; width: 100%; padding: 0; margin-bottom: var(--space-12); font-size: var(--fs-14); font-weight: 600; color: var(--text-primary); }   /* float — иначе legend сидит в рамке fieldset и отступы не работают */
 .look legend + * { clear: both; }
 .look input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
-/* цвет: «По умолчанию» или «Свой оттенок» со слайдером hue; дорожка слайдера — цвета, которые получатся при каждом оттенке */
-.mode { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-8); }
-.mode label { cursor: pointer; }
-.mode span {
-  display: flex; align-items: center; justify-content: center; gap: var(--space-8); height: var(--size-control); padding: 0 var(--space-12);
-  background: var(--fill-subtle); border-radius: var(--radius-md); font-size: var(--fs-14); font-weight: 500; color: var(--text-secondary);
-  transition: background-color .2s, color .2s;
-}
-.mode span::before { content: ""; width: 14px; height: 14px; flex-shrink: 0; border-radius: 50%; background: var(--c); box-shadow: inset 0 0 0 1px rgb(var(--shadow-rgb) / .12); }
-.mode label:hover span { background: var(--fill-muted); color: var(--text-primary); transition-duration: 0s; }
-.mode input:checked + span { background: var(--action-subtle); color: var(--action); box-shadow: inset 0 0 0 2px var(--action); }
-.mode input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
-.look .hue { position: static; opacity: 1; pointer-events: auto; display: block; width: 100%; height: 36px; margin: var(--space-12) 0 0; background: none; cursor: pointer; -webkit-appearance: none; appearance: none; }
-.hue::-webkit-slider-runnable-track { height: 28px; border-radius: var(--radius-full); background: var(--g); box-shadow: inset 0 0 0 1px rgb(var(--shadow-rgb) / .1); }
-.hue::-moz-range-track { height: 28px; border-radius: var(--radius-full); background: var(--g); box-shadow: inset 0 0 0 1px rgb(var(--shadow-rgb) / .1); }
-.hue::-webkit-slider-thumb { -webkit-appearance: none; width: 36px; height: 36px; margin-top: -4px; border-radius: 50%; background: var(--c); border: 3px solid var(--bg-surface); box-shadow: 0 1px 4px rgb(var(--shadow-rgb) / .35); }
-.hue::-moz-range-thumb { width: 30px; height: 30px; border-radius: 50%; background: var(--c); border: 3px solid var(--bg-surface); box-shadow: 0 1px 4px rgb(var(--shadow-rgb) / .35); }
-.hue:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: var(--radius-full); }
-.hue.is-off { opacity: .45; }
+/* темы: миниатюра — меню слева, фон страницы, строка текста и кружок цвета кнопок; цвета берутся из той же темы (data-theme на миниатюре) */
+.look-sub { margin: 0 0 var(--space-8); font-size: var(--fs-12); color: var(--text-secondary); }
+.themes { display: grid; grid-template-columns: repeat(auto-fill, minmax(56px, 1fr)); gap: var(--space-8); }   /* на ПК по 5 в ряд: первый ряд — белый фон и бледное меню, второй — цветной фон и насыщенное меню */
+.themes + .look-sub { margin-top: var(--space-16); }
+.theme { display: block; cursor: pointer; text-align: center; }
+.theme-box { position: relative; display: block; height: 44px; border-radius: var(--radius-md); background: linear-gradient(90deg, var(--side-bg) 30%, var(--bg-page) 30%); box-shadow: inset 0 0 0 1px rgb(127 127 127 / .35); }
+.theme-box::before { content: ""; position: absolute; left: calc(30% + 5px); right: 6px; top: 9px; height: 3px; border-radius: 2px; background: var(--text-primary); }
+.theme-box::after { content: ""; position: absolute; right: 6px; bottom: 6px; width: 14px; height: 14px; border-radius: 50%; background: var(--brand); }
+/* у исходной темы нет блока data-theme, её значения — :root; миниатюре они нужны даже при другой включённой теме */
+.theme-box--base { --bg-page: var(--neutral-0); --bg-surface: var(--neutral-0); --side-bg: var(--neutral-25); --text-primary: var(--neutral-900); --brand: #1d4f91; --action: #1d4f91; }
+.theme-name { display: block; margin-top: var(--space-4); font-size: var(--fs-12); line-height: 1.2; color: var(--text-secondary); }
+.theme:hover .theme-name { color: var(--text-primary); }
+.theme input:checked + .theme-box { box-shadow: 0 0 0 2px var(--bg-surface), 0 0 0 4px var(--action); }
+.theme input:checked ~ .theme-name { color: var(--text-primary); font-weight: 600; }
+.theme input:focus-visible + .theme-box { outline: 3px solid var(--focus); outline-offset: 4px; }
+/* шрифты заголовков: образец слова с кириллицей и название */
+.fonts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-8); }
+.font { display: block; cursor: pointer; min-width: 0; }
+.font-box { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-8) var(--space-12); background: var(--fill-subtle); border-radius: var(--radius-md); transition: background-color .2s; overflow: hidden; }
+.font-sample { font-size: var(--fs-16); font-weight: 700; line-height: 1.3; color: var(--text-primary); white-space: nowrap; }
+.font-name { font-size: var(--fs-12); line-height: 1.3; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.font:hover .font-box { background: var(--fill-muted); transition-duration: 0s; }
+.font input:checked + .font-box { background: var(--action-subtle); box-shadow: inset 0 0 0 2px var(--action); }
+.font input:focus-visible + .font-box { outline: 3px solid var(--focus); outline-offset: 2px; }
 /* скругления — 3 кнопки с превью угла */
 .segs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-8); }
 .seg { cursor: pointer; }

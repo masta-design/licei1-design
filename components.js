@@ -15,7 +15,7 @@ const fmtDate = iso => { const [y, m, d] = iso.split('-').map(Number); return `$
 /* '8 (38822) 2-43-81' → 'tel:+73882224381' */
 const telHref = v => { let d = v.replace(/\D/g, ''); if (d[0] === '8') d = '7' + d.slice(1); return 'tel:+' + d; };
 
-/* --- Соцсети: ссылки-иконки. mono — для подвала: там иконка одноцветная, силуэт задаётся маской --m --- */
+/* --- Соцсети: ссылки-иконки. mono — одноцветный вариант (.socials--mono): силуэт задаётся маской --m --- */
 const socialsHTML = (list, { mono = false } = {}) => list.map(s =>
   `<a href="${s.href}" aria-label="${esc(s.t)}"${mono ? ` style="--m: url(${s.mono})"` : ''}><img src="${s.icon}" alt=""></a>`).join('');
 

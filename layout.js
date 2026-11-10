@@ -48,20 +48,24 @@ const navHTML = path => NAV.map((g, gi) => `
   ${g.group ? `<div class="nav-group-label">${esc(g.group)}</div>` : ''}
   <ul>${g.items.map((it, ii) => navItem(it, `sub-${gi}-${ii}`, true, path)).join('')}</ul>`).join('');
 
-/* --- Панель контактов в шапке: пустые поля не выводятся, длинные списки обрезаются ссылкой «Все контакты» --- */
-function contactsPanelHTML(c) {
-  const item = (x, href, cls = '') =>
-    `<div class="cp-item ${cls}">${x.t ? `<span>${esc(x.t)}</span>` : ''}<a href="${href}">${esc(x.v)}</a></div>`;
+/* --- Контакты — этаж шапки под поиском. Слева адрес и телефоны (на больших экранах телефоны переходят направо — это делает CSS), справа почта и соцсети; у каждого пункта есть подпись.
+       Подпись телефона и почты берётся из x.t, а если её нет — «Телефон» и «E-mail».
+       Пустые поля не выводятся, нет данных совсем — нет и этажа; длинные списки обрезаются ссылкой «Все контакты».
+       Как пункты переносятся и где стоит подпись — в site.css, раздел «Контакты» --- */
+function contactsBarHTML(c) {
+  const item = (label, value, cls = '') => `<div class="tbc-item${cls ? ' ' + cls : ''}"><span class="tbc-label">${esc(label)}</span><div class="tbc-value">${value}</div></div>`;
   const phones = c.phones || [], emails = c.emails || [];
-  let html = '';
-  html += phones.slice(0, CONTACTS_LIMIT.phones).map(x => item(x, telHref(x.v), 'cp-phone')).join('');
-  html += emails.slice(0, CONTACTS_LIMIT.emails).map(x => item({ t: x.t || 'E-mail', v: x.v }, 'mailto:' + x.v)).join('');
-  if (c.address) html += `<div class="cp-item"><span>Адрес</span>${c.address.href
-    ? `<a href="${c.address.href}" target="_blank" rel="noopener">${esc(c.address.v)}</a>` : esc(c.address.v)}</div>`;
-  if ((c.socials || []).length) html += `<div class="cp-item"><span>Мы в соцсетях</span><div class="socials">${socialsHTML(c.socials)}</div></div>`;
-  if (phones.length > CONTACTS_LIMIT.phones || emails.length > CONTACTS_LIMIT.emails)
-    html += `<a class="cp-all" href="#">Все контакты<i class="i i-right" aria-hidden="true"></i></a>`;
-  return html;
+  const left = [
+    c.address && item('Адрес', c.address.href ? `<a href="${c.address.href}" target="_blank" rel="noopener">${esc(c.address.v)}</a>` : esc(c.address.v), 'tbc-address'),
+    phones.length && `<div class="tbc-group">${phones.slice(0, CONTACTS_LIMIT.phones).map(x => item(x.t || 'Телефон', `<a class="tbc-phone" href="${telHref(x.v)}">${esc(x.v)}</a>`)).join('')}</div>`,
+    (phones.length > CONTACTS_LIMIT.phones || emails.length > CONTACTS_LIMIT.emails) && `<a class="more" href="#">Все контакты <i class="i i-right" aria-hidden="true"></i></a>`,
+  ].filter(Boolean).join('');
+  const right = [
+    ...emails.slice(0, CONTACTS_LIMIT.emails).map(x => item(x.t || 'E-mail', `<a href="mailto:${x.v}">${esc(x.v)}</a>`)),
+    (c.socials || []).length && item('Мы в соцсетях', `<div class="socials socials--mono">${socialsHTML(c.socials, { mono: true })}</div>`, 'tbc-socials'),
+  ].filter(Boolean).join('');
+  if (!left && !right) return '';
+  return `<address class="tb-contacts">${left ? `<div class="tbc-group tbc-left">${left}</div>` : ''}${right ? `<div class="tbc-group tbc-right">${right}</div>` : ''}</address>`;
 }
 
 /* ================= Сайдбар (+ затемнение и крестик мобильного меню) =================
@@ -86,10 +90,11 @@ definePart('site-sidebar', () => `
   <div class="scrim" data-nav-close></div>
   <button class="btn btn-lg btn-icon nav-close" type="button" aria-label="Закрыть меню" data-nav-close><i class="i i-x" aria-hidden="true"></i></button>`);
 
-/* ================= Шапка: логотип (на узких экранах), поиск, «Меню», «Версия для слабовидящих», контакты, «Войти» ================= */
+/* ================= Шапка: кнопка меню и логотип (на узких экранах), поиск, «Версия для слабовидящих», «Войти»; ниже — этаж с контактами ================= */
 definePart('site-header', () => `
   <header class="topbar">
     <div class="tb-main">
+      <button class="btn btn-lg btn-icon btn-primary burger" type="button" aria-label="Открыть меню" aria-controls="sidebar" aria-expanded="false" data-nav-open><i class="i i-menu" aria-hidden="true"></i></button>
       <a class="mini-brand" href="./" title="На главную">
         <img src="${SCHOOL.logo}" alt="">
         <span class="brand-name">${esc(SCHOOL.name)}</span>
@@ -97,53 +102,25 @@ definePart('site-header', () => `
       <form class="search" role="search" onsubmit="return false">
         <label class="sr-only" for="q">Поиск по сайту</label>
         <i class="i i-search" aria-hidden="true"></i>
-        <input id="q" type="search" placeholder="Поиск по сайту и документам">
+        <input id="q" type="search" placeholder="Поиск по сайту">
       </form>
       <button class="btn btn-lg btn-icon btn-secondary search-toggle" type="button" aria-label="Открыть поиск" aria-controls="q" aria-expanded="false" data-search-toggle>
         <i class="i ico-open i-search" aria-hidden="true"></i><i class="i ico-close i-x" aria-hidden="true"></i>
       </button>
     </div>
     <div class="tb-tools">
-      <button class="btn btn-lg btn-primary burger" type="button" aria-controls="sidebar" aria-expanded="false" data-nav-open><i class="i i-menu" aria-hidden="true"></i>Меню</button>
       ${a11ySwitch}
-      <div class="contacts" data-contacts>
-        <button class="contacts-btn${CONTACTS.main ? '' : ' no-main'}" type="button" aria-expanded="false" aria-controls="contacts-panel">
-          <span class="cb-main">${esc(CONTACTS.main || '')}</span><span class="cb-alt">Контакты</span><i class="i chev i-down" aria-hidden="true"></i>
-        </button>
-        <address class="contacts-panel" id="contacts-panel">${contactsPanelHTML(CONTACTS)}</address>
-      </div>
       <a class="btn btn-lg btn-secondary btn-login" href="#">${loginIcon}Войти</a>
     </div>
+    ${contactsBarHTML(CONTACTS)}
   </header>`);
 
-/* ================= Подвал: логотип, адрес и контакты; меню разделов; копирайт и соцсети ================= */
-definePart('site-footer', () => {
-  const c = CONTACTS;
-  const addr = c.address ? `<ul class="f-list f-address"><li><small>Адрес</small>${c.address.href
-    ? `<a href="${c.address.href}" target="_blank" rel="noopener">${esc(c.address.v)}</a>` : esc(c.address.v)}</li></ul>` : '';
-  const contacts = [
-    ...(c.phones || []).map(x => `<li>${x.t ? `<small>${esc(x.t)}</small>` : ''}<a href="${telHref(x.v)}">${esc(x.v)}</a></li>`),
-    ...(c.emails || []).map(x => `<li><small>${esc(x.t || 'E-mail')}</small><a href="mailto:${x.v}">${esc(x.v)}</a></li>`),
-  ].join('');
-  const groups = NAV.filter(g => g.group && g.footer !== false).map(g =>
-    `<div><h2 class="footer-title">${esc(g.group)}</h2><ul>${g.items.map(it => `<li><a href="${it.href || '#'}">${esc(it.t)}</a></li>`).join('')}</ul></div>`).join('');
-  return `
+/* ================= Подвал: копирайт, «Карта сайта» и соцсети ================= */
+definePart('site-footer', () => `
   <footer class="footer">
-    <div class="footer-main">
-      <div class="f-about">
-        <div class="f-brand">
-          <img src="${SCHOOL.logo}" alt="">
-          <div class="n">${esc(SCHOOL.fullName)}</div>
-        </div>
-        ${addr}
-        ${contacts ? `<ul class="f-list f-contacts">${contacts}</ul>` : ''}
-      </div>
-      <nav class="footer-nav" aria-label="Разделы сайта"><div class="fn-grid">${groups}</div></nav>
-    </div>
     <div class="footer-bottom">
       <span>${esc(SCHOOL.copyright)}</span>
-      <nav><a href="#">Карта сайта</a></nav>
-      ${(c.socials || []).length ? `<div class="socials" aria-label="Мы в соцсетях" role="group">${socialsHTML(c.socials, { mono: true })}</div>` : ''}
+      <nav aria-label="Служебные ссылки"><a href="#">Карта сайта</a></nav>
+      ${(CONTACTS.socials || []).length ? `<div class="socials socials--mono" aria-label="Мы в соцсетях" role="group">${socialsHTML(CONTACTS.socials, { mono: true })}</div>` : ''}
     </div>
-  </footer>`;
-});
+  </footer>`);

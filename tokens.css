@@ -4,7 +4,7 @@
    Исключения — полупрозрачный белый/чёрный поверх фотографий (блики, маски, затемнения) и размеры, уникальные для одного компонента.
    Наглядно все токены и компоненты — на странице components.html. Правила работы с ними — в README.md.
 
-   Порядок: 1. Цвет  2. Типографика  3. Отступы  4. Размеры  5. Скругления  6. Тени  7. Ширины экранов
+   Порядок: 1. Цвет  2. Типографика  3. Отступы  4. Размеры  5. Скругления  6. Тени  7. Ширины экранов  8. Цветовые темы
    ============================================================ */
 
 :root {
@@ -63,7 +63,7 @@
   --text-primary: var(--neutral-900);      /* основной текст */
   --text-secondary: var(--neutral-600);    /* вторичный: даты, подписи, анонсы */
   --text-tertiary: var(--neutral-500);     /* третичный: подписи групп меню, плейсхолдер (контраст 3,6 — только для второстепенного) */
-  --text-brand: var(--brand-500);          /* цветной текст: ссылки, даты объявлений, ховеры, активные пункты (в демо — «Цвет текста») */
+  --text-brand: var(--brand-500);          /* цветной текст: ссылки, даты объявлений, ховеры, активные пункты */
   --text-on-brand: var(--neutral-0);       /* текст и иконки на цвете темы и поверх фото */
   /* текст на тёмном подвале — светлые ступени темы: подвал сам тёмная ступень темы, текст перекрашивается вместе с ним */
   --text-inverse-strong: var(--brand-50);       /* подвал: ссылки */
@@ -73,17 +73,27 @@
   --icon-secondary: var(--neutral-400);    /* служебные иконки: шевроны, разделители крошек, просмотры */
 
   /* Фоны и поверхности */
-  --bg-page: var(--neutral-0);             /* фон страницы */
-  --bg-surface: var(--neutral-0);          /* белые поверхности: шапка, выпадающие панели, выбранный пункт меню */
+  --bg-page: var(--neutral-0);             /* фон страницы и шапки */
+  --bg-surface: var(--neutral-0);          /* поверхности над фоном: всплывающие панели, плашка раскрытого пункта меню */
   --bg-subtle: var(--neutral-25);          /* сайдбар; подложка фото директора */
   --bg-canvas: var(--neutral-50);          /* по краям окна шире 2560px */
   --bg-inverse: var(--brand-900);          /* подвал — тёмный оттенок темы */
   --bg-media: var(--neutral-900);          /* подложка слайдера до загрузки картинки */
   --bg-overlay: rgb(var(--shadow-rgb) / .675);   /* затемнение страницы под открытым мобильным меню */
 
+  /* Меню (сайдбар). Свой набор ролей, как у подвала: меню бывает и бледным, и насыщенным со светлым текстом */
+  --side-bg: var(--bg-subtle);                  /* фон меню */
+  --side-text: var(--text-primary);             /* пункты меню, название школы */
+  --side-text-secondary: var(--text-secondary); /* подпункты */
+  --side-label: var(--text-tertiary);           /* подписи групп */
+  --side-icon: var(--icon-secondary);           /* шевроны */
+  --side-accent: var(--text-brand);             /* раскрытый раздел, текущая страница, ховер подпункта */
+  --side-hover: var(--fill-medium);             /* подсветка пункта при наведении и текущего подпункта */
+  --side-active: var(--bg-surface);             /* плашка раскрытого раздела и текущей страницы, низ мобильного меню */
+
   /* Заливки — шкала по силе, от едва заметной к плотной; где использовать — решает компонент */
   --fill-subtle: var(--neutral-25);        /* напр.: кнопка secondary, поле поиска, ховер номера пагинации */
-  --fill-muted: var(--neutral-50);         /* напр.: ховер заливки, подсветка пункта меню, низ градиента кнопки и плитки */
+  --fill-muted: var(--neutral-50);         /* напр.: ховер заливки, подсветка пункта меню, низ градиента кнопки */
   --fill-medium: var(--neutral-100);       /* напр.: подложка картинки до загрузки, низ градиента кнопки при наведении */
   --fill-strong: var(--neutral-200);       /* напр.: дорожка переключателя, неактивная точка слайдера, ползунок прокрутки */
   --fill-stronger: var(--neutral-300);     /* напр.: дорожка переключателя при наведении */
@@ -94,7 +104,7 @@
   --border-hover: color-mix(in srgb, var(--brand) 30%, transparent);   /* рамка при наведении */
   --border-focus: var(--brand-500);        /* рамка в фокусе */
 
-  /* Действие — цвет темы на кнопках, плитках, активных элементах */
+  /* Действие — цвет темы на кнопках, активных элементах */
   --action: var(--brand-500);              /* кнопка primary, текущая страница пагинации, активная точка слайдера */
   --action-hover: var(--brand-700);        /* ховер кнопки primary */
   --action-subtle: var(--brand-50);        /* бледная заливка: выбранный вариант, ореол поля поиска, раскрытый поиск */
@@ -196,7 +206,7 @@
   --size-icon-md: 16px;          /* обычные кнопки, ссылки «Все …», вкладки */
   --size-icon-lg: 20px;          /* по умолчанию: крупные кнопки, поиск, вложения */
   --size-icon-xl: 24px;          /* «play» на видео, закрытие меню */
-  --size-icon-2xl: 32px;         /* плитки быстрого доступа */
+  --size-icon-2xl: 32px;         /* самая крупная; сейчас в компонентах не используется */
   --size-logo: 56px;             /* логотип в сайдбаре и подвале */
   --size-sidebar: 296px;         /* ширина сайдбара на ПК */
   --size-content-max: 1600px;    /* шире контент и подвал не растут: лишнее уходит в поля страницы */
@@ -205,7 +215,7 @@
   /* Скругляются изображения и элементы управления; блоки страницы — нет («без островов»). Три значения, промежуточных нет.
      Картинки — всегда крупным радиусом (--radius-lg) */
   --radius-md: 8px;              /* напр.: кнопки, пункты меню, рамка фокуса */
-  --radius-lg: 16px;             /* напр.: картинки и обложки, виджет, плитки, выпадающие и плавающие панели */
+  --radius-lg: 16px;             /* напр.: картинки и обложки, виджет, выпадающие и плавающие панели */
   --radius-full: 999px;          /* «таблетка» и круг: поле поиска, бейджи, переключатель, точки слайдера */
 
   /* ---------- 6. Тени и объём ---------- */
@@ -239,7 +249,7 @@
 
    Окно (@media) — раскладка шапки и сайдбара:
      ≤ 767     телефон: шапка в два уровня, поиск по кнопке-лупе
-     768–959   планшет: сайдбар выезжает по кнопке «Меню», поиск в шапке
+     768–959   планшет: сайдбар выезжает по кнопке меню, поиск в шапке
      960–1199  узкий ПК: сайдбар виден, шапка в два этажа
      ≥ 1200    ПК
 
@@ -247,5 +257,164 @@
      < 560     1 колонка (телефон)       ≥ 560   2 колонки
      ≥ 900     4 колонки                 ≥ 1400  5 колонок
      ≥ 1900    6 колонок
-   Отдельные пороги есть только у раскладок, которым эти не подходят: «Об учреждении» (760), плитки (1000),
+   Отдельные пороги есть только у раскладок, которым эти не подходят: «Об учреждении» и первый экран (760),
    баннеры (1200), статья с колонкой справа (1300), подвал (640, 960 по ширине подвала) */
+
+/* ---------- 8. Цветовые темы ----------
+   Тема — один блок значений для одних и тех же ролей; компоненты о темах не знают.
+   Включается атрибутом на <html>: <html data-theme="sand">. Без атрибута действуют значения из :root — это исходная тема.
+   Все темы устроены одинаково. Новая тема — новый блок с тем же списком ролей: цвет темы, фоны, текст, подвал, меню и тень.
+   Заливки, рамки и оттенки текста подвала выводятся из этих значений один раз, в правиле ниже */
+[data-theme] {
+  --bg-canvas: color-mix(in srgb, var(--text-primary) 6%, var(--bg-page));
+  --icon-secondary: var(--text-tertiary);
+  --text-inverse: color-mix(in srgb, var(--text-inverse-strong) 92%, var(--bg-inverse));
+  --text-inverse-secondary: color-mix(in srgb, var(--text-inverse-strong) 82%, var(--bg-inverse));
+  --text-inverse-tertiary: color-mix(in srgb, var(--text-inverse-strong) 68%, var(--bg-inverse));
+  --fill-subtle: color-mix(in srgb, var(--text-primary) 5%, var(--bg-page));
+  --fill-muted: color-mix(in srgb, var(--text-primary) 10%, var(--bg-page));
+  --fill-medium: color-mix(in srgb, var(--text-primary) 16%, var(--bg-page));
+  --fill-strong: color-mix(in srgb, var(--text-primary) 26%, var(--bg-page));
+  --fill-stronger: color-mix(in srgb, var(--text-primary) 36%, var(--bg-page));
+  --border-subtle: color-mix(in srgb, var(--text-primary) 14%, var(--bg-page));
+  --border-default: color-mix(in srgb, var(--text-primary) 24%, var(--bg-page));
+  --border-focus: var(--text-brand);
+  --focus: var(--text-brand);
+  --action-subtle: color-mix(in srgb, var(--brand) 14%, var(--bg-surface));
+}
+
+/* Нейтральная */
+[data-theme="gray"] {   /* Серая */
+  --brand: #4a4a4a; --bg-page: #ffffff; --bg-surface: #ffffff; --bg-subtle: #f0f0f0; --bg-inverse: #2b2b2b;
+  --text-primary: #1f1f1f; --text-secondary: #5c5c5c; --text-tertiary: #7a7a7a; --text-brand: #404040; --text-inverse-strong: #f0f0f0;
+  --side-bg: #f0f0f0; --side-text: #1f1f1f; --side-text-secondary: #5c5c5c; --side-label: #7a7a7a; --side-icon: #7a7a7a; --side-accent: #393939; --side-hover: #dbdbdb; --side-active: #ffffff;
+  --shadow-rgb: 31 31 31;
+}
+
+/* Холодные: белый фон, бледное меню */
+[data-theme="ice"] {   /* Лёд */
+  --brand: #0b7a96; --bg-page: #ffffff; --bg-surface: #ffffff; --bg-subtle: #e6f3f8; --bg-inverse: #0b3a47;
+  --text-primary: #12303b; --text-secondary: #4c6470; --text-tertiary: #6a8291; --text-brand: #0a6a83; --text-inverse-strong: #e6f4f8;
+  --side-bg: #e6f3f8; --side-text: #12303b; --side-text-secondary: #4c6470; --side-label: #6a8291; --side-icon: #6a8291; --side-accent: #0c5c71; --side-hover: #d1e0e5; --side-active: #ffffff;
+  --shadow-rgb: 18 48 59;
+}
+[data-theme="mint"] {   /* Мята */
+  --brand: #12775a; --bg-page: #ffffff; --bg-surface: #ffffff; --bg-subtle: #e3f4ec; --bg-inverse: #0f3a2c;
+  --text-primary: #14302a; --text-secondary: #47604f; --text-tertiary: #64806f; --text-brand: #0f6a50; --text-inverse-strong: #e2f4ec;
+  --side-bg: #e3f4ec; --side-text: #14302a; --side-text-secondary: #47604f; --side-label: #64806f; --side-icon: #64806f; --side-accent: #105c47; --side-hover: #cee0d9; --side-active: #ffffff;
+  --shadow-rgb: 20 48 42;
+}
+[data-theme="lilac"] {   /* Сирень */
+  --brand: #5a3fc2; --bg-page: #ffffff; --bg-surface: #ffffff; --bg-subtle: #eeeafb; --bg-inverse: #2a1f5c;
+  --text-primary: #231c47; --text-secondary: #554e78; --text-tertiary: #736c93; --text-brand: #4d34ad; --text-inverse-strong: #ece8fb;
+  --side-bg: #eeeafb; --side-text: #231c47; --side-text-secondary: #554e78; --side-label: #736c93; --side-icon: #736c93; --side-accent: #432e94; --side-hover: #dad5e9; --side-active: #ffffff;
+  --shadow-rgb: 35 28 71;
+}
+[data-theme="sky"] {   /* Небо */
+  --brand: #1f66c7; --bg-page: #ffffff; --bg-surface: #ffffff; --bg-subtle: #e4effc; --bg-inverse: #0f2f5c;
+  --text-primary: #132a45; --text-secondary: #4b607a; --text-tertiary: #67809b; --text-brand: #1a5ab0; --text-inverse-strong: #e4eefb;
+  --side-bg: #e4effc; --side-text: #132a45; --side-text-secondary: #4b607a; --side-label: #67809b; --side-icon: #67809b; --side-accent: #184e95; --side-hover: #cfdbea; --side-active: #ffffff;
+  --shadow-rgb: 19 42 69;
+}
+[data-theme="mist"] {   /* Туман */
+  --brand: #3f5f82; --bg-page: #ffffff; --bg-surface: #ffffff; --bg-subtle: #e9edf2; --bg-inverse: #232f3d;
+  --text-primary: #1c2630; --text-secondary: #515d6b; --text-tertiary: #6e7b8a; --text-brand: #375574; --text-inverse-strong: #e9eef4;
+  --side-bg: #e9edf2; --side-text: #1c2630; --side-text-secondary: #515d6b; --side-label: #6e7b8a; --side-icon: #6e7b8a; --side-accent: #304963; --side-hover: #d5d9df; --side-active: #ffffff;
+  --shadow-rgb: 28 38 48;
+}
+
+/* Холодные: цветной фон, насыщенное меню со светлым текстом */
+[data-theme="ocean"] {   /* Океан */
+  --brand: #0f6a94; --bg-page: #dcecf4; --bg-surface: #eef6fa; --bg-subtle: #e3f0f6; --bg-inverse: #0b3a52;
+  --text-primary: #10303f; --text-secondary: #425c6b; --text-tertiary: #5f7a8a; --text-brand: #0c5f86; --text-inverse-strong: #e3f2fa;
+  --side-bg: #0f4c6b; --side-text: #f0f8fc; --side-text-secondary: #c4dcea; --side-label: #a6c6d9; --side-icon: #a6c6d9; --side-accent: #a9e0fb; --side-hover: #1b6286; --side-active: #1b6286;
+  --shadow-rgb: 16 48 63;
+}
+[data-theme="pine"] {   /* Хвоя */
+  --brand: #1f6b4a; --bg-page: #dcebe1; --bg-surface: #eef6f0; --bg-subtle: #e3efe7; --bg-inverse: #12382a;
+  --text-primary: #15291f; --text-secondary: #415a4a; --text-tertiary: #5b7465; --text-brand: #195c3f; --text-inverse-strong: #e3f2ea;
+  --side-bg: #1c5a40; --side-text: #f0faf4; --side-text-secondary: #c5e0d2; --side-label: #a9cdb9; --side-icon: #a9cdb9; --side-accent: #a8eccb; --side-hover: #266a4d; --side-active: #266a4d;
+  --shadow-rgb: 21 41 31;
+}
+[data-theme="indigo"] {   /* Индиго */
+  --brand: #4a3bb8; --bg-page: #e3e2f5; --bg-surface: #f3f2fc; --bg-subtle: #e9e8f8; --bg-inverse: #251c63;
+  --text-primary: #221c4a; --text-secondary: #4f4a78; --text-tertiary: #6e6995; --text-brand: #4033a5; --text-inverse-strong: #ece9fb;
+  --side-bg: #342a85; --side-text: #f3f1fd; --side-text-secondary: #d0caf0; --side-label: #b5ade4; --side-icon: #b5ade4; --side-accent: #cfc6ff; --side-hover: #463a9e; --side-active: #463a9e;
+  --shadow-rgb: 34 28 74;
+}
+[data-theme="teal"] {   /* Бирюза */
+  --brand: #0b7374; --bg-page: #d6eeec; --bg-surface: #ebf7f6; --bg-subtle: #def2f0; --bg-inverse: #083e40;
+  --text-primary: #0f2f30; --text-secondary: #3d5c5d; --text-tertiary: #5a7778; --text-brand: #096465; --text-inverse-strong: #dff3f2;
+  --side-bg: #0b5a5c; --side-text: #effafa; --side-text-secondary: #c0e2e1; --side-label: #a1d0cf; --side-icon: #a1d0cf; --side-accent: #9eeeea; --side-hover: #176c6e; --side-active: #176c6e;
+  --shadow-rgb: 15 47 48;
+}
+[data-theme="sapphire"] {   /* Сапфир */
+  --brand: #2a4fb5; --bg-page: #dbe4f7; --bg-surface: #eef2fb; --bg-subtle: #e2e9f8; --bg-inverse: #14295f;
+  --text-primary: #152348; --text-secondary: #465478; --text-tertiary: #647296; --text-brand: #2445a2; --text-inverse-strong: #e5ebfa;
+  --side-bg: #1c3a8a; --side-text: #f1f4fd; --side-text-secondary: #cdd7f2; --side-label: #adbce6; --side-icon: #adbce6; --side-accent: #bccfff; --side-hover: #2c4b9f; --side-active: #2c4b9f;
+  --shadow-rgb: 21 35 72;
+}
+
+/* Тёплые: белый фон, бледное меню */
+[data-theme="sand"] {   /* Песок */
+  --brand: #8a6a3b; --bg-page: #ffffff; --bg-surface: #ffffff; --bg-subtle: #f2ece0; --bg-inverse: #38301f;
+  --text-primary: #2e2820; --text-secondary: #635a4d; --text-tertiary: #7f7566; --text-brand: #75592f; --text-inverse-strong: #f1ebdd;
+  --side-bg: #f2ece0; --side-text: #2e2820; --side-text-secondary: #635a4d; --side-label: #7f7566; --side-icon: #7f7566; --side-accent: #634d2b; --side-hover: #ded8cd; --side-active: #ffffff;
+  --shadow-rgb: 46 40 32;
+}
+[data-theme="ruby"] {   /* Рубин */
+  --brand: #b01e3c; --bg-page: #ffffff; --bg-surface: #ffffff; --bg-subtle: #fbeaed; --bg-inverse: #4a1020;
+  --text-primary: #2b1418; --text-secondary: #684c52; --text-tertiary: #8a6d73; --text-brand: #a01a36; --text-inverse-strong: #fbe6ea;
+  --side-bg: #fbeaed; --side-text: #2b1418; --side-text-secondary: #684c52; --side-label: #8a6d73; --side-icon: #8a6d73; --side-accent: #83192f; --side-hover: #e6d5d8; --side-active: #ffffff;
+  --shadow-rgb: 43 20 24;
+}
+[data-theme="cedar"] {   /* Кедр */
+  --brand: #6f4e37; --bg-page: #ffffff; --bg-surface: #ffffff; --bg-subtle: #f1e8df; --bg-inverse: #33241a;
+  --text-primary: #2c211a; --text-secondary: #5f5046; --text-tertiary: #7d6c60; --text-brand: #664630; --text-inverse-strong: #f2e9e0;
+  --side-bg: #f1e8df; --side-text: #2c211a; --side-text-secondary: #5f5046; --side-label: #7d6c60; --side-icon: #7d6c60; --side-accent: #583d2b; --side-hover: #ddd4cb; --side-active: #ffffff;
+  --shadow-rgb: 44 33 26;
+}
+[data-theme="peach"] {   /* Персик */
+  --brand: #bf471e; --bg-page: #ffffff; --bg-surface: #ffffff; --bg-subtle: #fdebe0; --bg-inverse: #4a2212;
+  --text-primary: #35201a; --text-secondary: #6c5048; --text-tertiary: #8a6e65; --text-brand: #a93c17; --text-inverse-strong: #fdece2;
+  --side-bg: #fdebe0; --side-text: #35201a; --side-text-secondary: #6c5048; --side-label: #8a6e65; --side-icon: #8a6e65; --side-accent: #8c3518; --side-hover: #e9d7cc; --side-active: #ffffff;
+  --shadow-rgb: 53 32 26;
+}
+[data-theme="rose"] {   /* Роза */
+  --brand: #b52a75; --bg-page: #ffffff; --bg-surface: #ffffff; --bg-subtle: #fdeaf3; --bg-inverse: #4b1236;
+  --text-primary: #351628; --text-secondary: #6e4a60; --text-tertiary: #8d6a80; --text-brand: #a0225f; --text-inverse-strong: #fce7f2;
+  --side-bg: #fdeaf3; --side-text: #351628; --side-text-secondary: #6e4a60; --side-label: #8d6a80; --side-icon: #8d6a80; --side-accent: #851f51; --side-hover: #e9d5df; --side-active: #ffffff;
+  --shadow-rgb: 53 22 40;
+}
+
+/* Тёплые: цветной фон, насыщенное меню со светлым текстом */
+[data-theme="clay"] {   /* Глина */
+  --brand: #96553a; --bg-page: #efe3d6; --bg-surface: #f8f1e8; --bg-subtle: #f2e8dc; --bg-inverse: #432a1d;
+  --text-primary: #33241b; --text-secondary: #645245; --text-tertiary: #80695a; --text-brand: #80462d; --text-inverse-strong: #f5e9dd;
+  --side-bg: #744129; --side-text: #fbf3ea; --side-text-secondary: #e8d6c6; --side-label: #d6bfab; --side-icon: #d6bfab; --side-accent: #f3d6a6; --side-hover: #875239; --side-active: #875239;
+  --shadow-rgb: 51 36 27;
+}
+[data-theme="wine"] {   /* Бордо */
+  --brand: #9a2547; --bg-page: #f3dfe3; --bg-surface: #fbf0f2; --bg-subtle: #f5e5e9; --bg-inverse: #45101f;
+  --text-primary: #34141d; --text-secondary: #664650; --text-tertiary: #82626c; --text-brand: #8a1f3e; --text-inverse-strong: #fbe6ec;
+  --side-bg: #6e1a33; --side-text: #fff1f4; --side-text-secondary: #eccbd4; --side-label: #dcaebb; --side-icon: #dcaebb; --side-accent: #ffc9d6; --side-hover: #862a46; --side-active: #862a46;
+  --shadow-rgb: 52 20 29;
+}
+[data-theme="bark"] {   /* Кора */
+  --brand: #6b4a33; --bg-page: #eae0d6; --bg-surface: #f6f0e9; --bg-subtle: #efe7de; --bg-inverse: #2f2117;
+  --text-primary: #2b201a; --text-secondary: #584a40; --text-tertiary: #74655a; --text-brand: #5f412c; --text-inverse-strong: #f2e9df;
+  --side-bg: #4e3626; --side-text: #faf4ed; --side-text-secondary: #e2d5c8; --side-label: #c9b8a8; --side-icon: #c9b8a8; --side-accent: #ecd0a8; --side-hover: #614633; --side-active: #614633;
+  --shadow-rgb: 43 32 26;
+}
+[data-theme="sunset"] {   /* Закат */
+  --brand: #b84a16; --bg-page: #fbdfcc; --bg-surface: #fef1e6; --bg-subtle: #fce6d6; --bg-inverse: #55210b;
+  --text-primary: #3c1e10; --text-secondary: #6b4632; --text-tertiary: #866050; --text-brand: #9c3d10; --text-inverse-strong: #fdeadd;
+  --side-bg: #8f370e; --side-text: #fff5ee; --side-text-secondary: #f8d6c3; --side-label: #efc0a7; --side-icon: #efc0a7; --side-accent: #ffdfa8; --side-hover: #a4461a; --side-active: #a4461a;
+  --shadow-rgb: 60 30 16;
+}
+[data-theme="raspberry"] {   /* Малина */
+  --brand: #ad1d66; --bg-page: #f8dbe8; --bg-surface: #fdeff5; --bg-subtle: #f9e3ed; --bg-inverse: #520d31;
+  --text-primary: #3a1228; --text-secondary: #6b4459; --text-tertiary: #876177; --text-brand: #94185a; --text-inverse-strong: #fce5f0;
+  --side-bg: #8a1550; --side-text: #fff1f8; --side-text-secondary: #f2cbdf; --side-label: #e5acc9; --side-icon: #e5acc9; --side-accent: #ffc6e2; --side-hover: #a02a67; --side-active: #a02a67;
+  --shadow-rgb: 58 18 40;
+}

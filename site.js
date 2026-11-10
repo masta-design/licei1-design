@@ -1,7 +1,7 @@
 /* ============================================================
    ПОВЕДЕНИЕ КОМПОНЕНТОВ. Подключается последним, в конце <body>: вся разметка (в том числе от layout.js и скриптов страниц) уже есть.
    Каждый блок ищет свои элементы и молча выходит, если их на странице нет.
-   Правило: поведение, которое должно работать и у дорисованных позже элементов (карточки, плитки), —
+   Правило: поведение, которое должно работать и у дорисованных позже элементов (карточки), —
    через делегирование на document, а не обработчиками на каждом элементе
    ============================================================ */
 
@@ -22,15 +22,6 @@ document.getElementById('nav').addEventListener('click', e => {
   item.classList.toggle('is-open', open);
   btn.setAttribute('aria-expanded', open);
   if (open) setTimeout(() => item.scrollIntoView({ block: 'nearest', behavior: 'smooth' }), 260);
-});
-
-/* --- Контакты (шапка и мобильный сайдбар): нажатие открывает/закрывает панель (на тач-экранах), клик вне панели и Esc — закрывают --- */
-document.querySelectorAll('[data-contacts]').forEach(box => {
-  const btn = box.querySelector('.contacts-btn');
-  const set = open => { box.classList.toggle('is-open', open); btn.setAttribute('aria-expanded', open); };
-  btn.addEventListener('click', () => set(!box.classList.contains('is-open')));
-  document.addEventListener('click', e => { if (!box.contains(e.target)) set(false); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') set(false); });
 });
 
 /* --- Поиск на мобильных: кнопка-лупа раскрывает поле под верхним блоком --- */
@@ -81,7 +72,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') setNav(false
 
   function go(i) {
     idx = (i + slides.length) % slides.length;
-    slides.forEach((s, n) => { s.classList.toggle('is-active', n === idx); s.tabIndex = n === idx ? 0 : -1; });
+    slides.forEach((s, n) => s.classList.toggle('is-active', n === idx));
     dots.forEach((d, n) => d.setAttribute('aria-current', n === idx));
   }
 
@@ -130,10 +121,11 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') setNav(false
       img.closest('.slide').style.setProperty('--shade', hslToRgb(h, Math.min(s, .55), .14).join(' '));
     } catch (e) { /* картинка с чужого домена без CORS — остаётся цвет по умолчанию */ }
   };
-  // Картинка шире слайда — прижимаем к боковым краям (класс is-wide); пересчёт при смене размера окна
+  // Картинка шире области — прижимаем к боковым краям (класс is-wide); пересчёт при смене размера окна
   const fit = () => slides.forEach(s => {
     const img = s.querySelector('.fg');
-    if (img.naturalWidth) s.classList.toggle('is-wide', img.naturalWidth / img.naturalHeight > s.clientWidth / s.clientHeight);
+    const box = s.querySelector('.slide-media');
+    if (img.naturalWidth) s.classList.toggle('is-wide', img.naturalWidth / img.naturalHeight > box.clientWidth / box.clientHeight);
   });
   new ResizeObserver(fit).observe(root);
 
@@ -144,6 +136,18 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') setNav(false
   });
 
   go(0);
+})();
+
+/* --- Виджет Госуслуг: его минимальная ширина 293px. В более узком месте виджет уменьшается целиком, пропорционально, —
+       внутри он раскладывается как при 293px, поэтому переносы строк не меняются. Шире 293px — без изменений --- */
+(function () {
+  const box = document.querySelector('.gos');
+  const widget = document.getElementById('js-show-iframe-wrapper');
+  if (!box || !widget) return;   // виджет только на главной
+  const MIN_WIDTH = 293;
+  new ResizeObserver(() => {
+    widget.style.zoom = box.clientWidth < MIN_WIDTH ? box.clientWidth / MIN_WIDTH : '';
+  }).observe(box);
 })();
 
 /* --- Вкладки фото / видео --- */
@@ -184,12 +188,12 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') setNav(false
   }).observe(grid);
 })();
 
-/* --- «Лёгкий объём»: плитки быстрого доступа, новости и обложки фото/видео за курсором: координаты курсора → CSS-переменные --mx/--my/--px/--py/--glow.
+/* --- «Лёгкий объём»: новости и обложки фото/видео за курсором: координаты курсора → CSS-переменные --mx/--my/--px/--py/--glow.
    У новостей и обложек координаты считаются по картинке — наклоняется и бликует только она.
    Слушаем на документе, а не на каждой карточке: так эффект есть и у карточек, которые страница дорисовывает скриптом
    (список новостей, «Читайте также» — он пересобирается при смене ширины) --- */
 (function () {
-  const TILT = '.quick a, .news-card, .media-card';
+  const TILT = '.news-card, .media-card';
   const reset = a => ['--px', '--py', '--glow'].forEach(v => a.style.removeProperty(v));
   let cur = null;
   document.addEventListener('pointermove', e => {

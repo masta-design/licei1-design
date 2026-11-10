@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="robots" content="noindex, nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Лицей №1 им. М.В. Карамаева — демо главной (v1)</title>
+  <title>Лицей №1 им. М.В. Карамаева — демо главной (v2)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=PT+Serif:wght@400;700&display=swap" rel="stylesheet">
@@ -28,20 +28,22 @@
       <!-- h1 главной: видимого заголовка у главной нет по дизайну, но поисковикам и скринридерам он нужен -->
       <h1 class="sr-only">Официальный сайт МБОУ «Лицей №1 имени М.В. Карамаева города Горно-Алтайска»</h1>
 
-      <!-- ================= СЛАЙДЕР: главные сообщения на всю ширину (заголовки слайдов — h2) ================= -->
+      <!-- ================= ПЕРВЫЙ ЭКРАН: слайдер и справа виджет Госуслуг (на узких экранах виджет под слайдером) ================= -->
+      <div class="hero">
+      <!-- ================= СЛАЙДЕР: главные сообщения (заголовки слайдов — h2) ================= -->
       <section class="slider" data-slider aria-roledescription="карусель" aria-label="Главные новости">
         <div class="slides">
           <a class="slide is-active" href="#" aria-roledescription="слайд" aria-label="1 из 3">
             <div class="slide-media"><img class="bg" src="prototype/slider3.jpg" alt=""><img class="fg" src="prototype/slider3.jpg" alt="Плакат: сроки подачи заявлений на итоговое сочинение"></div>
-            <div class="slide-caption"><time class="slide-date">13 октября 2026</time><h2 class="slide-title">Определены сроки подачи заявлений на итоговое сочинение в 2026–2027 учебном году</h2></div>
+            <div class="slide-caption"><h2 class="slide-title">Определены сроки подачи заявлений на итоговое сочинение в 2026–2027 учебном году</h2><time class="slide-date">13 октября 2026</time></div>
           </a>
           <a class="slide" href="#" aria-roledescription="слайд" aria-label="2 из 3">
             <div class="slide-media"><img class="bg" src="prototype/slider2.jpg" alt=""><img class="fg" src="prototype/slider2.jpg" alt="Открытка ко Дню учителя"></div>
-            <div class="slide-caption"><time class="slide-date">5 октября 2026</time><h2 class="slide-title">С Днём учителя! Поздравляем педагогов лицея</h2></div>
+            <div class="slide-caption"><h2 class="slide-title">С Днём учителя! Поздравляем педагогов лицея</h2><time class="slide-date">5 октября 2026</time></div>
           </a>
           <a class="slide" href="#" aria-roledescription="слайд" aria-label="3 из 3">
             <div class="slide-media"><img class="bg" src="prototype/slider1.jpg" alt=""><img class="fg" src="prototype/slider1.jpg" alt="Логотип Года единства народов России"></div>
-            <div class="slide-caption"><time class="slide-date">2026</time><h2 class="slide-title">2026 — Год единства народов России</h2></div>
+            <div class="slide-caption"><h2 class="slide-title">2026 — Год единства народов России</h2><time class="slide-date">2026</time></div>
           </a>
         </div>
         <button class="btn btn-lg btn-icon btn-white slider-arrow prev" type="button" aria-label="Предыдущий слайд"><i class="i i-left" aria-hidden="true"></i></button>
@@ -49,74 +51,8 @@
         <div class="slider-dots" role="group" aria-label="Выбор слайда"></div>
       </section>
 
-      <!-- ================= БЫСТРЫЙ ДОСТУП ================= -->
-      <nav class="quick" aria-label="Быстрый доступ">
-        <a class="card" href="#"><span class="ico"><i class="i i-calendar" aria-hidden="true"></i></span><span class="label">Расписание уроков</span></a>
-        <a class="card" href="#"><span class="ico"><i class="i i-food" aria-hidden="true"></i></span><span class="label">Меню питания</span></a>
-        <a class="card" href="#"><span class="ico"><i class="i i-userplus" aria-hidden="true"></i></span><span class="label">Приём в 1&nbsp;класс</span></a>
-        <a class="card" href="#"><span class="ico"><i class="i i-cap" aria-hidden="true"></i></span><span class="label">ГИА-9 и ГИА-11</span></a>
-        <a class="card" href="#"><span class="ico"><i class="i i-star" aria-hidden="true"></i></span><span class="label">Кружки и секции</span></a>
-        <a class="card" href="#"><span class="ico"><i class="i i-building" aria-hidden="true"></i></span><span class="label">Сведения об&nbsp;ОО</span></a>
-      </nav>
-
-      <!-- ================= ОБЪЯВЛЕНИЯ ================= -->
-      <!-- Секция скрывается целиком, если объявлений нет -->
-      <section class="section ann" id="ann" aria-labelledby="ann-title">
-        <div class="section-head">
-          <h2 id="ann-title">Объявления</h2>
-          <a class="more" href="#">Все объявления <i class="i i-right" aria-hidden="true"></i></a>
-        </div>
-        <!-- последние 3 объявления, самое свежее — крупнее; карточка — ссылка целиком; текста может не быть (только файл); пометка — если есть вложения -->
-        <ul class="ann-list">
-          <li class="ann-main">
-            <a class="ann-card" href="#">
-              <time class="ann-date" datetime="2026-10-22T12:10"><span class="d">22</span><span class="m">октября 2026<span class="t">12:10</span></span></time>
-              <h3 class="ann-title">«Школа доверия»</h3>
-              <p class="ann-text">«Школа доверия» — это всероссийская линия психологической помощи, которую запустило Минпросвещения России 11 сентября 2026 года. Её цель — дать школьникам, их родителям и педагогам единый бесплатный канал, чтобы получить поддержку в сложных ситуациях, которые возникают в образовательной среде.</p>
-            </a>
-          </li>
-          <li>
-            <a class="ann-card" href="#">
-              <time class="ann-date" datetime="2026-02-12T12:02"><span class="d">12</span><span class="m">февраля 2026<span class="t">12:02</span></span></time>
-              <h3 class="ann-title">Психолого-педагогическая помощь для детей и родителей</h3>
-              <span class="ann-file"><i class="i i-file" aria-hidden="true"></i>ЦИФРОВОЙ_<wbr>ПСИХОЛОГ.pdf</span>
-            </a>
-          </li>
-          <li>
-            <a class="ann-card" href="#">
-              <time class="ann-date" datetime="2026-02-06T12:02"><span class="d">6</span><span class="m">февраля 2026<span class="t">12:02</span></span></time>
-              <h3 class="ann-title">Логопедическая олимпиада среди обучающихся с ограниченными возможностями здоровья</h3>
-              <p class="ann-text">С 11 по 18 марта 2026 года в Лицее № 1 г. Горно-Алтайска проводится Логопедическая олимпиада среди обучающихся с ограниченными возможностями здоровья в целях развития интеллектуального и творческого потенциала личности учащегося, повышения уровня мотивации к познавательной деятельности.</p>
-            </a>
-          </li>
-          <li>
-            <a class="ann-card" href="#">
-              <time class="ann-date" datetime="2026-01-28T09:30"><span class="d">28</span><span class="m">января 2026<span class="t">09:30</span></span></time>
-              <h3 class="ann-title">Запись в первый класс на 2026–2027 учебный год</h3>
-              <p class="ann-text">Приём заявлений о зачислении в первый класс начинается 1 апреля 2026 года. Подать заявление можно через портал Госуслуг или лично в приёмной лицея с понедельника по пятницу с 9:00 до 17:00.</p>
-            </a>
-          </li>
-          <li>
-            <a class="ann-card" href="#">
-              <time class="ann-date" datetime="2026-01-15T14:00"><span class="d">15</span><span class="m">января 2026<span class="t">14:00</span></span></time>
-              <h3 class="ann-title">График консультаций по подготовке к ГИА</h3>
-              <span class="ann-file"><i class="i i-file" aria-hidden="true"></i>График_<wbr>консультаций_<wbr>ГИА.pdf</span>
-            </a>
-          </li>
-        </ul>
-      </section>
-
-      <!-- ================= НОВОСТИ ================= -->
-      <section class="section news-main" aria-labelledby="news-title">
-        <div class="section-head">
-          <h2 id="news-title">Новости</h2>
-          <a class="more" href="news.html">Все новости <i class="i i-right" aria-hidden="true"></i></a>
-        </div>
-        <div class="news-grid" id="news-latest"><!-- 9 последних новостей из NEWS (page-home.js) --></div>
-      </section>
-
       <!-- ================= ГОСУСЛУГИ: РЕШАЕМ ВМЕСТЕ ================= -->
-      <section class="section gos-section" aria-label="Госуслуги. Решаем вместе">
+      <section class="gos-section" aria-label="Госуслуги. Решаем вместе">
       <!-- Виджет «Госуслуги. Решаем вместе» — код из прототипа без изменений -->
       <div class="gos">
         <script src="https://pos.gosuslugi.ru/bin/script.min.js"></script>
@@ -159,6 +95,79 @@
         <script>try { Widget("https://pos.gosuslugi.ru/form", 230204) } catch (e) {}</script>
       </div>
       </section>
+      </div>
+
+      <!-- ================= ОБЪЯВЛЕНИЯ ================= -->
+      <!-- Ряд: слева объявления, справа директор (в колонке третьего объявления; на узких экранах директор под объявлениями) -->
+      <div class="section ann-row">
+      <!-- Секция скрывается целиком, если объявлений нет; директор при этом остаётся -->
+      <section class="ann" id="ann" aria-labelledby="ann-title">
+        <div class="section-head">
+          <h2 id="ann-title">Объявления</h2>
+          <a class="more" href="#">Все объявления <i class="i i-right" aria-hidden="true"></i></a>
+        </div>
+        <!-- последние объявления (показываются три, лишние скрывает CSS), самое свежее — крупнее; карточка — ссылка целиком; текста может не быть (только файл); пометка — если есть вложения -->
+        <ul class="ann-list">
+          <li class="ann-main">
+            <a class="ann-card" href="#">
+              <time class="ann-date" datetime="2026-10-22T12:10"><span class="d">22</span><span class="m">октября 2026<span class="t">12:10</span></span></time>
+              <h3 class="ann-title">«Школа доверия»</h3>
+              <p class="ann-text">«Школа доверия» — это всероссийская линия психологической помощи, которую запустило Минпросвещения России 11 сентября 2026 года. Её цель — дать школьникам, их родителям и педагогам единый бесплатный канал, чтобы получить поддержку в сложных ситуациях, которые возникают в образовательной среде.</p>
+            </a>
+          </li>
+          <li>
+            <a class="ann-card" href="#">
+              <time class="ann-date" datetime="2026-02-12T12:02"><span class="d">12</span><span class="m">февраля 2026<span class="t">12:02</span></span></time>
+              <h3 class="ann-title">Психолого-педагогическая помощь для детей и родителей</h3>
+              <span class="ann-file"><i class="i i-file" aria-hidden="true"></i>ЦИФРОВОЙ_<wbr>ПСИХОЛОГ.pdf</span>
+            </a>
+          </li>
+          <li>
+            <a class="ann-card" href="#">
+              <time class="ann-date" datetime="2026-02-06T12:02"><span class="d">6</span><span class="m">февраля 2026<span class="t">12:02</span></span></time>
+              <h3 class="ann-title">Логопедическая олимпиада среди обучающихся с ограниченными возможностями здоровья</h3>
+              <p class="ann-text">С 11 по 18 марта 2026 года в Лицее № 1 г. Горно-Алтайска проводится Логопедическая олимпиада среди обучающихся с ограниченными возможностями здоровья в целях развития интеллектуального и творческого потенциала личности учащегося, повышения уровня мотивации к познавательной деятельности.</p>
+            </a>
+          </li>
+          <li>
+            <a class="ann-card" href="#">
+              <time class="ann-date" datetime="2026-01-28T09:30"><span class="d">28</span><span class="m">января 2026<span class="t">09:30</span></span></time>
+              <h3 class="ann-title">Запись в первый класс на 2026–2027 учебный год</h3>
+              <p class="ann-text">Приём заявлений о зачислении в первый класс начинается 1 апреля 2026 года. Подать заявление можно через портал Госуслуг или лично в приёмной лицея с понедельника по пятницу с 9:00 до 17:00.</p>
+            </a>
+          </li>
+          <li>
+            <a class="ann-card" href="#">
+              <time class="ann-date" datetime="2026-01-15T14:00"><span class="d">15</span><span class="m">января 2026<span class="t">14:00</span></span></time>
+              <h3 class="ann-title">График консультаций по подготовке к ГИА</h3>
+              <span class="ann-file"><i class="i i-file" aria-hidden="true"></i>График_<wbr>консультаций_<wbr>ГИА.pdf</span>
+            </a>
+          </li>
+        </ul>
+      </section>
+
+        <!-- Фото и имя ведут на страницу директора; контакты — отдельные ссылки (вложенные ссылки недопустимы) -->
+        <div class="director">
+          <a class="photo" href="#" tabindex="-1" aria-hidden="true"><img src="images/director.png" alt=""></a>
+          <div class="body">
+            <a class="name" href="#">Старикова Елена Михайловна</a>
+            <div class="role">Директор</div>
+            <ul class="director-contacts">
+              <li><a href="tel:+73882224565">8 (38822) 2-45-65</a></li>
+              <li><a href="mailto:Starikova1975.75@mail.ru">Starikova1975.75@mail.ru</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= НОВОСТИ ================= -->
+      <section class="section news-main" aria-labelledby="news-title">
+        <div class="section-head">
+          <h2 id="news-title">Новости</h2>
+          <a class="more" href="news.html">Все новости <i class="i i-right" aria-hidden="true"></i></a>
+        </div>
+        <div class="news-grid" id="news-latest"><!-- 9 последних новостей из NEWS (page-home.js) --></div>
+      </section>
 
       <!-- ================= ФОТО И ВИДЕО ================= -->
       <section class="section" aria-labelledby="media-title">
@@ -189,32 +198,16 @@
       </section>
 
       <!-- ================= О ЛИЦЕЕ ================= -->
-      <section class="section about-section" aria-labelledby="about-title">
+      <section class="section" aria-labelledby="about-title">
         <div class="section-head">
           <h2 id="about-title">Об учреждении</h2>
         </div>
-        <div class="about">
-          <!-- Текст об учреждении: только абзацы одного стиля (без колонок, фото, видео и кнопок), под ними ссылка «Подробнее». Факты: licei1.obr04.ru/sveden/common/ -->
-          <div class="about-text">
-            <p>Мы рады видеть вас в Лицее №1 имени М.В.&nbsp;Карамаева! Наша история началась 1&nbsp;сентября 1923&nbsp;года. Больше ста лет здесь звенят звонки, открываются новые таланты и завязывается дружба на всю жизнь.</p>
-            <p>Сегодня у лицея два здания в Горно-Алтайске. Самые младшие, с&nbsp;1 по&nbsp;4 класс, учатся на проспекте Коммунистическом, 44. Здесь всё устроено так, чтобы первые школьные шаги были уверенными и радостными. С&nbsp;5 класса ребята переходят в основное здание на улице Чорос-Гуркина, 14. Там их ждут профильное обучение, олимпиады, интересные проекты и подготовка к взрослой жизни.</p>
-            <p>Хорошую школу делают люди. У нас это внимательные учителя, любознательные ученики и родители, которые всегда рядом. Администрация работает по будням с&nbsp;8 до&nbsp;19 часов, а по понедельникам, средам и пятницам с&nbsp;9 до&nbsp;13 часов мы особенно ждём всех, у кого есть вопросы или идеи.</p>
-            <a class="more" href="#">Подробнее <i class="i i-right" aria-hidden="true"></i></a>
-          </div>
-
-          <!-- Фото и имя ведут на страницу директора; контакты — отдельные ссылки (вложенные ссылки недопустимы) -->
-          <div class="director">
-            <a class="photo" href="#" tabindex="-1" aria-hidden="true"><img src="images/director.png" alt=""></a>
-            <div class="body">
-              <a class="name" href="#">Старикова Елена Михайловна</a>
-              <div class="role">Директор</div>
-              <ul class="director-contacts">
-                <li><a href="tel:+73882224565">8 (38822) 2-45-65</a></li>
-                <li><a href="mailto:Starikova1975.75@mail.ru">Starikova1975.75@mail.ru</a></li>
-              </ul>
-            </div>
-          </div>
-
+        <!-- Текст об учреждении: только абзацы одного стиля (без колонок, фото, видео и кнопок), под ними ссылка «Подробнее». Факты: licei1.obr04.ru/sveden/common/ -->
+        <div class="about-text">
+          <p>Мы рады видеть вас в Лицее №1 имени М.В.&nbsp;Карамаева! Наша история началась 1&nbsp;сентября 1923&nbsp;года. Больше ста лет здесь звенят звонки, открываются новые таланты и завязывается дружба на всю жизнь.</p>
+          <p>Сегодня у лицея два здания в Горно-Алтайске. Самые младшие, с&nbsp;1 по&nbsp;4 класс, учатся на проспекте Коммунистическом, 44. Здесь всё устроено так, чтобы первые школьные шаги были уверенными и радостными. С&nbsp;5 класса ребята переходят в основное здание на улице Чорос-Гуркина, 14. Там их ждут профильное обучение, олимпиады, интересные проекты и подготовка к взрослой жизни.</p>
+          <p>Хорошую школу делают люди. У нас это внимательные учителя, любознательные ученики и родители, которые всегда рядом. Администрация работает по будням с&nbsp;8 до&nbsp;19 часов, а по понедельникам, средам и пятницам с&nbsp;9 до&nbsp;13 часов мы особенно ждём всех, у кого есть вопросы или идеи.</p>
+          <a class="more" href="#">Подробнее <i class="i i-right" aria-hidden="true"></i></a>
         </div>
       </section>
 

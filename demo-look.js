@@ -1,33 +1,86 @@
 /* ============================================================
-   ТОЛЬКО ДЛЯ ДЕМО: панель «Внешний вид» — подбор цвета темы, нейтральных цветов, цвета текста и скруглений на согласовании.
+   ТОЛЬКО ДЛЯ ДЕМО: панель «Внешний вид» — подбор темы, шрифта заголовков и скруглений на согласовании.
    На настоящий сайт не переносится (вместе с demo-look.css и тегом <demo-look> на страницах).
    Подключается в <head>: сохранённый выбор применяется до первой отрисовки, без мигания.
-   Цвета — переменные на <html> (--brand, --text-brand, --nh, --nc), скругления — атрибут data-radius; всё — в localStorage «look2».
-   Цвет — либо по умолчанию, либо свой оттенок (hue): светлота и насыщенность фиксированы, поэтому любой оттенок остаётся читаемым
+   Тема — блок значений в tokens.css, панель только ставит атрибут data-theme на <html>; так же тему будет включать админка.
+   Шрифт — переменная --font-head, скругления — атрибут data-radius; всё хранится в localStorage «look3»
    ============================================================ */
 
-const LOOK_KEY = 'look2';
-const LOOK_DEFAULT = { accent: '#1d4f91', text: null, nh: 257, nc: .04, radius: 'md' };   // = значения в tokens.css
+const LOOK_KEY = 'look3';
+const LOOK_DEFAULT = { theme: 'base', font: 'PT Serif', radius: 'md' };   // base — исходная тема: значения из :root в tokens.css, атрибут не нужен
 
-/* сохранённый выбор — сразу, до отрисовки */
-try {
-  const a = JSON.parse(localStorage.getItem(LOOK_KEY) || '{}'), st = document.documentElement.style;
-  if (a.accent) st.setProperty('--brand', a.accent);
-  if (a.text) st.setProperty('--text-brand', a.text);
-  if (a.nh != null) { st.setProperty('--nh', a.nh); st.setProperty('--nc', a.nc); }
-  if (a.radius) document.documentElement.dataset.radius = a.radius;
-} catch (e) {}
+/* Темы для панели: идентификатор совпадает с блоком [data-theme="…"] в tokens.css, цвета живут только там.
+   В холодных и тёплых первые 5 — белый фон и бледное меню, следующие 5 — цветной фон и насыщенное меню */
+const LOOK_THEMES = [
+  { id: 'base', group: 'base', name: 'Исходная' },
+  { id: 'gray', group: 'base', name: 'Серая' },
+  { id: 'ice', group: 'cold', name: 'Лёд' },
+  { id: 'mint', group: 'cold', name: 'Мята' },
+  { id: 'lilac', group: 'cold', name: 'Сирень' },
+  { id: 'sky', group: 'cold', name: 'Небо' },
+  { id: 'mist', group: 'cold', name: 'Туман' },
+  { id: 'ocean', group: 'cold', name: 'Океан' },
+  { id: 'pine', group: 'cold', name: 'Хвоя' },
+  { id: 'indigo', group: 'cold', name: 'Индиго' },
+  { id: 'teal', group: 'cold', name: 'Бирюза' },
+  { id: 'sapphire', group: 'cold', name: 'Сапфир' },
+  { id: 'sand', group: 'warm', name: 'Песок' },
+  { id: 'ruby', group: 'warm', name: 'Рубин' },
+  { id: 'cedar', group: 'warm', name: 'Кедр' },
+  { id: 'peach', group: 'warm', name: 'Персик' },
+  { id: 'rose', group: 'warm', name: 'Роза' },
+  { id: 'clay', group: 'warm', name: 'Глина' },
+  { id: 'wine', group: 'warm', name: 'Бордо' },
+  { id: 'bark', group: 'warm', name: 'Кора' },
+  { id: 'sunset', group: 'warm', name: 'Закат' },
+  { id: 'raspberry', group: 'warm', name: 'Малина' },
+];
 
-/* разметка панели: группа цвета — «По умолчанию» / «Свой оттенок» + слайдер оттенка */
-const lookColorGroup = (name, legend, defLabel, aria) => `
-    <fieldset>
-      <legend>${legend}</legend>
-      <div class="mode">
-        <label><input type="radio" name="${name}" value="default" checked><span data-swatch="${name}-default">${defLabel}</span></label>
-        <label><input type="radio" name="${name}" value="hue"><span data-swatch="${name}-hue">Свой оттенок</span></label>
-      </div>
-      <input class="hue is-off" type="range" min="0" max="359" step="1" value="257" data-hue="${name}" aria-label="${aria}">
-    </fieldset>`;
+/* Шрифты заголовков из Google Fonts, все с кириллицей и начертаниями 400 и 700. PT Serif — шрифт по умолчанию, он уже подключён на страницах */
+const LOOK_FONTS = [
+  { name: 'Onest', family: "'Onest', system-ui, sans-serif" },
+  { name: 'Google Sans', family: "'Google Sans', system-ui, sans-serif" },
+  { name: 'Montserrat', family: "'Montserrat', system-ui, sans-serif" },
+  { name: 'Arimo', family: "'Arimo', Arial, sans-serif" },
+  { name: 'PT Serif', family: "'PT Serif', Georgia, serif" },
+  { name: 'Jost', family: "'Jost', system-ui, sans-serif" },
+  { name: 'M PLUS Rounded 1c', family: "'M PLUS Rounded 1c', system-ui, sans-serif" },
+  { name: 'Alumni Sans', family: "'Alumni Sans', system-ui, sans-serif" },
+  { name: 'Merriweather', family: "'Merriweather', Georgia, serif" },
+];
+const lookFontUrl = names => 'https://fonts.googleapis.com/css2?' + names.map(n => `family=${n.replace(/ /g, '+')}:wght@400;700`).join('&') + '&display=swap';
+const lookLoadFonts = (names, id) => {
+  if (document.getElementById(id)) return;
+  const l = document.createElement('link');
+  l.id = id; l.rel = 'stylesheet'; l.href = lookFontUrl(names);
+  document.head.appendChild(l);
+};
+
+/* Применить выбор к странице; вызывается и до отрисовки, и из панели */
+function lookApply(st) {
+  const root = document.documentElement;
+  if (st.theme !== 'base' && LOOK_THEMES.some(x => x.id === st.theme)) root.dataset.theme = st.theme; else delete root.dataset.theme;
+  const f = LOOK_FONTS.find(x => x.name === st.font);
+  if (f && f.name !== LOOK_DEFAULT.font) { lookLoadFonts([f.name], 'look-font-' + f.name.replace(/ /g, '-')); root.style.setProperty('--font-head', f.family); }
+  else root.style.removeProperty('--font-head');
+  if (st.radius !== LOOK_DEFAULT.radius) root.dataset.radius = st.radius; else delete root.dataset.radius;
+}
+
+function lookLoad() {
+  try {
+    const st = { ...LOOK_DEFAULT, ...JSON.parse(localStorage.getItem(LOOK_KEY) || '{}') };
+    if (!LOOK_FONTS.some(f => f.name === st.font)) st.font = LOOK_DEFAULT.font;   // шрифт могли убрать из списка
+    return st;
+  } catch (e) { return { ...LOOK_DEFAULT }; }
+}
+lookApply(lookLoad());   // сохранённый выбор — сразу, до отрисовки
+
+/* разметка панели */
+const lookThemeGroup = (group, title) => `
+      <p class="look-sub">${title}</p>
+      <div class="themes">${LOOK_THEMES.filter(t => t.group === group).map(t => `
+        <label class="theme"><input type="radio" name="theme" value="${t.id}"><span class="theme-box${t.id === 'base' ? ' theme-box--base' : ''}"${t.id === 'base' ? '' : ` data-theme="${t.id}"`}></span><span class="theme-name">${t.name}</span></label>`).join('')}
+      </div>`;
 const lookHTML = () => `
 <button class="look-fab" type="button" aria-expanded="false" aria-controls="look" aria-label="Настройки внешнего вида"><i class="i i-sliders" aria-hidden="true"></i></button>
 <div class="look" id="look" role="dialog" aria-labelledby="look-title" hidden>
@@ -36,14 +89,23 @@ const lookHTML = () => `
     <button class="look-close" type="button" aria-label="Закрыть"><i class="i i-x" aria-hidden="true"></i></button>
   </div>
   <form class="look-form">
-    ${lookColorGroup('accent', 'Цвет темы', 'По умолчанию', 'Оттенок цвета темы')}
-    ${lookColorGroup('neutral', 'Нейтральные цвета', 'По умолчанию', 'Оттенок нейтральных цветов')}
-    ${lookColorGroup('text', 'Цвет текста', 'Как тема', 'Оттенок цвета текста')}
+    <fieldset>
+      <legend>Тема</legend>
+      ${lookThemeGroup('base', 'Основные')}
+      ${lookThemeGroup('cold', 'Холодные')}
+      ${lookThemeGroup('warm', 'Тёплые')}
+    </fieldset>
+    <fieldset>
+      <legend>Шрифт заголовков</legend>
+      <div class="fonts">${LOOK_FONTS.map(f => `
+        <label class="font"><input type="radio" name="font" value="${f.name}"><span class="font-box"><span class="font-sample" style="font-family:${f.family}">Объявления</span><span class="font-name">${f.name}</span></span></label>`).join('')}
+      </div>
+    </fieldset>
     <fieldset>
       <legend>Скругления</legend>
       <div class="segs">
         <label class="seg"><input type="radio" name="radius" value="lg"><span class="seg-box" style="--r: 16px">Большие</span></label>
-        <label class="seg"><input type="radio" name="radius" value="md" checked><span class="seg-box" style="--r: 8px">Средние</span></label>
+        <label class="seg"><input type="radio" name="radius" value="md"><span class="seg-box" style="--r: 8px">Средние</span></label>
         <label class="seg"><input type="radio" name="radius" value="sm"><span class="seg-box" style="--r: 6px">Малые</span></label>
       </div>
     </fieldset>
@@ -60,93 +122,35 @@ customElements.define('demo-look', class extends HTMLElement {
 
 function initLook() {
   const fab = document.querySelector('.look-fab'), panel = document.getElementById('look'), form = panel.querySelector('.look-form');
-  const root = document.documentElement;
-  const DEF = LOOK_DEFAULT;
-  const NEU_C = .03;   // насыщенность нейтральных при своём оттенке
+  let st = lookLoad();
 
-  // --- OKLCH → hex с подгонкой в sRGB, контраст с белым ---
-  const lin = c => (c /= 255) <= .04045 ? c / 12.92 : ((c + .055) / 1.055) ** 2.4;
-  const enc = x => { x = Math.min(Math.max(x, 0), 1); return Math.round(255 * (x <= .0031308 ? 12.92 * x : 1.055 * x ** (1 / 2.4) - .055)); };
-  const fromLch = (L, C, H) => {   // уменьшаем насыщенность, пока цвет не влезет в sRGB
-    for (let c = C; ; c -= .005) {
-      const a = Math.max(c, 0) * Math.cos(H * Math.PI / 180), b = Math.max(c, 0) * Math.sin(H * Math.PI / 180);
-      const l = (L + .3963377774 * a + .2158037573 * b) ** 3, m = (L - .1055613458 * a - .0638541728 * b) ** 3, s = (L - .0894841775 * a - 1.2914855480 * b) ** 3;
-      const v = [4.0767416621 * l - 3.3077115913 * m + .2309699292 * s, -1.2684380046 * l + 2.6097574011 * m - .3413193965 * s, -.0041960863 * l - .7034186147 * m + 1.7076147010 * s];
-      if (c <= 0 || v.every(x => x >= -.001 && x <= 1.001)) return '#' + v.map(x => enc(x).toString(16).padStart(2, '0')).join('');
-    }
+  const save = () => {
+    const out = {};
+    for (const k in LOOK_DEFAULT) if (st[k] !== LOOK_DEFAULT[k]) out[k] = st[k];
+    try { localStorage.setItem(LOOK_KEY, JSON.stringify(out)); } catch (e) {}
   };
-  const contrast = h => { const [r, g, b] = [1, 3, 5].map(i => lin(parseInt(h.slice(i, i + 2), 16))); return 1.05 / (.2126 * r + .7152 * g + .0722 * b + .05); };
-  // цвет темы/текста из оттенка: L .5, C .15, затемняем до контраста с белым ≥ 4.5 (WCAG AA)
-  const hueColor = h => { let l = .5, out = fromLch(l, .15, h); while (contrast(out) < 4.5) out = fromLch(l -= .01, .15, h); return out; };
-  const neuPreview = h => `oklch(.55 ${NEU_C * 2} ${h})`;   // для образца и дорожки — заметнее, чем сами серые
-  const grad = f => `linear-gradient(90deg, ${Array.from({ length: 13 }, (_, i) => f(i * 30)).join(', ')})`;
-
-  // --- состояние ---
-  let st = { ...DEF };
-  try { st = { ...DEF, ...JSON.parse(localStorage.getItem(LOOK_KEY) || '{}') }; } catch (e) {}
-  const sliders = {}; panel.querySelectorAll('[data-hue]').forEach(r => sliders[r.dataset.hue] = r);
-  sliders.accent.style.setProperty('--g', grad(hueColor));
-  sliders.text.style.setProperty('--g', grad(hueColor));
-  sliders.neutral.style.setProperty('--g', grad(neuPreview));
-  panel.querySelector('[data-swatch="accent-default"]').style.setProperty('--c', DEF.accent);
-  panel.querySelector('[data-swatch="neutral-default"]').style.setProperty('--c', `oklch(.55 ${DEF.nc * 1.5} ${DEF.nh})`);
-
-  const apply = () => {
-    const set = (k, v, d) => v != null && v !== d ? root.style.setProperty(k, v) : root.style.removeProperty(k);
-    set('--brand', st.accent, DEF.accent);
-    set('--text-brand', st.text, null);
-    if (st.nh !== DEF.nh || st.nc !== DEF.nc) { root.style.setProperty('--nh', st.nh); root.style.setProperty('--nc', st.nc); }
-    else { root.style.removeProperty('--nh'); root.style.removeProperty('--nc'); }
-    if (st.radius !== DEF.radius) root.dataset.radius = st.radius; else delete root.dataset.radius;
-    const save = {};
-    for (const k of ['accent', 'text', 'radius', 'ah', 'th']) if (st[k] != null && st[k] !== DEF[k]) save[k] = st[k];
-    if (st.nh !== DEF.nh || st.nc !== DEF.nc) { save.nh = st.nh; save.nc = st.nc; }
-    try { localStorage.setItem(LOOK_KEY, JSON.stringify(save)); } catch (e) {}
-  };
-  // панель по состоянию: какой режим выбран, где ползунки, цвет образцов
+  // отметить в панели текущий выбор; тема может быть не выбрана — тогда исходная палитра
   const sync = () => {
-    const mode = { accent: st.accent !== DEF.accent, text: st.text != null, neutral: st.nh !== DEF.nh || st.nc !== DEF.nc };
-    const hue = { accent: st.ah ?? DEF.nh, text: st.th ?? DEF.nh, neutral: mode.neutral ? st.nh : DEF.nh };
-    for (const k in mode) {
-      form.querySelector(`input[name="${k}"][value="${mode[k] ? 'hue' : 'default'}"]`).checked = true;
-      sliders[k].value = hue[k];
-      sliders[k].classList.toggle('is-off', !mode[k]);
-      const c = k === 'neutral' ? neuPreview(hue[k]) : hueColor(hue[k]);
-      sliders[k].style.setProperty('--c', c);
-      panel.querySelector(`[data-swatch="${k}-hue"]`).style.setProperty('--c', c);
-    }
-    panel.querySelector('[data-swatch="text-default"]').style.setProperty('--c', st.accent);
+    form.querySelectorAll('input[name="theme"]').forEach(r => { r.checked = r.value === st.theme; });
+    form.querySelector(`input[name="font"][value="${st.font}"]`).checked = true;
     form.querySelector(`input[name="radius"][value="${st.radius}"]`).checked = true;
-  };
-  // свой оттенок группы → значения в состояние
-  const setHue = (k, h) => {
-    if (k === 'accent') { st.ah = h; st.accent = hueColor(h); }
-    if (k === 'text') { st.th = h; st.text = hueColor(h); }
-    if (k === 'neutral') { st.nh = h; st.nc = NEU_C; }
-  };
-  const setDefault = k => {
-    if (k === 'accent') { st.accent = DEF.accent; delete st.ah; }
-    if (k === 'text') { st.text = null; delete st.th; }
-    if (k === 'neutral') { st.nh = DEF.nh; st.nc = DEF.nc; }
   };
 
   form.addEventListener('change', e => {
-    const t = e.target;
-    if (t.type !== 'radio') return;
-    if (t.name === 'radius') st.radius = t.value;
-    else if (t.value === 'hue') setHue(t.name, +sliders[t.name].value);
-    else setDefault(t.name);
-    apply(); sync();
+    if (e.target.type !== 'radio') return;
+    st[e.target.name] = e.target.value;
+    lookApply(st); save();
   });
-  form.addEventListener('input', e => {   // ползунок — сразу, пока его двигают; трогать его — значит выбрать «Свой оттенок»
-    const k = e.target.dataset.hue; if (!k) return;
-    setHue(k, +e.target.value);
-    apply(); sync();
-  });
-  form.addEventListener('reset', e => { e.preventDefault(); st = { ...DEF }; apply(); sync(); });
+  form.addEventListener('reset', e => { e.preventDefault(); st = { ...LOOK_DEFAULT }; lookApply(st); save(); sync(); });
   sync();
 
-  const toggle = open => { panel.hidden = !open; fab.setAttribute('aria-expanded', open); if (open) panel.querySelector('input:checked').focus({ preventScroll: true }); };
+  const toggle = open => {
+    panel.hidden = !open; fab.setAttribute('aria-expanded', open);
+    if (open) {
+      lookLoadFonts(LOOK_FONTS.filter(f => f.name !== LOOK_DEFAULT.font).map(f => f.name), 'look-fonts-all');   // образцы всех шрифтов — только когда панель открыли
+      panel.querySelector('input:checked').focus({ preventScroll: true });
+    }
+  };
   fab.addEventListener('click', () => toggle(panel.hidden));
   panel.querySelector('.look-close').addEventListener('click', () => { toggle(false); fab.focus(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !panel.hidden) { toggle(false); fab.focus(); } });
