@@ -21,7 +21,7 @@
 .look-fab:active { transform: translateY(1px); filter: brightness(.92); }
 .look {
   position: fixed; right: 24px; bottom: 92px; z-index: 61; width: min(380px, calc(100vw - 32px));
-  max-height: calc(100vh - 116px); overflow-y: auto; overscroll-behavior: contain;
+  max-height: calc(100dvh - 116px); overflow-y: auto; overscroll-behavior: contain;
   padding: var(--space-20); background: var(--bg-surface); color: var(--text-primary); border-radius: var(--radius-lg);
   box-shadow: var(--shadow-panel);
 }
@@ -73,5 +73,5 @@
 .look-reset { margin-top: var(--space-20); width: 100%; }
 @media (max-width: 767px) {
   .look-fab { right: 16px; bottom: 16px; width: 48px; height: 48px; }
-  .look { right: 16px; bottom: 76px; max-height: calc(100vh - 96px); }
+  .look { right: 16px; bottom: 76px; max-height: calc(100dvh - 96px); }
 }

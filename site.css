@@ -339,6 +339,7 @@ h4, .type-h4 { font: var(--type-h4); letter-spacing: normal; }
   .app { grid-template-columns: minmax(0, 1fr); }
   .sidebar {
     position: fixed; left: 0; top: 0; z-index: 70; width: var(--sb-w);
+    height: 100dvh;   /* видимая высота экрана: в мобильных браузерах 100vh выше неё на адресную строку, и низ меню с кнопками уходил под неё */
     transform: translateX(-100%); transition: transform .25s ease; box-shadow: var(--shadow-drawer);
   }
   body.nav-open .sidebar { transform: none; }
@@ -416,7 +417,7 @@ h4, .type-h4 { font: var(--type-h4); letter-spacing: normal; }
 .section-head .more { margin-left: auto; }
 /* телефон: ссылка всегда под заголовком */
 @container content (max-width: 559px) {
-  .section-head { flex-direction: column; align-items: flex-start; }
+  .section-head { flex-direction: column; align-items: flex-start; row-gap: var(--space-4); }   /* ссылка под заголовком — ближе к нему: у крупного заголовка и так большой межстрочный */
   .section-head .more { margin-left: 0; }
 }
 /* заголовок секции — h2 со стилем h2 по умолчанию */
@@ -736,6 +737,8 @@ a.card:hover .card-title { color: var(--text-brand); }
 .article-photos img { width: auto; max-width: 100%; height: auto; max-height: min(80vh, 760px); border-radius: var(--radius-lg); background: var(--fill-medium); }
 .article-body { max-width: 720px; margin-top: clamp(var(--space-32), 2.6vw, var(--space-56)); }
 .article-back { margin-top: clamp(var(--space-16), 1.4vw, var(--space-32)); }   /* в конце статьи: «← Все новости» */
+/* телефон: у строчной ссылки .more внешний отступ сверху не работает — делаем её строчным блоком; её поля 12px (зона нажатия) входят в отступ */
+@media (max-width: 767px) { .article-back { display: inline-block; margin-top: calc(clamp(var(--space-16), 1.4vw, var(--space-32)) - var(--space-12)); } }
 .article-photos:empty + .article-body { margin-top: 0; }
 
 /* Контент из CMS (.prose): текст статей и страниц, который набирает редактор — заголовки, списки, таблицы, цитаты, фото.
