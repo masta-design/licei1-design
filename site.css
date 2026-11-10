@@ -380,18 +380,18 @@ h4, .type-h4 { font: var(--type-h4); letter-spacing: normal; }
   /* не закреплена. В разметке контакты идут после кнопок (порядок ПК), здесь order ставит их перед нижним уровнем */
   .topbar { display: contents; }
   .tb-main, .tb-contacts { order: -1; }
-  .tb-contacts { padding: var(--space-12) var(--space-12) var(--space-12); background: var(--bg-page); }   /* сверху 12 + 12 снизу у логотипа = 24 между этажами */
+  .tb-contacts { padding: var(--space-12) var(--space-page-x); background: var(--bg-page); }   /* сверху 12 + 12 снизу у логотипа = 24 между этажами; по бокам — как у контента */
   .tb-main {
     position: relative; z-index: 45; flex-wrap: wrap; gap: var(--space-12);
-    padding: var(--space-12); background: var(--bg-page);   /* отступы по бокам = сверху и снизу */
+    padding: var(--space-12) var(--space-page-x); background: var(--bg-page);   /* по бокам — как у контента */
   }
   .search-toggle[aria-expanded="true"] { background: var(--action-subtle); color: var(--text-brand); box-shadow: none; }
   .search-toggle .ico-close, .search-toggle[aria-expanded="true"] .ico-open { display: none; }
   .search-toggle[aria-expanded="true"] .ico-close { display: block; }
   .search { display: none; order: 10; flex-basis: 100%; max-width: none; }
   .tb-main.search-open .search { display: block; }
-  /* «Слабовидящим» и «Войти» переехали в сайдбар, блок кнопок пуст и только рисует линию-тень под шапкой: у блока нулевой высоты тень не видна, поэтому он в 1px и заходит на шапку */
-  .tb-tools { position: relative; z-index: 41; height: 1px; margin-top: -1px; background: var(--bg-page); box-shadow: var(--header-shadow); }
+  /* «Слабовидящим» и «Войти» переехали в сайдбар — блок кнопок не нужен; линии под шапкой на узких экранах нет */
+  .tb-tools { display: none; }
   .tb-tools .btn-a11y, .tb-tools .btn-login { display: none; }
 }
 /* планшет: в верхнем ряду кнопка меню, логотип и сразу поле поиска */
@@ -446,6 +446,7 @@ a.card { color: inherit; text-decoration: none !important; }
 /* Сетка колонок — общая с рядом объявлений (раздел 10): слайдер шириной как объявления, виджет — как карточка директора.
    Контент уже 760px — виджет под слайдером. Высота виджета — по его содержимому, с высотой слайдера не связана */
 .hero { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; gap: var(--space-grid-y) var(--space-grid-x); margin-top: var(--space-page-x); }
+@media (max-width: 959px) { .hero { margin-top: calc(var(--space-page-x) * 3); } }   /* шапка без линии — контент отделён воздухом */
 
 /* Слайдер. Листается только вручную: стрелки, точки, свайп (site.js). Картинка — 3:2, любые пропорции изображения вписываются в неё;
    заголовок и дата — под картинкой; на картинке внизу точки слева и стрелки справа. --media-h — высота картинки (2/3 ширины слайдера) */
@@ -668,6 +669,7 @@ a.card:hover .card-title { color: var(--text-brand); }
 
 /* ================= 12. Внутренние страницы: хлебные крошки, заголовок h1 ================= */
 .page-head { padding-top: clamp(var(--space-24), 2.2vw, var(--space-48)); margin-bottom: clamp(var(--space-40), 3.4vw, var(--space-72)); }
+@media (max-width: 959px) { .page-head { padding-top: calc(var(--space-page-x) * 3); } }   /* как у первого экрана главной */
 .crumbs ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4) var(--space-8); font-size: var(--fs-14); line-height: 1.4; color: var(--text-secondary); }
 .crumbs li { display: inline-flex; align-items: center; gap: var(--space-8); min-width: 0; }
 /* разделитель — каретка из набора иконок, как у ссылок «Все …» */
