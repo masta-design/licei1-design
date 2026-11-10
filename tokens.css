@@ -284,10 +284,10 @@
 }
 
 /* Нейтральная */
-[data-theme="gray"] {   /* Серая */
-  --brand: #4a4a4a; --bg-page: #ffffff; --bg-surface: #ffffff; --bg-subtle: #f0f0f0; --bg-inverse: #2b2b2b;
-  --text-primary: #1f1f1f; --text-secondary: #5c5c5c; --text-tertiary: #7a7a7a; --text-brand: #404040; --text-inverse-strong: #f0f0f0;
-  --side-bg: #f0f0f0; --side-text: #1f1f1f; --side-text-secondary: #5c5c5c; --side-label: #7a7a7a; --side-icon: #7a7a7a; --side-accent: #393939; --side-hover: #dbdbdb; --side-active: #ffffff;
+[data-theme="gray"] {   /* Серая: нейтральные серые и солидный «университетский» синий акцент */
+  --brand: #1f3d8a; --bg-page: #ffffff; --bg-surface: #ffffff; --bg-subtle: #f0f0f0; --bg-inverse: #2b2b2b;
+  --text-primary: #1f1f1f; --text-secondary: #5c5c5c; --text-tertiary: #7a7a7a; --text-brand: #1f3d8a; --text-inverse-strong: #f0f0f0;
+  --side-bg: #f0f0f0; --side-text: #1f1f1f; --side-text-secondary: #5c5c5c; --side-label: #7a7a7a; --side-icon: #7a7a7a; --side-accent: #1f366f; --side-hover: #dbdbdb; --side-active: #ffffff;
   --shadow-rgb: 31 31 31;
 }
 

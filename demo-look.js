@@ -40,12 +40,9 @@ const LOOK_THEMES = [
 const LOOK_FONTS = [
   { name: 'Onest', family: "'Onest', system-ui, sans-serif" },
   { name: 'Google Sans', family: "'Google Sans', system-ui, sans-serif" },
-  { name: 'Montserrat', family: "'Montserrat', system-ui, sans-serif" },
   { name: 'Arimo', family: "'Arimo', Arial, sans-serif" },
   { name: 'PT Serif', family: "'PT Serif', Georgia, serif" },
-  { name: 'Jost', family: "'Jost', system-ui, sans-serif" },
   { name: 'M PLUS Rounded 1c', family: "'M PLUS Rounded 1c', system-ui, sans-serif" },
-  { name: 'Alumni Sans', family: "'Alumni Sans', system-ui, sans-serif" },
   { name: 'Merriweather', family: "'Merriweather', Georgia, serif" },
 ];
 const lookFontUrl = names => 'https://fonts.googleapis.com/css2?' + names.map(n => `family=${n.replace(/ /g, '+')}:wght@400;700`).join('&') + '&display=swap';
