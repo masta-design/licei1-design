@@ -24,19 +24,26 @@ document.getElementById('nav').addEventListener('click', e => {
   if (open) setTimeout(() => item.scrollIntoView({ block: 'nearest', behavior: 'smooth' }), 260);
 });
 
-/* --- Поиск на мобильных: кнопка-лупа раскрывает поле под верхним блоком --- */
+/* --- Поиск: когда места меньше 280px, вместо поля — кнопка-лупа (это решает CSS); по ней поле раскрывается поверх страницы и фон затемняется.
+       Закрывается той же кнопкой, клавишей Esc или кликом по затемнению --- */
 (function () {
   const btn = document.querySelector('[data-search-toggle]');
-  const bar = btn.closest('.tb-main');
-  btn.addEventListener('click', () => {
-    const open = bar.classList.toggle('search-open');
+  const box = btn.closest('.search-box');
+  const set = open => {
+    box.classList.toggle('is-open', open);
     btn.setAttribute('aria-expanded', open);
     btn.setAttribute('aria-label', open ? 'Закрыть поиск' : 'Открыть поиск');
+  };
+  btn.addEventListener('click', () => {
+    const open = !box.classList.contains('is-open');
+    set(open);
     if (open) document.getElementById('q').focus();
   });
+  box.addEventListener('click', e => { if (e.target === box) set(false); });   // клик по затемнению (это ::before обёртки)
+  box.addEventListener('keydown', e => { if (e.key === 'Escape' && box.classList.contains('is-open')) { set(false); btn.focus(); } });
 })();
 
-/* --- Версия для слабовидящих: переключатели в шапке и в мобильном сайдбаре синхронны (в демо режим только запоминает состояние) --- */
+/* --- Версия для слабовидящих: переключатель в сайдбаре; если их несколько — синхронны (в демо режим только запоминает состояние) --- */
 (function () {
   const sw = document.querySelectorAll('[data-a11y]');
   sw.forEach(b => b.addEventListener('click', () => {

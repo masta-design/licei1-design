@@ -74,6 +74,7 @@ function contactsBarHTML(c) {
 definePart('site-sidebar', () => `
   <a class="btn btn-primary skip-link" href="#main">Перейти к содержимому</a>
   <aside class="sidebar" id="sidebar" aria-label="Основная навигация">
+    <div class="side-scroll">   <!-- прокручиваются логотип и меню; кнопки ниже стоят на месте -->
     <div class="brand-wrap">
       <a class="brand" href="./" title="На главную">
         <img src="${SCHOOL.logo}" alt="${esc(SCHOOL.logoAlt)}">
@@ -81,7 +82,8 @@ definePart('site-sidebar', () => `
       </a>
     </div>
     <nav class="nav" id="nav">${navHTML((document.body.dataset.nav || '').split('/').filter(Boolean))}</nav>
-    <!-- мобильный сайдбар: кнопки из шапки — внизу, закреплены от прокрутки -->
+    </div>
+    <!-- «Версия для слабовидящих» и «Войти» — внизу сайдбара на всех ширинах, вне прокрутки -->
     <div class="side-tools">
       ${a11ySwitch}
       <a class="btn btn-secondary" href="#">${loginIcon}Войти</a>
@@ -90,7 +92,9 @@ definePart('site-sidebar', () => `
   <div class="scrim" data-nav-close></div>
   <button class="btn btn-lg btn-icon nav-close" type="button" aria-label="Закрыть меню" data-nav-close><i class="i i-x" aria-hidden="true"></i></button>`);
 
-/* ================= Шапка: кнопка меню и логотип (на узких экранах), поиск, «Версия для слабовидящих», «Войти»; ниже — этаж с контактами ================= */
+/* ================= Шапка: кнопка меню и логотип (на узких экранах), поиск, контакты.
+   Поиск занимает место, оставшееся в строке: хватает 280px — поле, иначе кнопка-лупа, по ней поле раскрывается поверх страницы.
+   «Версия для слабовидящих» и «Войти» — в сайдбаре ================= */
 definePart('site-header', () => `
   <header class="topbar">
     <div class="tb-main">
@@ -99,19 +103,19 @@ definePart('site-header', () => `
         <img src="${SCHOOL.logo}" alt="">
         <span class="brand-name">${esc(SCHOOL.name)}</span>
       </a>
-      <form class="search" role="search" onsubmit="return false">
-        <label class="sr-only" for="q">Поиск по сайту</label>
-        <i class="i i-search" aria-hidden="true"></i>
-        <input id="q" type="search" placeholder="Поиск по сайту">
-      </form>
-      <button class="btn btn-lg btn-icon btn-secondary search-toggle" type="button" aria-label="Открыть поиск" aria-controls="q" aria-expanded="false" data-search-toggle>
-        <i class="i ico-open i-search" aria-hidden="true"></i><i class="i ico-close i-x" aria-hidden="true"></i>
-      </button>
+      <!-- поиск занимает всё свободное место в строке: шире 280px — поле, уже — кнопка-лупа (site.css, раздел 5) -->
+      <div class="search-box">
+        <form class="search" role="search" onsubmit="return false">
+          <label class="sr-only" for="q">Поиск по сайту</label>
+          <i class="i i-search" aria-hidden="true"></i>
+          <input id="q" type="search" placeholder="Поиск по сайту">
+        </form>
+        <button class="btn btn-lg btn-icon btn-secondary search-toggle" type="button" aria-label="Открыть поиск" aria-controls="q" aria-expanded="false" data-search-toggle>
+          <i class="i ico-open i-search" aria-hidden="true"></i><i class="i ico-close i-x" aria-hidden="true"></i>
+        </button>
+      </div>
     </div>
-    <div class="tb-tools">
-      ${a11ySwitch}
-      <a class="btn btn-lg btn-secondary btn-login" href="#">${loginIcon}Войти</a>
-    </div>
+    <div class="tb-line"></div>   <!-- линия-тень под шапкой на узких экранах (раздел 6 site.css) -->
     ${contactsBarHTML(CONTACTS)}
   </header>`);
 

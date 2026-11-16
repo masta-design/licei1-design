@@ -166,7 +166,7 @@ h4, .type-h4 { font: var(--type-h4); letter-spacing: normal; }
    поэтому считается здесь и наследуется готовым числом — слайдер и ленты на телефоне используют тот же отступ */
 @property --page-x { syntax: '<length>'; inherits: true; initial-value: 20px; }
 :root { --page-x: var(--space-page-x); }
-.content, .footer { --page-x: max(var(--space-page-x), (100cqi - var(--size-content-max)) / 2); }
+.content, .footer, .topbar { --page-x: max(var(--space-page-x), (100cqi - var(--size-content-max)) / 2); }
 .content { container: content / inline-size; padding: 0 var(--page-x); flex: 1; }
 /* «Перейти к содержимому» — первая ссылка страницы: скрыта, пока на неё не попадёт фокус с клавиатуры (Tab) */
 .skip-link { position: absolute; left: 16px; top: 16px; z-index: 100; transform: translateY(calc(-100% - 32px)); }
@@ -175,20 +175,24 @@ h4, .type-h4 { font: var(--type-h4); letter-spacing: normal; }
 
 /* ================= 4. Сайдбар ================= */
 /* Меню строится из NAV (school-data.js) скриптом layout.js; раскрытие разделов — site.js */
+/* Сайдбар — колонка во всю высоту экрана: сверху прокручиваемая часть (логотип и меню, .side-scroll), снизу кнопки (.side-tools) */
 .sidebar {
   position: sticky; top: 0;
   height: 100vh;
-  overflow-y: auto;
-  overscroll-behavior: contain;
   background: var(--side-bg);
   --focus: var(--side-accent);   /* рамка фокуса — цветом меню: на насыщенном фоне цвет темы не виден */
   display: flex; flex-direction: column;
+}
+.side-scroll {
+  flex: 1; min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   scrollbar-width: thin;
   scrollbar-gutter: stable both-edges; /* зазор под скроллбар (10px) с обеих сторон: пункты не меняют ширину, отступы слева и справа равны */
   scrollbar-color: transparent transparent;
 }
 /* скроллбар виден только при наведении (место под него зарезервировано — без сдвига) */
-.sidebar:hover, .sidebar:focus-within { scrollbar-color: color-mix(in srgb, var(--side-text) 26%, transparent) transparent; }
+.side-scroll:hover, .side-scroll:focus-within { scrollbar-color: color-mix(in srgb, var(--side-text) 26%, transparent) transparent; }
 .brand {
   flex: 1; display: flex; align-items: center; gap: var(--space-12);
   padding: var(--space-28) 0 var(--space-12) calc(var(--space-shell-x) - 10px);
@@ -198,7 +202,7 @@ h4, .type-h4 { font: var(--type-h4); letter-spacing: normal; }
 .brand img { width: var(--size-logo); height: var(--size-logo); border-radius: 50%; object-fit: cover; flex-shrink: 0; background: var(--action-subtle); }
 .brand-name { display: block; max-width: 300px; font-weight: 700; font-size: var(--fs-16); line-height: calc(1.25em - 4px); }   /* block — иначе межстрочный задаёт строка родителя */
 .brand-wrap { display: flex; align-items: center; padding-right: calc(var(--space-shell-x) - 10px); }
-.app > .nav-close, .side-tools { display: none; }
+.app > .nav-close { display: none; }
 
 .nav { padding: var(--space-4) calc(var(--space-16) - 10px) var(--space-48); }   /* 10px — зазор под полосу прокрутки (scrollbar-gutter): вместе 16px до подсветки пунктов с обеих сторон */
 .nav-group-label {
@@ -243,25 +247,70 @@ h4, .type-h4 { font: var(--type-h4); letter-spacing: normal; }
 .nav .nav-sub .nav-sub { margin-left: var(--space-16); border-left: 1px solid color-mix(in srgb, var(--side-text) 14%, transparent); }
 .nav-sub .nav-item.is-open > .nav-sub-wrap > .nav-sub { margin-top: var(--space-4); margin-bottom: var(--space-8); }
 
+/* «Версия для слабовидящих» и «Войти» — внизу сайдбара, вне прокрутки (на всех ширинах) */
+.side-tools {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-8);
+  position: relative; flex-shrink: 0;
+  padding: var(--space-12) var(--space-16) calc(var(--space-12) + env(safe-area-inset-bottom));
+  background: var(--side-active); box-shadow: 0 -8px 24px rgb(var(--shadow-rgb) / .08);   /* тень вместо линии-разделителя */
+  /* кнопки внутри — цветами меню, как в подвале: компоненты те же, роли переназначены только здесь */
+  color: var(--side-text); --text-primary: var(--side-text); --text-brand: var(--side-accent); --focus: var(--side-accent);
+  --fill-subtle: color-mix(in srgb, var(--side-text) 6%, var(--side-active)); --fill-muted: color-mix(in srgb, var(--side-text) 12%, var(--side-active));
+  --fill-strong: color-mix(in srgb, var(--side-text) 28%, var(--side-active)); --fill-stronger: color-mix(in srgb, var(--side-text) 40%, var(--side-active));
+  --hl-soft: inset 0 1px 0 color-mix(in srgb, #fff 16%, var(--side-active));
+}
+.side-tools .btn-a11y { justify-content: flex-start; padding: 0 var(--space-4); }
+.side-tools .btn-secondary { align-self: center; }   /* «Войти» — обычного размера 40px */
+
 .scrim { display: none; }
 
 
 /* ================= 5. Шапка ================= */
-/* не закреплена: прокручивается вместе со страницей */
+/* Не закреплена: прокручивается вместе со страницей. На ПК — контакты, справа поиск (поле или кнопка-лупа, см. ниже).
+   Поля слева и справа — как у контента (--page-x, раздел 3) */
 .topbar {
   position: relative; z-index: 40;
-  display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-24) var(--space-16);
-  padding: var(--space-16) var(--space-shell-x);
+  display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--space-16) var(--space-32);   /* лупа — по верхнему краю контактов */
+  padding: var(--space-16) var(--page-x);
   background: var(--bg-page);
-  box-shadow: var(--header-shadow);
 }
-.tb-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: var(--space-12) var(--space-16); }
-.tb-tools { display: flex; align-items: center; gap: var(--space-24); }
-.tb-tools .btn-lg:not(.btn-a11y) { padding: 0 var(--space-16) 0 var(--space-12); }
-.topbar .burger, .mini-brand, .topbar .search-toggle { display: none; }
+/* линия-тень под шапкой — только по ширине контента, не во всю ширину */
+.topbar::after { content: ""; position: absolute; left: var(--page-x); right: var(--page-x); bottom: 0; height: 1px; box-shadow: var(--header-shadow); pointer-events: none; }
+.tb-main { display: contents; }   /* на ПК поиск — сам пункт строки шапки */
+.topbar .burger, .mini-brand, .tb-line { display: none; }
+.tb-contacts { order: 0; flex: 0 1 auto; }   /* контакты — по содержимому, остаток строки забирает поиск */
+
+/* Поиск: обёртка .search-box забирает всё свободное место в строке (но не меньше кнопки) и сама является контейнером —
+   её ширина и есть свободное место. От 280px внутри показано поле, уже — кнопка-лупа;
+   по лупе поле выезжает поверх страницы под шапкой, фон затемняется (класс .is-open ставит site.js), лупа становится крестиком.
+   Закрытое поле не убирается из вёрстки, а прячется (opacity + visibility) — так открытие и закрытие анимируются */
+.search-box { order: 1; flex: 1 1 0; min-width: var(--size-control-lg); display: flex; justify-content: flex-end; container: search / inline-size; }
+.search-box .search { flex: 1; }
+.search-box .search-toggle { display: none; }
+@container search (width < 280px) {
+  .search-box .search-toggle { display: inline-flex; position: relative; z-index: 51; }   /* крестик — над затемнением */
+  .search-box .search {
+    position: absolute; z-index: 50; left: var(--page-x); right: var(--page-x); top: calc(100% + var(--space-8));
+    border-radius: var(--radius-full); box-shadow: var(--shadow-pop);
+    opacity: 0; visibility: hidden; transform: translateY(calc(-1 * var(--space-8)));
+    transition: opacity .2s ease, transform .2s ease, visibility 0s .2s;   /* закрытие: сначала растворяется, потом прячется */
+  }
+  .search-box.is-open .search { opacity: 1; visibility: visible; transform: none; transition: opacity .2s ease, transform .2s ease, visibility 0s; }
+  .search-box .search input { background: var(--bg-surface); }   /* поверх страницы — непрозрачный фон */
+  /* затемнение страницы: градиент от верхнего края экрана — сверху плотнее, книзу слабее; клик по нему закрывает поиск */
+  .search-box::before {
+    content: ""; position: fixed; inset: 0; z-index: 49;
+    background: linear-gradient(to bottom, rgb(var(--shadow-rgb) / .55), rgb(var(--shadow-rgb) / .12));
+    opacity: 0; visibility: hidden; transition: opacity .25s ease, visibility 0s .25s;
+  }
+  .search-box.is-open::before { opacity: 1; visibility: visible; transition: opacity .25s ease, visibility 0s; }
+}
+.search-toggle[aria-expanded="true"] { background: var(--action-subtle); color: var(--text-brand); box-shadow: none; }
+.search-toggle .ico-close, .search-toggle[aria-expanded="true"] .ico-open { display: none; }
+.search-toggle[aria-expanded="true"] .ico-close { display: block; }
 
 /* Поиск — всегда «таблетка», не зависит от набора скруглений */
-.search { flex: 1 1 180px; max-width: 640px; position: relative; }
+.search { position: relative; }
 .search input {
   width: 100%; height: var(--size-control-lg); padding: 0 var(--space-20) 0 var(--space-48);
   border-radius: var(--radius-full); border: 1px solid transparent; background: var(--fill-subtle);
@@ -278,7 +327,7 @@ h4, .type-h4 { font: var(--type-h4); letter-spacing: normal; }
    — телефоны стоят вместе и уходят на новую строку одним блоком; пока им хватает места, адрес сужается и переносится по словам.
    На ПК и планшете подпись над значением, на телефоне — строка: подпись, линия, значение */
 .tb-contacts {
-  width: 100%; display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: var(--space-12) var(--space-32);
+  display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: var(--space-12) var(--space-32);
   font: var(--type-body-sm); color: var(--text-primary);
 }
 .tbc-group { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--space-8) var(--space-24); min-width: 0; }
@@ -293,16 +342,29 @@ h4, .type-h4 { font: var(--type-h4); letter-spacing: normal; }
 .tbc-phone { font-weight: 600; white-space: nowrap; }
 .tb-contacts .socials { flex-wrap: wrap; gap: var(--space-4); }   /* у силуэтов свои поля — видимый просвет больше */
 .tb-contacts .more { align-self: flex-end; font: inherit; font-weight: 600; }
+/* Планшет и ПК: группы «растворяются» — адрес, телефоны, почта и соцсети становятся пунктами одного потока.
+   До 1280px адрес — отдельной верхней строкой, остальные пункты под ним друг за другом через 24–32px (не хватает места — переносятся).
+   От 1280px — все пункты в одну строку через 24–32px, слева; свободное место остаётся между ними и лупой, сжимается только адрес */
 @media (min-width: 768px) {
-  .tbc-address { flex: 1 1 240px; max-width: max-content; }
+  .tb-contacts { justify-content: flex-start; column-gap: clamp(var(--space-24), 1.7vw, var(--space-32)); }   /* резиновый: 24px до ~1410px экрана, 32px от ~1880px */
+  .tbc-left, .tbc-right, .tbc-left > .tbc-group { display: contents; }
+  .tbc-address { flex: 1 1 100%; }
   .tb-contacts .socials a { width: var(--size-icon-xl); height: var(--size-icon-xl); }   /* под подписью иконка вровень с текстом соседних пунктов */
 }
-/* большой экран: слева только адрес, телефоны — справа рядом с почтой. Левая группа «растворяется», её пункты становятся пунктами этажа;
-   адрес забирает свободное место отступом справа, остальное прижато к правому краю и при нехватке места переносится туда же */
-@media (min-width: 1200px) {
-  .tb-contacts { justify-content: flex-end; column-gap: var(--space-24); }
-  .tbc-left { display: contents; }
-  .tbc-address { margin-right: auto; }
+/* узкий ПК: контакты «растворяются» в строке шапки, чтобы поиск встал справа от адреса; остальные пункты — строкой ниже.
+   Перенос строки после поиска даёт пустой .topbar::before во всю ширину (его отступ сверху гасит лишний промежуток между строками) */
+@media (min-width: 960px) and (max-width: 1279px) {
+  .topbar { column-gap: clamp(var(--space-24), 1.7vw, var(--space-32)); row-gap: var(--space-12); }
+  .tb-contacts { display: contents; }
+  .tb-contacts .tbc-address { order: 0; flex: 0 1 auto; }
+  .tb-contacts .tbc-item:not(.tbc-address), .tb-contacts .more { order: 3; }
+  .topbar::before { content: ""; order: 2; flex-basis: 100%; margin-top: calc(-1 * var(--space-12)); }
+}
+@media (min-width: 1280px) {
+  .topbar { flex-wrap: nowrap; align-items: center; }   /* одна строка: контакты и поиск — по центру шапки по вертикали; поиск не уходит на новую строку — не хватает места, сужается адрес, поиск остаётся кнопкой */
+  .tb-contacts { flex-wrap: nowrap; }
+  .tb-contacts .tbc-item, .tb-contacts .more { flex-shrink: 0; }   /* пункты — сквозь «растворённые» группы — не сжимаются… */
+  .tb-contacts .tbc-address { flex: 0 1 auto; min-width: 200px; }   /* …кроме адреса: он переносится по словам */
 }
 @media (max-width: 767px) {
   .tb-contacts { row-gap: var(--space-8); }
@@ -333,7 +395,7 @@ h4, .type-h4 { font: var(--type-h4); letter-spacing: normal; }
 
 
 /* ================= 6. Каркас на узком ПК, планшете и телефоне ================= */
-/* планшет и телефон: сайдбар выезжает по кнопке меню слева от логотипа; «Слабовидящим» и «Войти» — внизу сайдбара; шапка «рассыпается» на уровни — кнопка меню + логотип + поиск, контакты */
+/* планшет и телефон: сайдбар выезжает по кнопке меню слева от логотипа; шапка «рассыпается» на уровни — кнопка меню + логотип + кнопка-лупа (поле раскрывается ниже), контакты */
 @media (max-width: 959px) {
   .app { --sb-w: min(340px, calc(100vw - 64px)); }   /* ширина выезжающего сайдбара; справа остаётся место под кнопку закрытия */
   .app { grid-template-columns: minmax(0, 1fr); }
@@ -346,22 +408,8 @@ h4, .type-h4 { font: var(--type-h4); letter-spacing: normal; }
   /* логотип в мобильном сайдбаре не нужен (он есть в шапке) */
   .sidebar .brand-wrap { display: none; }
   /* на телефонах скроллбар поверх содержимого и зазора под него нет — отступ 16px задаём сами */
-  .sidebar { scrollbar-gutter: auto; }
+  .side-scroll { scrollbar-gutter: auto; }
   .nav { padding-left: var(--space-16); padding-right: var(--space-16); }
-  /* внизу сайдбара — кнопки из шапки, закреплены от прокрутки */
-  .side-tools {
-    display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-8);
-    position: sticky; bottom: 0; margin-top: auto;
-    padding: var(--space-12) var(--space-16) calc(var(--space-12) + env(safe-area-inset-bottom));
-    background: var(--side-active); box-shadow: 0 -8px 24px rgb(var(--shadow-rgb) / .08);   /* тень вместо линии-разделителя */
-    /* кнопки внутри — цветами меню, как в подвале: компоненты те же, роли переназначены только здесь */
-    color: var(--side-text); --text-primary: var(--side-text); --text-brand: var(--side-accent); --focus: var(--side-accent);
-    --fill-subtle: color-mix(in srgb, var(--side-text) 6%, var(--side-active)); --fill-muted: color-mix(in srgb, var(--side-text) 12%, var(--side-active));
-    --fill-strong: color-mix(in srgb, var(--side-text) 28%, var(--side-active)); --fill-stronger: color-mix(in srgb, var(--side-text) 40%, var(--side-active));
-    --hl-soft: inset 0 1px 0 color-mix(in srgb, #fff 16%, var(--side-active));
-  }
-  .side-tools .btn-a11y { justify-content: flex-start; padding: 0 var(--space-4); }
-  .side-tools .btn-secondary { align-self: center; }   /* «Войти» — обычного размера 40px */
   /* крестик закрытия — снаружи, справа от сайдбара */
   .app > .nav-close .i { --i-size: var(--size-icon-xl); }
   .app > .nav-close {
@@ -373,32 +421,23 @@ h4, .type-h4 { font: var(--type-h4); letter-spacing: normal; }
   .scrim { display: block; position: fixed; inset: 0; z-index: 65; background: var(--bg-overlay); opacity: 0; pointer-events: none; transition: opacity .25s; }
   body.nav-open .scrim { opacity: 1; pointer-events: auto; }
 
-  .topbar .burger, .topbar .search-toggle { display: inline-flex; }
+  .topbar .burger { display: inline-flex; }
+  .tb-main { display: flex; align-items: center; }
   .mini-brand { display: flex; align-items: center; gap: var(--space-12); color: var(--text-primary); text-decoration: none !important; }
   .mini-brand img { width: 48px; height: 48px; flex-shrink: 0; border-radius: 50%; object-fit: cover; }
-  .mini-brand { flex: 1 1 0; min-width: 0; }   /* текст логотипа переносится, лупа остаётся в строке */
+  .mini-brand { flex: 0 1 auto; min-width: 0; }   /* текст логотипа переносится, остаток строки забирает поиск */
   /* не закреплена. В разметке контакты идут после кнопок (порядок ПК), здесь order ставит их перед нижним уровнем */
   .topbar { display: contents; }
   .tb-main, .tb-contacts { order: -1; }
   .tb-contacts { padding: var(--space-12) var(--space-page-x); background: var(--bg-page); }   /* сверху 12 + 12 снизу у логотипа = 24 между этажами; по бокам — как у контента */
   .tb-main {
-    position: relative; z-index: 45; flex-wrap: wrap; gap: var(--space-12);
+    position: relative; z-index: 45; flex-wrap: nowrap; gap: var(--space-12);   /* в одну строку: поиску — остаток после логотипа */
     padding: var(--space-12) var(--space-page-x); background: var(--bg-page);   /* по бокам — как у контента */
   }
-  .search-toggle[aria-expanded="true"] { background: var(--action-subtle); color: var(--text-brand); box-shadow: none; }
-  .search-toggle .ico-close, .search-toggle[aria-expanded="true"] .ico-open { display: none; }
-  .search-toggle[aria-expanded="true"] .ico-close { display: block; }
-  .search { display: none; order: 10; flex-basis: 100%; max-width: none; }
-  .tb-main.search-open .search { display: block; }
-  /* «Слабовидящим» и «Войти» переехали в сайдбар, блок кнопок пуст и только рисует линию-тень под шапкой: у блока нулевой высоты тень не видна, поэтому он в 1px и заходит на шапку */
-  .tb-tools { position: relative; z-index: 41; height: 1px; margin-top: -1px; background: var(--bg-page); box-shadow: var(--header-shadow); }
-  .tb-tools .btn-a11y, .tb-tools .btn-login { display: none; }
-}
-/* планшет: в верхнем ряду кнопка меню, логотип и сразу поле поиска */
-@media (min-width: 768px) and (max-width: 959px) {
-  .mini-brand { flex: 0 1 auto; }
-  .tb-main .search { display: block; order: 0; flex: 1 1 auto; }
-  .topbar .search-toggle { display: none; }
+  /* шапка здесь «рассыпана» (display: contents) и своей тени не рисует — линию-тень под ней даёт пустой .tb-line
+     (по ширине контента): у блока нулевой высоты тень не видна, поэтому он в 1px и заходит на шапку */
+  .topbar::after { display: none; }
+  .tb-line { display: block; position: relative; z-index: 41; height: 1px; margin: -1px var(--page-x) 0; background: var(--bg-page); box-shadow: var(--header-shadow); }
 }
 /* телефон: текст логотипа мельче, чтобы занимал меньше места рядом с лупой */
 @media (max-width: 767px) {
