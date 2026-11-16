@@ -12,13 +12,13 @@
     6. Каркас на планшете и телефоне: выезжающий сайдбар, шапка в два уровня
     7. Секции: заголовок, ссылка «Все …»
     8. Первый экран: слайдер и виджет Госуслуг
-   10. Объявления и директор
+   10. Об учреждении, директор и объявления
    11. Новости: карточка и сетка
    12. Внутренние страницы: хлебные крошки, заголовок h1
    13. Список новостей
    14. Пагинация
    15. Страница новости и «Читайте также»
-   16. Об учреждении
+   16. Об учреждении: текст
    17. Фото и видео
    18. Виджет Госуслуг
    19. Полезные ресурсы
@@ -390,8 +390,8 @@ h4, .type-h4 { font: var(--type-h4); letter-spacing: normal; }
   .search-toggle[aria-expanded="true"] .ico-close { display: block; }
   .search { display: none; order: 10; flex-basis: 100%; max-width: none; }
   .tb-main.search-open .search { display: block; }
-  /* «Слабовидящим» и «Войти» переехали в сайдбар — блок кнопок не нужен; линии под шапкой на узких экранах нет */
-  .tb-tools { display: none; }
+  /* «Слабовидящим» и «Войти» переехали в сайдбар, блок кнопок пуст и только рисует линию-тень под шапкой: у блока нулевой высоты тень не видна, поэтому он в 1px и заходит на шапку */
+  .tb-tools { position: relative; z-index: 41; height: 1px; margin-top: -1px; background: var(--bg-page); box-shadow: var(--header-shadow); }
   .tb-tools .btn-a11y, .tb-tools .btn-login { display: none; }
 }
 /* планшет: в верхнем ряду кнопка меню, логотип и сразу поле поиска */
@@ -443,10 +443,10 @@ a.card { color: inherit; text-decoration: none !important; }
 
 
 /* ================= 8. Первый экран: слайдер и виджет Госуслуг ================= */
-/* Сетка колонок — общая с рядом объявлений (раздел 10): слайдер шириной как объявления, виджет — как карточка директора.
+/* Сетка колонок — в разделе 10: слайдер занимает все колонки, кроме последней, виджет — последнюю.
    Контент уже 760px — виджет под слайдером. Высота виджета — по его содержимому, с высотой слайдера не связана */
 .hero { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; gap: var(--space-grid-y) var(--space-grid-x); margin-top: var(--space-page-x); }
-@media (max-width: 959px) { .hero { margin-top: calc(var(--space-page-x) * 3); } }   /* шапка без линии — контент отделён воздухом */
+@media (max-width: 959px) { .hero { margin-top: var(--space-48); } }   /* телефон и планшет: одинаковые 48px от линии шапки (поле ×3 на планшете давало до ~100px) */
 
 /* Слайдер. Листается только вручную: стрелки, точки, свайп (site.js). Картинка — 3:2, любые пропорции изображения вписываются в неё;
    заголовок и дата — под картинкой; на картинке внизу точки слева и стрелки справа. --media-h — высота картинки (2/3 ширины слайдера) */
@@ -528,47 +528,51 @@ a.card { color: inherit; text-decoration: none !important; }
 }
 
 
-/* ================= 10. Объявления и директор ================= */
-/* Ряд .ann-row: последнюю колонку занимает директор, остальные — объявления. Те же колонки у первого экрана (.hero, раздел 8).
-   Шаг сетки у ряда и у списка один, поэтому колонки внутри .ann совпадают с колонками ряда.
-   Контент уже 760px — директор под объявлениями.
-   Объявления и директор не связаны по смыслу, поэтому между ними всегда отступ как между секциями (--space-section) */
-.ann-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-section) var(--space-grid-x); align-items: start; }
-.ann { min-width: 0; }
-@container content (min-width: 760px) {
-  :is(.hero, .ann-row) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  :is(.slider, .ann) { grid-column: span 2; }
-  .ann { padding-right: var(--space-section); }
-  .hero .slider { margin-right: var(--space-section); }   /* margin, а не padding: у слайдера от внутренней ширины считается высота картинки */
+/* ================= 10. Об учреждении, директор и объявления ================= */
+/* Первый экран (.hero, раздел 8) и общая секция .about-row стоят на одной сетке из 6 колонок:
+   в первых четырёх — слайдер / текст «Об учреждении» с директором, в последних двух — виджет Госуслуг / объявления.
+   Между частями — дополнительный отступ около 2.2vw (margin у левой части, сверх шага сетки), поэтому края виджета и объявлений совпадают.
+   Первый экран делится на колонки с контента 760px, общая секция — с 900px; уже — части друг под другом */
+.about-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-section); align-items: start; }
+.about-main, .ann { min-width: 0; }
+/* Левая часть: заголовок, под ним текст и карточка директора. Директор встаёт справа от текста (вровень с первым абзацем),
+   только если самой части хватает ширины — иначе текст стал бы слишком узким; тогда директор под текстом.
+   Решает ширина самой части (container about), а не окна: так раскладка одинаково работает и рядом с объявлениями, и под ними */
+.about-main { container: about / inline-size; }
+.about-body { display: grid; grid-template-columns: minmax(0, 1fr); column-gap: clamp(var(--space-32), 3.4vw, var(--space-72)); align-items: start; }
+.about-body .director { margin-top: var(--space-grid-y); }
+@container about (min-width: 640px) {
+  .about-body { grid-template-columns: minmax(0, 1fr) clamp(220px, 32%, 260px); }   /* тексту остаётся не меньше ~380px */
+  .about-body .director { margin-top: 0; flex-direction: column; }
+  .about-body .director .photo { width: 100%; }
+  .about-body .director .body { padding: var(--space-16) 0 0; align-self: auto; }
 }
 @container content (min-width: 900px) {
-  :is(.hero, .ann-row) { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  :is(.slider, .ann) { grid-column: span 3; }
-}
-@container content (min-width: 1400px) {
-  :is(.hero, .ann-row) { grid-template-columns: repeat(5, minmax(0, 1fr)); }
-  :is(.slider, .ann) { grid-column: span 4; }
+  .about-row { grid-template-columns: repeat(6, minmax(0, 1fr)); column-gap: var(--space-grid-x); }
+  .about-main { grid-column: span 4; margin-right: clamp(var(--space-24), 2.2vw, var(--space-56)); }
+  .about-row .ann { grid-column: span 2; }
+  .about-row .ann .section-head { flex-direction: column; align-items: flex-start; row-gap: var(--space-4); }   /* узкая колонка: ссылка под заголовком */
+  .about-row .ann .section-head .more { margin-left: 0; }
 }
 
-/* Всегда три объявления: самое свежее (.ann-main) сверху на всю ширину и крупнее, два других под ним в две колонки */
+/* Первый экран (раздел 8): слайдер — 4 колонки, виджет — 2 */
+@container content (min-width: 760px) {
+  .hero { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .slider { grid-column: span 4; }
+  .gos-section { grid-column: span 2; }
+  .hero .slider { margin-right: clamp(var(--space-24), 2.2vw, var(--space-56)); }   /* margin, а не padding: у слайдера от внутренней ширины считается высота картинки */
+}
+
+/* Всегда три объявления друг под другом, заголовки у всех одного размера */
 .ann-list {
   list-style: none; margin: 0; padding: 0;
-  display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-grid-y) var(--space-grid-x);
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-grid-y);
 }
 .ann-list > :nth-child(n+4) { display: none; }
-/* в одну колонку (телефон) все карточки одинаковые; крупнее свежее — только когда есть две колонки */
-@container content (min-width: 560px) {
-  .ann-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .ann-main { grid-column: 1 / -1; }
-  .ann-main .ann-title { font: var(--type-h3); }   /* как у главной новости */
-}
 /* карточка: дата и время, заголовок целиком, текст — не больше 3 строк; ссылка — вся карточка */
 .ann-card { display: flex; flex-direction: column; gap: var(--space-8); color: var(--text-primary); text-decoration: none !important; }
-/* дата — опора карточки: крупное число + месяц с годом и время; при наведении число наклоняется */
-.ann-date { display: flex; align-items: center; gap: var(--space-12); margin-bottom: var(--space-8); }
-.ann-date .d { font-family: var(--font-head); font-size: 40px; font-weight: 700; line-height: 1; color: var(--text-brand); transform-origin: left bottom; transition: transform .25s cubic-bezier(.3, 1.35, .5, 1); }
-.ann-card:hover .ann-date .d { transform: rotate(-8deg); }
-.ann-date .m { display: flex; flex-direction: column; font-size: var(--fs-14); line-height: 1.25; color: var(--text-brand); font-weight: 500; }
+/* дата одной строкой: «22 октября 2026 в 12:10», время — серым */
+.ann-date { font-size: var(--fs-14); line-height: 1.4; font-weight: 500; color: var(--text-brand); }
 .ann-date .t { color: var(--text-secondary); font-weight: 400; }
 .ann-title { font: var(--type-title); transition: color .2s; }
 .ann-card:hover .ann-title { color: var(--text-brand); transition-duration: 0s; }
@@ -581,17 +585,11 @@ a.card { color: inherit; text-decoration: none !important; }
 .ann-file .i { --i-size: var(--size-icon-lg); color: var(--text-brand); }
 
 /* Директор: фото и имя ведут на его страницу, контакты — отдельные ссылки */
-.director { display: flex; flex-direction: column; }
-.director .photo { display: block; }
+.director { display: flex; flex-direction: row; align-items: flex-start; }
+.director .photo { display: block; width: 120px; flex-shrink: 0; }
 .director img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; object-position: top; border-radius: var(--radius-lg); background: var(--bg-subtle); }   /* фото с прозрачным фоном — подложка как у сайдбара */
 .director:has(.photo:hover) .name, .director .name:hover { color: var(--text-brand); }
-.director .body { padding: var(--space-16) 0 0; }
-@container content (max-width: 759px) {
-  .director { flex-direction: row; align-items: flex-start; }
-  .director .body { align-self: center; }   /* короткий текст — по центру фото; текст выше фото задаёт высоту ряда и начинается вровень с фото */
-  .director .photo { width: 120px; flex-shrink: 0; }
-  .director .body { padding: 0 0 0 var(--space-16); }
-}
+.director .body { padding: 0 0 0 var(--space-16); align-self: center; }   /* короткий текст — по центру фото; текст выше фото задаёт высоту ряда и начинается вровень с ним */
 .director .name { display: block; color: var(--text-primary); font-size: var(--fs-16); font-weight: 700; line-height: 1.25; }
 .director .role { font-size: var(--fs-14); color: var(--text-secondary); margin-top: var(--space-2); }
 /* контакты директора — без подписей, телефон и почта узнаются сами */
@@ -669,7 +667,7 @@ a.card:hover .card-title { color: var(--text-brand); }
 
 /* ================= 12. Внутренние страницы: хлебные крошки, заголовок h1 ================= */
 .page-head { padding-top: clamp(var(--space-24), 2.2vw, var(--space-48)); margin-bottom: clamp(var(--space-40), 3.4vw, var(--space-72)); }
-@media (max-width: 959px) { .page-head { padding-top: calc(var(--space-page-x) * 3); } }   /* как у первого экрана главной */
+@media (max-width: 959px) { .page-head { padding-top: var(--space-48); } }   /* как у первого экрана главной */
 .crumbs ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4) var(--space-8); font-size: var(--fs-14); line-height: 1.4; color: var(--text-secondary); }
 .crumbs li { display: inline-flex; align-items: center; gap: var(--space-8); min-width: 0; }
 /* разделитель — каретка из набора иконок, как у ссылок «Все …» */
@@ -875,7 +873,7 @@ a.card:hover .card-title { color: var(--text-brand); }
 /* Код виджета — из прототипа без изменений. Блок не тянется на всю ширину: до 1060px (максимум раскладки виджета);
    горизонтальная раскладка у виджета включается сама от 500px ширины */
 .gos { max-width: 1060px; margin-inline: auto; border-radius: var(--radius-lg); overflow: hidden; display: flex; }
-.gos > #js-show-iframe-wrapper { flex: 1; min-width: 0; }   /* свой минимум виджета — 293px; в более узком месте site.js уменьшает его целиком (zoom) */
+.gos > #js-show-iframe-wrapper { flex: 1; min-width: 0; align-items: flex-start; }   /* размер и масштаб рядом со слайдером подбирает site.js; содержимое прижато к верху — без пустой полосы над картинкой */
 
 
 /* ================= 19. Полезные ресурсы: баннеры ================= */
