@@ -421,7 +421,7 @@ h4, .type-h4 { font: var(--type-h4); letter-spacing: normal; }
   .scrim { display: block; position: fixed; inset: 0; z-index: 65; background: var(--bg-overlay); opacity: 0; pointer-events: none; transition: opacity .25s; }
   body.nav-open .scrim { opacity: 1; pointer-events: auto; }
 
-  .topbar .burger { display: inline-flex; }
+  .topbar .burger { display: inline-flex; flex-shrink: 0; }   /* кнопка меню не сжимается — всегда квадратная */
   .tb-main { display: flex; align-items: center; }
   .mini-brand { display: flex; align-items: center; gap: var(--space-12); color: var(--text-primary); text-decoration: none !important; }
   .mini-brand img { width: 48px; height: 48px; flex-shrink: 0; border-radius: 50%; object-fit: cover; }
@@ -924,8 +924,7 @@ a.card:hover .card-title { color: var(--text-brand); }
 .banner-strip { display: contents; }   /* на ПК баннеры остаются ячейками общей сетки */
 /* одинаковые ячейки без рамок, картинка вписана целиком и не влияет на размер ячейки */
 .banner { position: relative; width: 100%; aspect-ratio: 4 / 3; align-self: stretch; background: var(--neutral-0); border-radius: var(--radius-lg); }   /* белый во всех темах: баннеры — чужие картинки, рассчитанные на белый фон */
-.banner img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; border-radius: inherit; transition: transform .25s; }
-.banner:hover img { transform: scale(1.04); }
+.banner img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; border-radius: inherit; }   /* увеличение при наведении — только на ПК (ниже); на телефоне и планшете без анимации */
 /* ПК: при наведении баннер увеличивается на 50% поверх соседей; точку роста (transform-origin) скрипт сдвигает так,
    чтобы крайние баннеры не вылезали за сетку и на заголовок. Белая подложка — соседи не просвечивают через прозрачные поля картинки */
 @media (hover: hover) and (min-width: 768px) {
@@ -934,15 +933,15 @@ a.card:hover .card-title { color: var(--text-brand); }
   .banner img { transition: transform .25s, box-shadow .25s; }
   .banner:hover img { transform: scale(1.5); background: var(--neutral-0); border-radius: calc(var(--radius-lg) * .6); box-shadow: 0 6px 20px rgb(var(--shadow-rgb) / .16); }
 }
-/* телефон: горизонтальная лента со свайпом (виджет Госуслуг остаётся над ней во всю ширину);
-   видно 2 баннера и край третьего — понятно, что ленту можно листать */
+/* телефон: горизонтальная лента со свайпом, как у слайдера и фотоальбомов: виден один баннер и край следующего —
+   понятно, что ленту можно листать */
 @container content (max-width: 559px) {
   .banner-strip {
     grid-column: 1 / -1; display: flex; gap: var(--space-12); overflow-x: auto; scroll-snap-type: x mandatory;
     margin: 0 calc(-1 * var(--page-x)); padding: 0 var(--page-x) var(--space-8); scroll-padding-inline: var(--page-x); scrollbar-width: none;
   }
   .banner-strip::-webkit-scrollbar { display: none; }
-  .banner-strip .banner { flex: 0 0 42%; scroll-snap-align: start; }
+  .banner-strip .banner { flex: 0 0 80%; scroll-snap-align: start; }   /* ширина карточки — как у других лент на телефоне (слайдер, фото и видео) */
 }
 @media (max-width: 767px) { .banners { gap: var(--space-12); } }
 
