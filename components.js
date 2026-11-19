@@ -20,14 +20,14 @@ const socialsHTML = (list, { mono = false } = {}) => list.map(s =>
   `<a href="${s.href}" aria-label="${esc(s.t)}"${mono ? ` style="--m: url(${s.mono})"` : ''}><img src="${s.icon}" alt=""></a>`).join('');
 
 /* --- Карточка новости (site.css → «11. Новости»).
-       n — запись из NEWS (news-data.js): { id, date, title, text?, img? }.
+       n — запись из NEWS (news-data.js): { id, date, title, text?, img?, typical? }. Нет обложки (img) — на её месте заглушка .ph.
        featured — крупная (на главной первая; в списке — какие решает site.js); lazy — ленивая загрузка картинки;
        level — уровень заголовка по структуре страницы: 3 под заголовком секции (по умолчанию), 2 в списке под h1 страницы.
        Вид от уровня не зависит — его задаёт класс .card-title.
        Анонс выводится всегда: у маленьких карточек его скрывает CSS, а в списке новостей карточка может стать крупной --- */
-const newsHref = n => typeof ARTICLES !== 'undefined' && ARTICLES[n.id] ? `news-item.html?id=${n.id}` : '#';   // страницы есть пока у первых 10 новостей
+const newsHref = n => (typeof ARTICLES !== 'undefined' && ARTICLES[n.id]) || n.typical ? `news-item.html?id=${n.id}` : '#';   // страница есть у новостей с текстом в ARTICLES и у типовых
 const newsCard = (n, { featured = false, lazy = false, level = 3 } = {}) => `<a class="news-card${featured ? ' news-card--featured' : ''} card" href="${newsHref(n)}">
-    <div class="thumb">${n.img ? `<img src="${n.img}" alt=""${lazy ? ' loading="lazy"' : ''}>` : ''}</div>
+    <div class="thumb">${n.img ? `<img src="${n.img}" alt=""${lazy ? ' loading="lazy"' : ''}>` : '<span class="ph" aria-hidden="true"><i class="i i-image"></i></span>'}</div>
     <div class="body"><h${level} class="card-title">${esc(n.title)}</h${level}>${n.text ? `<p>${esc(n.text)}</p>` : ''}<time datetime="${n.date}">${fmtDate(n.date)}</time></div>
   </a>`;
 

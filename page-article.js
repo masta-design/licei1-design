@@ -1,8 +1,8 @@
 /* --- Страница новости: news-item.html?id=… (в CMS — отдельный адрес у каждой новости).
-       Текст и фото — из ARTICLES (news-articles.js), заголовок и дата — из NEWS (news-data.js) --- */
+       Текст и фото — из ARTICLES (news-articles.js), у типовых новостей — TYPICAL_ARTICLE; заголовок и дата — из NEWS (news-data.js) --- */
 (function () {
   const id = new URLSearchParams(location.search).get('id') || Object.keys(ARTICLES)[0];
-  const n = NEWS.find(x => x.id === id), a = ARTICLES[id];
+  const n = NEWS.find(x => x.id === id), a = ARTICLES[id] || (n && n.typical ? TYPICAL_ARTICLE : null);   // типовая новость — образец текста
 
   if (!n || !a) {
     document.getElementById('article-title').textContent = 'Новость не найдена';
@@ -20,9 +20,11 @@
     v.title = 'Просмотров: ' + a.views;
     v.hidden = false;
   }
-  document.getElementById('article-photos').innerHTML = a.photos.map(src => `<img src="${src}" alt="">`).join('');
+  // null вместо адреса — заглушка фото (у типовой новости)
+  document.getElementById('article-photos').innerHTML = a.photos.map(src => src ? `<img src="${src}" alt="">` : '<div class="ph" aria-hidden="true"><i class="i i-image"></i></div>').join('');
   // абзацы приходят из CMS готовым HTML (ссылки, переносы строк)
-  document.getElementById('article-body').innerHTML = (a.lead ? `<p class="article-lead">${esc(a.lead)}</p>` : '') + a.body.map(p => `<p>${p}</p>`).join('');
+  const block = /^<(h[2-4]|p|ul|ol|figure|blockquote|table|div|details)[\s>]/;   // строка с тегом блока — как есть, иначе — абзац
+  document.getElementById('article-body').innerHTML = (a.lead ? `<p class="article-lead">${esc(a.lead)}</p>` : '') + a.body.map(p => block.test(p) ? p : `<p>${p}</p>`).join('');
 
   // «Читайте также»: строкой под новостью — столько новостей, сколько колонок (2/4/5/6; на телефоне лента из 6);
   // колонкой справа (большие экраны, сетка в одну колонку) — 3.

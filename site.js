@@ -222,7 +222,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') setNav(false
 })();
 
 /* --- Список новостей: крупные карточки для разнообразия. Блок — крупная 2×2 и маленькие, заполняющие две строки рядом с ней;
-       крупная чередуется: слева, справа, слева… На 1–2 колонках — крупная во всю ширину, после неё 4 маленькие.
+       крупная чередуется: слева (первая новость блока), справа (последняя), слева… На 1–2 колонках — крупная во всю ширину, после неё 4 маленькие.
        Число колонок задают контейнерные запросы CSS, поэтому раскладка пересчитывается при смене ширины --- */
 (function () {
   const grid = document.querySelector('.news-list .news-grid');
@@ -235,10 +235,15 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') setNav(false
     cols0 = cols;
     const small = cols >= 4 ? 2 * (cols - 2) : 4;   // маленьких в блоке
     cards.forEach((c, i) => {
-      // крупная — только если за ней хватает маленьких, чтобы закрыть блок; иначе в конце страницы остались бы дыры
-      const big = i % (small + 1) === 0 && cards.length - i > small;
+      const block = Math.floor(i / (small + 1)), start = block * (small + 1);
+      const right = cols >= 4 && block % 2 === 1;
+      // крупная — только в полном блоке (иначе в конце страницы остались бы дыры).
+      // Слева — первая новость блока; справа — последняя: маленькие (свежее) встают слева от неё, и даты идут по убыванию слева направо
+      const big = cards.length - start > small && i === start + (right ? small : 0);
       c.classList.toggle('news-card--featured', big);
-      c.classList.toggle('is-right', big && cols >= 4 && i / (small + 1) % 2 === 1);
+      c.classList.toggle('is-right', big && right);
+      // справа крупная идёт последней в блоке — без явной строки сетка поставила бы её ниже маленьких; блок занимает 2 строки
+      c.style.gridRow = big && right ? `${block * 2 + 1} / span 2` : '';
     });
   }).observe(grid);
 })();

@@ -779,6 +779,7 @@ a.card:hover .card-title { color: var(--text-brand); }
 /* телефон: у строчной ссылки .more внешний отступ сверху не работает — делаем её строчным блоком; её поля 12px (зона нажатия) входят в отступ */
 @media (max-width: 767px) { .article-back { display: inline-block; margin-top: calc(clamp(var(--space-16), 1.4vw, var(--space-32)) - var(--space-12)); } }
 .article-photos:empty + .article-body { margin-top: 0; }
+.article-photos .ph { aspect-ratio: 3 / 2; border-radius: var(--radius-lg); }   /* обложка-заглушка: размер как у горизонтального фото */
 
 /* Контент из CMS (.prose): текст статей и страниц, который набирает редактор — заголовки, списки, таблицы, цитаты, фото.
    Подзаголовки внутри текста — h2, h3, h4 (h1 у страницы уже есть); выглядят по своему тегу, как везде на сайте.
@@ -802,6 +803,8 @@ a.card:hover .card-title { color: var(--text-brand); }
 .prose figure:has(> blockquote) figcaption { padding-left: var(--space-32); }
 .prose figure > blockquote { margin: 0; }
 .prose figure { margin: 1.6em 0; }
+.prose :is(.note, .docs) { margin: 1.6em 0; }   /* примечание, документы и таблица отделены от текста так же, как цитата и фото */
+.prose table { margin: 1.6rem 0; }   /* у таблицы кегль мельче — em дал бы меньший отступ; rem = кегль текста статьи (16px) */
 .prose img { height: auto; border-radius: var(--radius-lg); background: var(--fill-medium); }
 .prose figcaption { margin-top: var(--space-8); font: var(--type-body-sm); color: var(--text-secondary); }
 .prose hr { height: 0; margin: 2em 0; border: 0; }   /* разрыв — только воздухом */
@@ -812,6 +815,45 @@ a.card:hover .card-title { color: var(--text-brand); }
 .prose th { font-weight: 600; color: var(--text-secondary); }
 .prose tbody tr:nth-child(odd) { background: var(--fill-subtle); }
 .prose caption { margin-bottom: var(--space-8); font: var(--type-body-sm); color: var(--text-secondary); text-align: left; }
+
+/* Заглушка фото (.ph): там, где картинки нет или она ещё не загружена в CMS — серая подложка со значком.
+   В карточке новости без обложки заполняет место картинки; в тексте (.prose) — фото 3 : 2 с подписью */
+.ph { display: grid; place-items: center; width: 100%; height: 100%; background: var(--fill-medium); color: var(--icon-secondary); }
+.ph .i { --i-size: var(--size-icon-xl); }
+.prose .ph { aspect-ratio: 3 / 2; border-radius: var(--radius-lg); }
+
+/* Примечание (.note): важное в тексте — бледная подложка цвета темы, без рамок и линий */
+.prose .note { padding: var(--space-16) var(--space-20); border-radius: var(--radius-lg); background: var(--action-subtle); }
+.prose .note > * { margin: 0 0 .5em; }
+.prose .note > :last-child { margin-bottom: 0; }
+
+/* Документы (.docs): список файлов — значок, название, под ним формат и размер; ссылка — вся строка */
+.prose .docs { list-style: none; padding: 0; display: grid; gap: var(--space-16); }
+.prose .docs li { margin: 0; }
+.doc { display: flex; align-items: flex-start; gap: var(--space-12); color: var(--text-primary); text-decoration: none !important; }
+.doc .i { --i-size: var(--size-icon-lg); flex-shrink: 0; margin-top: var(--space-2); color: var(--text-brand); }
+.doc-name { display: block; font-weight: 500; transition: color .2s; }
+.doc-meta { display: block; margin-top: var(--space-2); font: var(--type-body-sm); color: var(--text-secondary); }
+.doc:hover .doc-name { color: var(--text-brand); transition-duration: 0s; }
+
+/* Раскрывающиеся блоки (.acc): вопросы и ответы, длинные перечни. Каждый блок — на подложке, без линий; открытый — шеврон вверх */
+.prose .acc { margin: 0 0 var(--space-8); border-radius: var(--radius-lg); background: var(--fill-subtle); }
+.prose .acc + :not(.acc) { margin-top: 1em; }
+.acc > summary {
+  display: flex; align-items: center; gap: var(--space-12); padding: var(--space-16) var(--space-20);
+  font-weight: 600; cursor: pointer; list-style: none; border-radius: inherit; transition: color .2s;
+}
+.acc > summary::-webkit-details-marker { display: none; }
+.acc > summary:hover { color: var(--text-brand); transition-duration: 0s; }
+.acc > summary .i { margin-left: auto; flex-shrink: 0; --i-size: var(--size-icon-md); color: var(--icon-secondary); transition: transform .2s; }
+.acc[open] > summary .i { transform: rotate(180deg); }
+.acc-body { padding: 0 var(--space-20) var(--space-20); }
+.acc-body > * { margin: 0 0 1em; }
+.acc-body > :last-child { margin-bottom: 0; }
+
+/* Типовая страница раздела (page.html): текст — колонка для чтения; внизу — дата обновления */
+.page-body { max-width: 720px; }
+.page-updated { margin: clamp(var(--space-32), 2.6vw, var(--space-56)) 0 0; font-size: var(--fs-14); color: var(--text-secondary); }
 
 /* «Читайте также» — одна строка карточек: сколько колонок, столько и новостей (2/4/5/6; число ставит скрипт); на телефоне — лента со свайпом */
 .related { container: news / inline-size; }

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Типовая страница раздела — Лицей №1 им. М.В. Карамаева (v3)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=PT+Serif:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="site.css">
+  <link rel="stylesheet" href="demo-look.css"><!-- только для демо -->
+  <script src="demo-look.js"></script><!-- только для демо; первым — сохранённые цвета применяются до отрисовки -->
+  <script src="school-data.js"></script>
+  <script src="components.js"></script>
+  <script src="layout.js"></script>
+</head>
+<!-- Типовая страница раздела: шаблон для любых текстовых страниц сайта (сведения об организации, документы, страницы разделов).
+     Текст набирает редактор в CMS — всё внутри .prose; здесь собраны все элементы, которые он может использовать -->
+<body data-nav="Типовая страница раздела">
+
+<!-- Общие части (сайдбар, шапка, подвал) — теги-заглушки, разметку подставляет layout.js -->
+<div class="app">
+  <site-sidebar></site-sidebar>
+  <div class="main">
+    <site-header></site-header>
+
+    <main class="content" id="main">
+
+      <!-- ================= ЗАГОЛОВОК СТРАНИЦЫ: хлебные крошки + h1 ================= -->
+      <div class="page-head">
+        <nav class="crumbs" aria-label="Хлебные крошки">
+          <ol>
+            <li><a href="./">Главная</a></li>
+            <li><span aria-current="page">Типовая страница раздела</span></li>
+          </ol>
+        </nav>
+        <h1 class="page-title">Типовая страница раздела</h1>
+      </div>
+
+      <!-- ================= ТЕКСТ СТРАНИЦЫ: из CMS, стили .prose ================= -->
+      <div class="page-body prose">
+        <p class="article-lead">Лид — короткое вступление: о чём эта страница и кому она пригодится. Необязательный элемент.</p>
+        <p>Обычный абзац текста с <a href="#">ссылкой</a> и <strong>выделением</strong>. Межстрочный интервал увеличен для удобного чтения длинного текста.</p>
+
+        <h2>Подзаголовок h2</h2>
+        <p>Текст раздела. Подзаголовки делят длинную страницу на части и помогают найти нужное.</p>
+        <h3>Подзаголовок h3</h3>
+        <ul>
+          <li>Пункт маркированного списка</li>
+          <li>Ещё один пункт — может быть длиннее и переноситься на следующую строку</li>
+          <li>Третий пункт</li>
+        </ul>
+        <h4>Подзаголовок h4</h4>
+        <ol>
+          <li>Пункт нумерованного списка</li>
+          <li>Второй пункт</li>
+          <li>Третий пункт</li>
+        </ol>
+
+        <div class="note">
+          <p><strong>Обратите внимание.</strong> Примечание выделяет важное: срок подачи документов, условие, изменение в расписании.</p>
+        </div>
+
+        <figure>
+          <blockquote><p>«Цитата выделяется отступом и шрифтом заголовков, без линий и значков. Кавычки — в самом тексте».</p></blockquote>
+          <figcaption>— Имя Фамилия, должность</figcaption>
+        </figure>
+
+        <figure>
+          <div class="ph"><i class="i i-image" aria-hidden="true"></i></div>
+          <figcaption>Подпись к фото: кто или что на снимке</figcaption>
+        </figure>
+
+        <h2>Таблица</h2>
+        <table>
+          <thead><tr><th>День</th><th>Часы работы</th><th>Перерыв</th></tr></thead>
+          <tbody>
+            <tr><td>Понедельник — пятница</td><td>8:00–18:00</td><td>12:00–13:00</td></tr>
+            <tr><td>Суббота</td><td>8:00–14:00</td><td>—</td></tr>
+            <tr><td>Воскресенье</td><td>Выходной</td><td>—</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Документы</h2>
+        <ul class="docs">
+          <li><a class="doc" href="#"><i class="i i-file" aria-hidden="true"></i><span><span class="doc-name">Устав МБОУ «Лицей №1 им. М.В. Карамаева»</span><span class="doc-meta">PDF, 2,4 МБ</span></span></a></li>
+          <li><a class="doc" href="#"><i class="i i-file" aria-hidden="true"></i><span><span class="doc-name">Лицензия на осуществление образовательной деятельности</span><span class="doc-meta">PDF, 860 КБ</span></span></a></li>
+          <li><a class="doc" href="#"><i class="i i-file" aria-hidden="true"></i><span><span class="doc-name">Правила внутреннего распорядка обучающихся</span><span class="doc-meta">DOCX, 120 КБ</span></span></a></li>
+        </ul>
+
+        <h2>Вопросы и ответы</h2>
+        <details class="acc">
+          <summary>Как записать ребёнка в первый класс?<i class="i i-down" aria-hidden="true"></i></summary>
+          <div class="acc-body"><p>Ответ раскрывается по нажатию. Внутри — обычный текст: абзацы, списки, ссылки.</p></div>
+        </details>
+        <details class="acc">
+          <summary>Какие документы нужны для перевода из другой школы?<i class="i i-down" aria-hidden="true"></i></summary>
+          <div class="acc-body">
+            <ul>
+              <li>Заявление родителя</li>
+              <li>Личное дело обучающегося</li>
+              <li>Ведомость текущих оценок</li>
+            </ul>
+          </div>
+        </details>
+        <details class="acc">
+          <summary>Длинный вопрос, который не помещается в одну строку и переносится — шеврон остаётся справа по центру<i class="i i-down" aria-hidden="true"></i></summary>
+          <div class="acc-body"><p>Ответ на вопрос.</p></div>
+        </details>
+      </div>
+
+      <p class="page-updated">Страница обновлена <time datetime="2026-10-12">12 октября 2026</time></p>
+
+    </main>
+
+    <site-footer></site-footer>
+  </div>
+</div>
+
+<demo-look></demo-look><!-- только для демо: панель «Внешний вид» -->
+
+<script src="site.js"></script>
+</body>
+</html>
