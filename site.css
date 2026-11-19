@@ -20,7 +20,7 @@
    15. Страница новости и «Читайте также»
    16. Об учреждении: текст
    17. Фото и видео
-   18. Виджет Госуслуг
+   18. Баннер Госуслуг
    19. Полезные ресурсы
    20. Подвал
    21. Уменьшение движения
@@ -568,12 +568,11 @@ a.card { color: inherit; text-decoration: none !important; }
 
 
 /* ================= 10. Об учреждении, директор и объявления ================= */
-/* Первый экран (.hero, раздел 8) и общая секция .about-row стоят на одной сетке из 6 колонок:
-   в первых четырёх — слайдер / текст «Об учреждении» с директором, в последних двух — виджет Госуслуг / объявления.
-   Между частями — дополнительный отступ около 2.2vw (margin у левой части, сверх шага сетки), поэтому края виджета и объявлений совпадают.
-   Первый экран делится на колонки с контента 760px, общая секция — с 900px; уже — части друг под другом */
-.about-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-section); align-items: start; }
+/* Объявления — в правой колонке первого экрана (.hero-side), под баннером Госуслуг, без заголовка; «Все объявления» — под списком.
+   «Об учреждении» с директором — во всю ширину контента */
 .about-main, .ann { min-width: 0; }
+.hero-side { display: grid; gap: var(--space-40); align-content: start; min-width: 0; container: side / inline-size; }
+.ann-more { display: inline-flex; margin-top: var(--space-24); }
 /* Левая часть: заголовок, под ним текст и карточка директора. Директор встаёт справа от текста (вровень с первым абзацем),
    только если самой части хватает ширины — иначе текст стал бы слишком узким; тогда директор под текстом.
    Решает ширина самой части (container about), а не окна: так раскладка одинаково работает и рядом с объявлениями, и под ними */
@@ -586,28 +585,43 @@ a.card { color: inherit; text-decoration: none !important; }
   .about-body .director .photo { width: 100%; }
   .about-body .director .body { padding: var(--space-16) 0 0; align-self: auto; }
 }
-@container content (min-width: 900px) {
-  .about-row { grid-template-columns: repeat(6, minmax(0, 1fr)); column-gap: var(--space-grid-x); }
-  .about-main { grid-column: span 4; margin-right: clamp(var(--space-24), 2.2vw, var(--space-56)); }
-  .about-row .ann { grid-column: span 2; }
-  .about-row .ann .section-head { flex-direction: column; align-items: flex-start; row-gap: var(--space-4); }   /* узкая колонка: ссылка под заголовком */
-  .about-row .ann .section-head .more { margin-left: 0; }
+
+/* «Об учреждении» на той же сетке, что первый экран: заголовок и текст — 4 колонки (под слайдером),
+   директор — 2 колонки справа (под объявлениями), верх фото вровень с заголовком секции */
+@container content (min-width: 760px) {
+  .about-main { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-template-rows: auto 1fr; column-gap: var(--space-grid-x); align-items: start; }   /* 1fr: если директор выше текста, лишняя высота уходит во 2-ю строку — отступ под заголовком не растёт */
+  .about-main > .section-head, .about-text { grid-column: 1 / span 4; margin-right: clamp(var(--space-24), 2.2vw, var(--space-56)); }
+  .about-body { display: contents; }
+  .about-body .director { grid-column: 5 / span 2; grid-row: 1 / span 2; margin-top: 0; flex-direction: column; }
+  .about-body .director .photo { width: 100%; max-width: 320px; }
+  .about-body .director .body { padding: var(--space-16) 0 0; align-self: auto; }
 }
 
-/* Первый экран (раздел 8): слайдер — 4 колонки, виджет — 2 */
+/* Первый экран (раздел 8): слайдер — 4 колонки, правая колонка (баннер Госуслуг и объявления) — 2 */
 @container content (min-width: 760px) {
   .hero { grid-template-columns: repeat(6, minmax(0, 1fr)); }
   .slider { grid-column: span 4; }
-  .gos-section { grid-column: span 2; }
+  .hero-side { grid-column: span 2; }
   .hero .slider { margin-right: clamp(var(--space-24), 2.2vw, var(--space-56)); }   /* margin, а не padding: у слайдера от внутренней ширины считается высота картинки */
 }
 
 /* Всегда три объявления друг под другом, заголовки у всех одного размера */
 .ann-list {
   list-style: none; margin: 0; padding: 0;
-  display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-grid-y);
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-32);
 }
 .ann-list > :nth-child(n+4) { display: none; }
+/* правая колонка первого экрана узкая — объявлений меньше, чтобы колонка не была сильно длиннее слайдера: уже 375px — два, уже 310px — одно
+   (при сайдбаре 296px это окно примерно 1380–1600px и 1150–1380px).
+   Только пока первый экран делится на колонки (content от 760px): на телефоне колонка тоже узкая, но там объявлений три */
+@container content (min-width: 760px) {
+  @container side (width < 375px) {
+    .ann-list > :nth-child(3) { display: none; }
+  }
+  @container side (width < 310px) {   /* совсем узкая (окно ~1150–1380px) — одно объявление */
+    .ann-list > :nth-child(2) { display: none; }
+  }
+}
 /* карточка: дата и время, заголовок целиком, текст — не больше 3 строк; ссылка — вся карточка */
 .ann-card { display: flex; flex-direction: column; gap: var(--space-8); color: var(--text-primary); text-decoration: none !important; }
 /* дата одной строкой: «22 октября 2026 в 12:10», время — серым */
@@ -888,7 +902,7 @@ a.card:hover .card-title { color: var(--text-brand); }
 /* ================= 16. Об учреждении ================= */
 /* В тексте — только абзацы одного стиля (без фото, видео, ссылок и кнопок), под ними «Подробнее» */
 .about-text { padding: 0; max-width: 980px; }
-.about-text p { margin: 0 0 var(--space-20); font: var(--type-prose); }
+.about-text p { margin: 0 0 var(--space-20); font: var(--type-prose); font-size: clamp(var(--fs-16), 12px + .3125vw, var(--fs-20)); }   /* резиновый: 16px до экрана 1280px, растёт до 20px на 2560px */
 .about-text .more { margin-top: var(--space-8); }
 
 
@@ -950,11 +964,72 @@ a.card:hover .card-title { color: var(--text-brand); }
 .media-card .meta { margin-top: var(--space-4); font-size: var(--fs-14); color: var(--text-secondary); }
 
 
-/* ================= 18. Виджет Госуслуг «Решаем вместе» ================= */
-/* Код виджета — из прототипа без изменений. Блок не тянется на всю ширину: до 1060px (максимум раскладки виджета);
-   горизонтальная раскладка у виджета включается сама от 500px ширины */
-.gos { max-width: 1060px; margin-inline: auto; border-radius: var(--radius-lg); overflow: hidden; display: flex; }
-.gos > #js-show-iframe-wrapper { flex: 1; min-width: 0; align-items: flex-start; }   /* размер и масштаб рядом со слайдером подбирает site.js; содержимое прижато к верху — без пустой полосы над картинкой */
+/* ================= 18. Баннер Госуслуг ================= */
+/* Своя вёрстка вместо кода виджета: в 2–2,5 раза ниже. Фирменное у Госуслуг не меняем — градиент, синяя кнопка и логотип;
+   это цвета чужого бренда, поэтому они заданы здесь, а не токенами темы, и от темы сайта не зависят.
+   Раскладка — от ширины самого баннера: в узкой колонке (рядом со слайдером, на телефоне) — вертикальная,
+   от 560px — горизонтальная: логотип, текст, кнопка в одну строку */
+.gos {
+  --gos-gradient: linear-gradient(138.4deg, #38bafe 26.49%, #2d73bc 79.45%);
+  --gos-btn: #0d4cd3; --gos-btn-hover: #1d5deb;
+  container: gos / inline-size;
+}
+.gos-banner {
+  position: relative; overflow: hidden; isolation: isolate;
+  display: grid; gap: var(--space-16); justify-items: start;
+  padding: var(--space-24);
+  border-radius: var(--radius-lg); background: var(--gos-gradient); color: #fff; cursor: pointer;
+}
+/* украшение: два полупрозрачных круга в правом верхнем углу — вместо иллюстрации виджета, не занимают места */
+.gos-banner::before {
+  content: ""; position: absolute; z-index: -1; right: -64px; top: -96px; width: 240px; height: 240px; border-radius: 50%;
+  background: rgb(255 255 255 / .08); box-shadow: 0 0 0 40px rgb(255 255 255 / .05);
+}
+.gos-logo { display: block; width: 128px; height: auto; }
+.gos-text { display: grid; gap: var(--space-8); }
+.gos-text p { margin: 0; }
+.gos-title { font-size: var(--fs-20); line-height: 1.3; font-weight: 700; text-wrap: balance; }
+.gos-note { font-size: var(--fs-16); line-height: 1.45; opacity: .9; }
+.gos-btn {
+  justify-self: stretch; height: var(--size-control-lg); padding: 0 var(--space-20);
+  border: 0; border-radius: var(--radius-md); background: var(--gos-btn); color: #fff;
+  font: inherit; font-size: var(--fs-16); font-weight: 600; white-space: nowrap; cursor: pointer; transition: background-color .2s;   /* текст кнопки — всегда в одну строку */
+}
+/* самый узкий баннер (колонка ~240–280px): поля и кнопка компактнее, чтобы «Сообщить о проблеме» помещалось в строку */
+@container gos (width < 300px) {
+  .gos-banner { padding: var(--space-20); }
+  .gos-btn { padding: 0 var(--space-12); font-size: var(--fs-14); }
+}
+.gos-btn:hover { background: var(--gos-btn-hover); transition-duration: 0s; }
+.gos-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+/* иллюстрация Госуслуг (городской парк) — только в горизонтальной раскладке */
+.gos-art { display: none; }
+/* Горизонтальная раскладка (от 560px), как у фирменного баннера: слева логотип и текст, справа иллюстрация на ~40% ширины
+   с дугой по левому краю; кнопка стоит поверх иллюстрации внизу */
+@container gos (min-width: 560px) {
+  .gos-banner {
+    grid-template-columns: minmax(0, 1fr) 40%; grid-template-rows: auto 1fr; align-items: start;
+    column-gap: var(--space-24); row-gap: var(--space-24);
+    padding: var(--space-32) var(--space-32) var(--space-32) clamp(var(--space-24), 4cqi, var(--space-48));
+  }
+  .gos-banner::before { display: none; }   /* круги не нужны — есть иллюстрация */
+  .gos-logo { grid-column: 1; grid-row: 1; }
+  .gos-text { grid-column: 1; grid-row: 2; align-self: end; gap: var(--space-12); }
+  .gos-title { font-size: var(--fs-24); }
+  .gos-note { font-size: var(--fs-20); line-height: 1.4; }
+  .gos-btn { grid-column: 2; grid-row: 2; align-self: end; justify-self: end; width: auto; white-space: nowrap; height: 56px; padding: 0 var(--space-32); font-size: var(--fs-20); box-shadow: 0 6px 20px rgb(0 0 0 / .18); }
+  .gos-art {
+    display: block; position: absolute; z-index: -1; top: 0; right: 0; bottom: 0; width: 40%;
+    /* иллюстрация Госуслуг (banner-fluid-bg-2-small.svg) — копия без внутренней тени по краю; дуга по левому краю — в самой картинке */
+    background: url(images/gosuslugi-park.svg) 0 100% / cover no-repeat;
+  }
+}
+/* средняя ширина: текст уже — кегли поменьше, кнопка компактнее */
+@container gos (min-width: 560px) and (max-width: 759px) {
+  .gos-title { font-size: var(--fs-20); }
+  .gos-note { font-size: var(--fs-16); }
+  .gos-btn { height: var(--size-control-lg); padding: 0 var(--space-20); font-size: var(--fs-16); }
+}
 
 
 /* ================= 19. Полезные ресурсы: баннеры ================= */

@@ -145,66 +145,6 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') setNav(false
   go(0);
 })();
 
-/* --- Виджет Госуслуг (сторонний, свой код не меняем — только масштаб и высоту).
-       Рядом со слайдером: всегда вертикальный и ровно той же высоты, что слайдер с подписью (до даты).
-       Подбираем масштаб: наибольший, при котором виджет не выше слайдера, затем подгоняем точно по высоте;
-       если всё же остаётся свободное место — оно снизу, под кнопкой (содержимое прижато к верху).
-       Внутренняя ширина при этом 293–405px — в этом диапазоне раскладка виджета вертикальная и не меняется.
-       Под слайдером (узкие экраны): своя раскладка виджета; уже 293px — уменьшается целиком --- */
-(function () {
-  const box = document.querySelector('.gos');
-  const widget = document.getElementById('js-show-iframe-wrapper');
-  const slider = document.querySelector('.hero .slider');
-  if (!box || !widget) return;   // виджет только на главной
-  const MIN = 293, MAX = 405;
-  let busy = false;
-  // виджет сам выбирает раскладку по своей ширине при resize окна; на время пересчёта показываем ему ширину вертикальной раскладки
-  const forceVertical = () => {
-    busy = true;
-    widget.style.zoom = ''; widget.style.flex = 'none'; widget.style.width = MIN + 'px';
-    window.dispatchEvent(new Event('resize'));
-    widget.style.flex = ''; widget.style.width = '';
-    busy = false;
-  };
-  const fit = () => {
-    if (busy) return;
-    busy = true;
-    widget.style.zoom = ''; box.style.height = '';
-    const W = box.clientWidth, b = box.getBoundingClientRect(), sl = slider && slider.getBoundingClientRect();
-    const beside = sl && Math.abs(b.top - sl.top) < 2 && b.left >= sl.right;
-    busy = false;
-    if (!beside) { if (W < MIN) widget.style.zoom = W / MIN; return; }
-    forceVertical();
-    busy = true;
-    const H = sl.height;
-    let zoom = null;
-    for (let w = MIN; w <= MAX; w += 4) {            // чем меньше внутренняя ширина, тем крупнее виджет
-      widget.style.zoom = W / w;
-      if (widget.getBoundingClientRect().height <= H) { zoom = W / w; break; }
-    }
-    if (zoom === null) {                              // даже при 405px выше слайдера — уменьшаем по высоте
-      widget.style.zoom = W / MAX;
-      zoom = (W / MAX) * H / widget.getBoundingClientRect().height;
-    }
-    widget.style.zoom = zoom;
-    // точная подгонка: масштаб по отношению высот; оставляем, только если переносы строк не изменились и виджет не стал выше
-    const h = widget.getBoundingClientRect().height;
-    if (h < H) {
-      const exact = zoom * H / h;
-      widget.style.zoom = exact;
-      if (widget.getBoundingClientRect().height <= H + 0.5) zoom = exact; else widget.style.zoom = zoom;
-    }
-    box.style.height = H + 'px';
-    busy = false;
-  };
-  const ro = new ResizeObserver(fit);
-  ro.observe(box);
-  if (slider) ro.observe(slider);
-  window.addEventListener('resize', fit);
-  window.addEventListener('load', fit);
-  document.fonts.ready.then(fit);
-})();
-
 /* --- Вкладки фото / видео --- */
 (function () {
   const tabs = [...document.querySelectorAll('[role="tab"]')];
