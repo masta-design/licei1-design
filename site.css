@@ -237,6 +237,7 @@ h4, .type-h4 { font: var(--type-h4); letter-spacing: normal; }
 .nav .nav-sub { min-height: 0; overflow: hidden; margin: 0 0 0 var(--space-12); transition: margin-top .25s ease, margin-bottom .25s ease; }
 .nav-item.is-open > .nav-sub-wrap > .nav-sub { margin-top: var(--space-8); margin-bottom: var(--space-12); }
 .nav-sub a { display: block; padding: var(--space-8) var(--space-12); font-size: var(--fs-14); line-height: 1.3; color: var(--side-text-secondary); border-radius: var(--radius-md); }
+@media (max-width: 767px) { .nav-row > a, .nav-row > button, .nav-sub a, .nav-sub .nav-row > button { font-size: var(--fs-16); } }   /* телефон: пункты меню — 16px */
 .nav-sub a:hover { color: var(--side-accent); background: var(--side-hover); text-decoration: none; }
 .nav-sub a[aria-current="page"] { color: var(--side-accent); font-weight: 600; background: var(--side-hover); }   /* текущая страница (путь — в data-nav у <body>) */
 /* третий уровень: подраздел внутри раскрытого раздела */
@@ -370,7 +371,7 @@ h4, .type-h4 { font: var(--type-h4); letter-spacing: normal; }
   .tb-contacts .tbc-address { flex: 0 1 auto; min-width: 200px; }   /* …кроме адреса: он переносится по словам */
 }
 @media (max-width: 767px) {
-  .tb-contacts { row-gap: var(--space-8); }
+  .tb-contacts { row-gap: var(--space-8); font: var(--type-body); }   /* телефон: контакты — основной текст 16px */
   .tbc-left, .tbc-right { flex: 1 1 100%; }
   .tbc-group { flex-direction: column; flex-wrap: nowrap; align-items: stretch; }
   .tbc-item { flex-direction: row; align-items: baseline; gap: var(--space-8); }
@@ -391,10 +392,20 @@ h4, .type-h4 { font: var(--type-h4); letter-spacing: normal; }
 .socials a:hover { opacity: .85; transform: translateY(-1px); transition: opacity 0s, transform .2s; }
 .socials img { width: 100%; height: 100%; display: block; }
 /* одноцветный вариант: картинка скрыта, вместо неё силуэт (--m задаёт socialsHTML) цветом темы; в подвале цвет свой (раздел 20) */
-.socials--mono a { background: var(--text-brand); -webkit-mask: var(--m) center / contain no-repeat; mask: var(--m) center / contain no-repeat; transition: background-color .2s, transform .2s; }
-.socials--mono a:hover { background: var(--action-hover); opacity: 1; transition: background-color 0s, transform .2s; }
-.socials--mono a:focus-visible { background: var(--focus); }   /* маска обрезает outline — фокус показываем цветом */
+/* силуэт рисует ::before с маской, а не сама ссылка: маска обрезала бы и рамку фокуса, и область нажатия. Цвет — переменная --soc-c */
+.socials--mono a { position: relative; --soc-c: var(--text-brand); }
+.socials--mono a::before { content: ""; position: absolute; inset: 0; background: var(--soc-c); -webkit-mask: var(--m) center / contain no-repeat; mask: var(--m) center / contain no-repeat; transition: background-color .2s; }
+.socials--mono a:hover { --soc-c: var(--action-hover); opacity: 1; }
+.socials--mono a:hover::before { transition-duration: 0s; }
+.socials--mono a:focus-visible { --soc-c: var(--focus); }
 .socials--mono img { opacity: 0; }
+/* Телефон: невидимые зоны нажатия ~44px вокруг мелких ссылок — размеры и отступы на экране не меняются.
+   Зона — невидимый ::after шире ссылки (у одноцветных иконок маска — на ::before, саму ссылку она не обрезает) */
+@media (max-width: 767px) {
+  .socials a, .footer-bottom nav > a, .director-contacts a { position: relative; }
+  .socials a::after { content: ""; position: absolute; inset: calc((32px - var(--size-tap)) / 2); }
+  .footer-bottom nav > a::after, .director-contacts a::after { content: ""; position: absolute; inset: calc((1lh - var(--size-tap)) / 2) 0; }
+}
 
 
 /* ================= 6. Каркас на узком ПК, планшете и телефоне ================= */
@@ -405,9 +416,10 @@ h4, .type-h4 { font: var(--type-h4); letter-spacing: normal; }
   .sidebar {
     position: fixed; left: 0; top: 0; z-index: 70; width: var(--sb-w);
     height: 100dvh;   /* видимая высота экрана: в мобильных браузерах 100vh выше неё на адресную строку, и низ меню с кнопками уходил под неё */
-    transform: translateX(-100%); transition: transform .25s ease; box-shadow: var(--shadow-drawer);
+    transform: translateX(-100%); visibility: hidden; transition: transform .25s ease, visibility 0s .25s, box-shadow .25s;
+    box-shadow: none;   /* закрытое меню — без тени: она шире самого меню и торчала бы у левого края экрана серой полоской */
   }
-  body.nav-open .sidebar { transform: none; }
+  body.nav-open .sidebar { transform: none; visibility: visible; box-shadow: var(--shadow-drawer); transition: transform .25s ease, visibility 0s, box-shadow .25s; }   /* visibility: закрытое меню не ловит Tab */
   /* логотип в мобильном сайдбаре не нужен (он есть в шапке) */
   .sidebar .brand-wrap { display: none; }
   /* на телефонах скроллбар поверх содержимого и зазора под него нет — отступ 16px задаём сами */
@@ -578,7 +590,10 @@ a.card { color: inherit; text-decoration: none !important; }
 .about-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-section); align-items: start; }
 .about-main, .ann { min-width: 0; }
 .hero-side { display: grid; gap: var(--space-40); align-content: start; min-width: 0; }
-.ann-more { display: inline-flex; margin-top: var(--space-24); }
+/* шапка объявлений: небольшой заголовок слева, «Смотреть все» справа — всегда в одну строку */
+.section-head.ann-head { flex-direction: row; align-items: baseline; justify-content: space-between; margin-bottom: var(--space-24); }
+.section-head.ann-head .more { margin-left: auto; }
+.ann-head h2 { font: var(--type-h4); letter-spacing: normal; }
 @container content (min-width: 760px) {
   .about-row { grid-template-columns: repeat(6, minmax(0, 1fr)); column-gap: var(--space-grid-x); }
   .about-main { grid-column: 1 / span 4; grid-row: 1; margin-right: clamp(var(--space-24), 2.2vw, var(--space-56)); }
@@ -589,7 +604,7 @@ a.card { color: inherit; text-decoration: none !important; }
    Решает ширина самой части (container about), а не окна. Сетка — на внутренней обёртке .about-grid (контейнер сам себя не стилизует) */
 .about-main { container: about / inline-size; }
 .about-body .director { margin-top: var(--space-grid-y); }
-@container about (min-width: 640px) {
+@container about (min-width: 743px) {   /* при сайдбаре 296px это окно шире 1600px; уже — директор под текстом */
   .about-grid {
     display: grid; grid-template-columns: minmax(0, 1fr) clamp(220px, 32%, 260px); grid-template-rows: auto 1fr;   /* 1fr: если директор выше текста, лишнее уходит во 2-ю строку — отступ под заголовком не растёт */
     column-gap: clamp(var(--space-32), 3.4vw, var(--space-72)); align-items: start;
@@ -634,6 +649,7 @@ a.card { color: inherit; text-decoration: none !important; }
 /* контакты директора — без подписей, телефон и почта узнаются сами */
 .director-contacts { list-style: none; margin: var(--space-16) 0 0; padding: 0; display: grid; gap: var(--space-4); }
 .director-contacts a { color: var(--text-primary); font-size: var(--fs-14); font-weight: 600; overflow-wrap: anywhere; }
+@media (max-width: 767px) { .director-contacts a { font-size: var(--fs-16); } }   /* телефон: 16px; зона нажатия — невидимая, см. раздел 5 «Соцсети» */
 .director-contacts a:hover { color: var(--text-brand); }
 
 
@@ -684,7 +700,7 @@ a.card:hover .card-title { color: var(--text-brand); }
   .news-card:not(.news-card--featured) { flex-direction: row; }
   .news-card:not(.news-card--featured) .thumb { width: 116px; align-self: flex-start; }
   .news-card:not(.news-card--featured) .body { padding: 0 0 0 var(--space-16); align-self: center; }   /* короткий текст — по центру картинки; текст выше картинки начинается вровень с ней */
-  .news-card:not(.news-card--featured) .card-title { font-size: var(--fs-14); }
+  .news-card:not(.news-card--featured) .card-title { font-size: var(--fs-16); }   /* на телефоне заголовок карточки — как основной текст, не мельче */
 }
 @container news (min-width: 560px) {
   .news-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -1007,7 +1023,7 @@ a.card:hover .card-title { color: var(--text-brand); }
   .gos-art {
     display: block; position: absolute; z-index: -1; top: 0; right: 0; bottom: 0; width: 40%;
     /* иллюстрация Госуслуг (banner-fluid-bg-2-small.svg) — копия без внутренней тени по краю; дуга по левому краю — в самой картинке */
-    background: url(images/gosuslugi-park.svg) 0 100% / cover no-repeat;
+    background: url(images/other/gosuslugi-park.svg) 0 100% / cover no-repeat;
   }
 }
 /* средняя ширина: текст уже — кегли поменьше, кнопка компактнее */
@@ -1064,9 +1080,10 @@ a.card:hover .card-title { color: var(--text-brand); }
 @container footer (max-width: 639px) { .footer-bottom nav { margin-left: 0; } }   /* на телефоне всё столбиком по левому краю */
 @container footer (min-width: 640px) { .footer-bottom { padding-right: var(--space-72); } }   /* справа внизу — плавающая кнопка демо-настроек, соцсети под неё не заходят */
 /* соцсети в подвале — вариант .socials--mono: свой размер и светлый цвет */
-.footer .socials a { width: 36px; height: 36px; background: var(--text-inverse-secondary); }
-.footer .socials a:hover { background: var(--text-inverse-strong); }
-.footer .socials a:focus-visible { background: var(--focus); }
+.footer .socials a { width: 36px; height: 36px; --soc-c: var(--text-inverse-secondary); }
+
+.footer .socials a:hover { --soc-c: var(--text-inverse-strong); }
+.footer .socials a:focus-visible { --soc-c: var(--focus); }
 
 
 /* ================= 21. Уменьшение движения ================= */

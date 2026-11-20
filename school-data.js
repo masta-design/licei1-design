@@ -8,7 +8,7 @@
 const SCHOOL = {
   name: 'МБОУ «Лицей №1 им. М.В. Карамаева» г. Горно‑Алтайска',
   copyright: '© 1923–2026 МБОУ «Лицей №1 г. Горно-Алтайска»',
-  logo: 'images/logo-licey-1.png',
+  logo: 'images/logo/logo-licey-1.png',
   logoAlt: 'Логотип Лицея №1',
 };
 
@@ -20,10 +20,10 @@ const CONTACTS = {
   emails: [{ v: 'licei1K@yandex.ru' }],
   address: { v: '649000, Республика Алтай, г. Горно-Алтайск, ул. Чорос-Гуркина, д. 14', href: 'https://yandex.ru/maps/-/CXb2AT3K' },
   socials: [
-    { t: 'ВКонтакте', href: '#', icon: 'images/vk.svg', mono: 'images/vk-footer.svg' },
-    { t: 'Rutube', href: '#', icon: 'images/rutube.svg', mono: 'images/rutube-footer.svg' },
-    { t: 'Одноклассники', href: '#', icon: 'images/ok.svg', mono: 'images/ok-footer.svg' },
-    { t: 'Макс', href: '#', icon: 'images/max.svg', mono: 'images/max-footer.svg' },
+    { t: 'ВКонтакте', href: '#', icon: 'images/icons/vk.svg', mono: 'images/icons/vk-footer.svg' },
+    { t: 'Rutube', href: '#', icon: 'images/icons/rutube.svg', mono: 'images/icons/rutube-footer.svg' },
+    { t: 'Одноклассники', href: '#', icon: 'images/icons/ok.svg', mono: 'images/icons/ok-footer.svg' },
+    { t: 'Макс', href: '#', icon: 'images/icons/max.svg', mono: 'images/icons/max-footer.svg' },
   ],
 };
 const CONTACTS_LIMIT = { phones: 4, emails: 3 };
