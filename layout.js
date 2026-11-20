@@ -124,7 +124,7 @@ definePart('site-footer', () => `
   <footer class="footer">
     <div class="footer-bottom">
       <span>${esc(SCHOOL.copyright)}</span>
-      <nav aria-label="Служебные ссылки"><a href="#">Карта сайта</a></nav>
+      <nav aria-label="Служебные ссылки"><a href="sitemap.html">Карта сайта</a></nav>
       ${(CONTACTS.socials || []).length ? `<div class="socials socials--mono" aria-label="Мы в соцсетях" role="group">${socialsHTML(CONTACTS.socials, { mono: true })}</div>` : ''}
     </div>
   </footer>`);

@@ -24,6 +24,8 @@
    19. Полезные ресурсы
    20. Подвал
    21. Уменьшение движения
+   22. Версия для слабовидящих
+   23. Карта сайта
 
    Соглашения
    — Цвет при наведении меняется сразу, а возвращается плавно за 200ms: у элемента transition .2s, у :hover — длительность 0s.
@@ -297,6 +299,7 @@ h4, .type-h4 { font: var(--type-h4); letter-spacing: normal; }
   }
   .search-box.is-open .search { opacity: 1; visibility: visible; transform: none; transition: opacity .2s ease, transform .2s ease, visibility 0s; }
   .search-box .search input { background: var(--bg-surface); }   /* поверх страницы — непрозрачный фон */
+  .search-box .search input:focus { box-shadow: none; }   /* раскрытое поле — без ореола фокуса: у него уже есть тень и рамка, вместе выходила двойная обводка */
   /* затемнение страницы: градиент от верхнего края экрана — сверху плотнее, книзу слабее; клик по нему закрывает поиск */
   .search-box::before {
     content: ""; position: fixed; inset: 0; z-index: 49;
@@ -1071,3 +1074,160 @@ a.card:hover .card-title { color: var(--text-brand); }
   * { transition: none !important; scroll-behavior: auto !important; }
   :is(.news-card, .media-card) .thumb { transform: none !important; }
 }
+
+
+/* ================= 22. Версия для слабовидящих ================= */
+/* Режим включает a11y.js (атрибуты на <html>), цвета, размер и шрифт — tokens.css, раздел 9. Здесь — панель настроек и упрощение вёрстки:
+   одна колонка смысла без украшений — без теней, градиентов, иллюстраций и текста поверх фото; ссылки подчёркнуты, фокус — толстая рамка.
+   !important здесь допустим: режим должен перебить любые интервалы и анимации компонентов */
+
+/* ----- панель настроек (макет в Figma): вверху страницы. Строка: «К обычному виду» и «Сбросить» слева, «Свернуть» справа;
+   под ней три колонки через вертикальные линии — общие настройки, обычный текст, заголовки. Контент уже 900px — колонки друг под другом ----- */
+.a11y-panel { display: none; }
+html[data-a11y] .a11y-panel {
+  display: block; --page-x: max(var(--space-page-x), (100cqi - var(--size-content-max)) / 2);
+  background: var(--bg-page); color: var(--text-primary); border-bottom: 2px solid var(--text-primary);
+}
+html[data-a11y] .main > .a11y-panel { order: -2; }   /* на узких экранах шапка «рассыпана» по порядку (раздел 6) — панель всё равно первой */
+/* панель постоянного вида: шрифт, кегли и интервалы — свои (токены --a11y-ui-*), настройки шрифта на неё не действуют; цвета — из схемы */
+html[data-a11y] .a11y-panel, html[data-a11y] .a11y-panel * { font-family: var(--a11y-ui-font); letter-spacing: 0; line-height: 1.3; }
+.a11y-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-12); padding: var(--space-24) var(--page-x); }
+.a11y-head-start, .a11y-head-end { display: flex; flex-wrap: wrap; gap: var(--space-8); }
+.a11y-body { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 0 var(--page-x); border-top: 2px solid var(--text-primary); }
+.a11y-body[hidden] { display: none; }
+.a11y-col { min-width: 0; padding: var(--space-24); display: grid; align-content: start; gap: var(--space-24); container: a11y-col / inline-size; }
+.a11y-col:first-child { padding-left: 0; }
+.a11y-col:last-child { padding-right: 0; }
+.a11y-col + .a11y-col { border-left: 2px solid var(--text-primary); }
+.a11y-group { display: grid; gap: var(--space-12); }
+.a11y-h { margin: 0; font-weight: 700; font-size: var(--a11y-ui-fs-lg); }
+.a11y-seg { display: flex; flex-wrap: wrap; gap: var(--space-8); }
+.a11y-rows { display: grid; gap: var(--space-12); }
+/* строка счётчика: подпись, значение, − и + */
+.a11y-row { display: grid; grid-template-columns: minmax(min-content, 1fr) auto auto auto; align-items: center; gap: var(--space-8); }   /* подпись не уже своего самого длинного слова — не наезжает на значение, переносится по словам */
+.a11y-label { font-weight: 700; font-size: var(--a11y-ui-fs); }
+.a11y-value { min-width: 3.4em; text-align: right; font-weight: 700; font-size: var(--a11y-ui-fs); margin-right: var(--space-4); }   /* ширина постоянная — кнопки не сдвигаются */
+/* совсем узкая колонка (подпись, значение и кнопки не помещаются даже с переносом подписи): подпись сверху, под ней значение и кнопки */
+@container a11y-col (width < 320px) {
+  .a11y-row { grid-template-columns: auto auto auto 1fr; row-gap: var(--space-8); }
+  .a11y-row .a11y-label { grid-column: 1 / -1; }
+  .a11y-row .a11y-value { text-align: left; min-width: 3.4em; }
+}
+/* кнопки: максимальный контраст — цвет текста схемы на её фоне, рамка; выбранная — наоборот, заливка цветом текста */
+.a11y-btn {
+  min-height: var(--a11y-ui-h); padding: 0 var(--space-16); display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8);
+  border: 2px solid var(--text-primary); border-radius: var(--radius-md); background: var(--bg-page); color: var(--text-primary);
+  font-weight: 700; font-size: var(--a11y-ui-fs); white-space: nowrap; cursor: pointer;
+}
+.a11y-btn .i { --i-size: var(--size-icon-md); }
+.a11y-btn:hover { background: var(--fill-medium); }
+.a11y-btn[aria-pressed="true"], .a11y-btn--strong { background: var(--text-primary); color: var(--bg-page); }
+.a11y-btn--strong:hover { background: var(--text-primary); text-decoration: underline; }
+.a11y-btn:disabled { border-style: dashed; color: color-mix(in srgb, var(--text-primary) 45%, var(--bg-page)); background: var(--bg-page); cursor: default; }
+.a11y-btn--sq { width: var(--a11y-ui-h-sq); min-height: var(--a11y-ui-h-sq); padding: 0; font-size: var(--a11y-ui-fs-lg); }
+.a11y-toggle[aria-expanded="true"] .i { transform: rotate(180deg); }   /* «Свернуть ↑», «Развернуть ↓» */
+/* образец схемы: «Аа» её цветами; выбранный — двойная рамка (своя + внешняя цветом текста страницы) */
+.a11y-swatch {
+  width: var(--a11y-ui-h); height: var(--a11y-ui-h); border: 2px solid var(--a11y-fg); border-radius: var(--radius-md);
+  background: var(--a11y-bg); color: var(--a11y-fg); font-weight: 700; font-size: var(--a11y-ui-fs); cursor: pointer;
+}
+.a11y-swatch[aria-pressed="true"] { outline: 2px solid var(--text-primary); outline-offset: 2px; }
+@container main (max-width: 900px) {
+  .a11y-body { grid-template-columns: minmax(0, 1fr); }
+  .a11y-col, .a11y-col:first-child, .a11y-col:last-child { padding: var(--space-24) 0; }
+  .a11y-col + .a11y-col { border-left: 0; border-top: 2px solid var(--text-primary); }
+}
+.a11y-short { display: none; }
+@container main (max-width: 559px) {
+  /* телефон: все три кнопки в одну строку — «К обычному виду» только стрелкой, «Сбросить» без «настройки» (полные названия — в aria-label) */
+  .a11y-head, .a11y-head-start, .a11y-head-end { flex-wrap: nowrap; }
+  .a11y-exit { width: var(--a11y-ui-h); padding: 0; flex-shrink: 0; }
+  .a11y-exit-text, .a11y-long { display: none; }
+  .a11y-short { display: inline; }
+}
+
+/* ----- общее: интервалы, фокус, ссылки, без анимаций и украшений ----- */
+html[data-a11y] body * { transition: none !important; animation: none !important; }
+html[data-a11y] body *:not(.a11y-panel, .a11y-panel *) { letter-spacing: var(--a11y-ls) !important; line-height: var(--a11y-lh) !important; }
+/* заголовки — свои межстрочный и межбуквенный интервалы */
+html[data-a11y] :is(h1, h2, h3, h4, h5, h6, .slide-title, .card-title, .ann-title, .gos-title):not(.a11y-panel *) { line-height: var(--a11y-hlh) !important; letter-spacing: var(--a11y-hls) !important; }
+html[data-a11y] :focus-visible { outline: 3px solid var(--focus) !important; outline-offset: 3px !important; }
+html[data-a11y] :is(.prose, .about-text, .crumbs, .footer, .tb-contacts, .ann-card, .director) a,
+html[data-a11y] :is(.more, .ann-title, .director .name) { text-decoration: underline !important; text-underline-offset: .2em; }
+html[data-a11y] :is(.look-fab, #look) { display: none !important; }
+/* контакты в шапке и баннер Госуслуг при крупном шрифте переносятся, а не уходят за край */
+html[data-a11y] .topbar, html[data-a11y] .tb-contacts { flex-wrap: wrap !important; }
+html[data-a11y] .tb-contacts .tbc-item { flex-shrink: 1 !important; min-width: 0; }
+html[data-a11y] .brand-name { max-width: none; font-size: min(var(--fs-16), 22px); }
+/* кнопки растут вместе с текстом: высота — не меньше обычной, а не ровно обычная (иначе крупный текст вылезает за кнопку и плашку) */
+html[data-a11y] .btn:not(.btn-icon) { height: auto; min-height: var(--size-control); padding-block: var(--space-8); }
+html[data-a11y] .btn-lg:not(.btn-icon) { min-height: var(--size-control-lg); }
+/* плашка «Слабовидящим / Войти» внизу сайдбара: вместо тени — линия сверху */
+html[data-a11y] .side-tools { box-shadow: none; border-top: 2px solid var(--text-primary); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; }   /* крупный текст: «Войти» уходит на следующую строку, а не наезжает */
+/* сайдбар отделён от страницы линией справа, поле поиска — рамкой */
+html[data-a11y] .sidebar { border-right: 2px solid var(--text-primary); }
+html[data-a11y] .search input { border: 2px solid var(--text-primary); }
+html[data-a11y] .search-box .search { box-shadow: none; }   /* раскрытое поле: одна рамка поля — без кольца-тени вокруг */
+html[data-a11y] .search input:focus-visible { outline: none !important; border-width: 3px; }   /* фокус — утолщённая рамка самого поля, а не вторая обводка снаружи */
+html[data-a11y] .mini-brand .brand-name { font-size: min(var(--fs-14), 18px); }   /* название школы — не крупнее 22px, иначе не помещается в сайдбар даже по словам */
+html[data-a11y] .gos-btn { white-space: normal; height: auto; min-height: var(--size-control-lg); padding-block: var(--space-8); }   /* демо-панель «Внешний вид» в этом режиме не нужна */
+html[data-a11y] :is(.news-card, .media-card) .thumb { transform: none !important; }
+html[data-a11y] :is(.news-card, .media-card) .thumb::after { display: none; }   /* блик за курсором */
+html[data-a11y] :is(.news-card, .media-card):hover .thumb img { transform: none; }
+
+/* ----- слайдер: список строк — слева миниатюра, справа дата и заголовок; все посты видны, стрелок и точек нет.
+   Картинка в рамке, без размытой подложки и растворения краёв. На телефоне миниатюра меньше (112px), но тоже слева ----- */
+html[data-a11y] .slider { margin: var(--space-24) 0 0; display: block; background: none; color: var(--text-primary); overflow: visible; }
+html[data-a11y] .slides { display: grid; gap: var(--space-24); background: none; }
+html[data-a11y] .slide {
+  grid-area: auto; height: auto; opacity: 1; visibility: visible;
+  display: grid; grid-template-columns: clamp(160px, 18vw, 240px) minmax(0, 1fr); align-items: start; gap: var(--space-16) var(--space-24);
+}
+html[data-a11y] .slide-media { position: relative; inset: auto; height: auto; aspect-ratio: 3 / 2; border: 2px solid var(--text-primary); background: var(--bg-page); overflow: hidden; }
+html[data-a11y] .slide-media .bg, html[data-a11y] .slide-media::after { display: none; }
+html[data-a11y] .slide-media .fg, html[data-a11y] .slide.is-wide .fg {
+  position: static; transform: none; width: 100%; height: 100%; max-width: none; max-height: none; object-fit: cover;
+  -webkit-mask-image: none; mask-image: none;
+}
+html[data-a11y] .slide-caption { position: static; filter: none; color: var(--text-primary); align-self: center; }   /* дата и заголовок — по центру миниатюры; текст выше неё задаёт высоту строки и начинается вровень с ней */
+html[data-a11y] .slide-date { opacity: 1; }
+html[data-a11y] .slide-title { display: block; -webkit-line-clamp: none; overflow: visible; margin-top: var(--space-4); font: var(--type-h3); }   /* как заголовок карточки, а не «афиша» */
+html[data-a11y] :is(.slider-arrow, .slider-dots) { display: none; }
+@container content (max-width: 559px) {
+  html[data-a11y] .slide { grid-template-columns: 112px minmax(0, 1fr); gap: var(--space-12); }   /* телефон: миниатюра меньше, но всё так же слева — список остаётся компактным */
+}
+/* изображения скрыты — строка из одного текста, без пустой рамки */
+html[data-a11y][data-a11y-img="off"] .slide { grid-template-columns: minmax(0, 1fr); }
+html[data-a11y][data-a11y-img="off"] .slide-media { display: none; }
+
+/* ----- баннер Госуслуг: цвета схемы, без иллюстрации; логотип (белый) не виден на светлом фоне — вместо него текст ----- */
+html[data-a11y] .gos-banner { background: var(--bg-page); color: var(--text-primary); border: 2px solid var(--text-primary); }
+html[data-a11y] .gos-logo, html[data-a11y] .gos-art { display: none; }
+html[data-a11y] .gos-banner::before { content: "Госуслуги"; position: static; z-index: auto; display: block; width: auto; height: auto; border-radius: 0; background: none; box-shadow: none; font-weight: 700; font-size: var(--fs-20); }
+html[data-a11y] .gos-note { opacity: 1; }
+html[data-a11y] .gos-btn { background: var(--action); color: var(--text-on-brand); box-shadow: none; }
+
+/* ----- изображения: чёрно-белые или скрыты (вместо картинки — её подпись из alt, a11y.js) ----- */
+.a11y-alt { display: none; }
+html[data-a11y][data-a11y-img="gray"] :is(img, .gos-art) { filter: grayscale(1) !important; }
+html[data-a11y][data-a11y-img="off"] img, html[data-a11y][data-a11y-img="off"] .gos-art { display: none !important; }
+html[data-a11y][data-a11y-img="off"] .a11y-alt {
+  display: block; padding: var(--space-8) var(--space-12); border: 2px dashed var(--text-primary); color: var(--text-primary);
+  font-size: var(--fs-14); text-align: center; overflow-wrap: anywhere;
+}
+
+
+/* ================= 23. Карта сайта ================= */
+/* Группы меню — колонками (1 / 2 / 3 по ширине контента), внутри — разделы списком, подразделы — с отступом.
+   Без линий и маркеров: структуру держат отступы и жирность — разделы полужирные, подразделы обычные */
+.sitemap { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-section) var(--space-grid-x); align-items: start; }
+@container content (min-width: 640px) { .sitemap { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@container content (min-width: 1100px) { .sitemap { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.sitemap-title { margin: 0 0 var(--space-section-head); font: var(--type-h4); }
+.sitemap ul { list-style: none; margin: 0; padding: 0; }
+.sitemap-list { display: grid; gap: var(--space-12); }
+.sitemap-list > li > a { font-weight: 600; }
+.sitemap ul ul { margin: var(--space-8) 0 var(--space-4) var(--space-16); display: grid; gap: var(--space-8); }
+.sitemap ul ul a { font-size: var(--fs-14); color: var(--text-secondary); }
+.sitemap a { color: var(--text-primary); }
+.sitemap a:hover { color: var(--text-brand); }

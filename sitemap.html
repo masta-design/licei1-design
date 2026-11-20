@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Карта сайта — Лицей №1 им. М.В. Карамаева (v5)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=PT+Serif:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="site.css">
+  <link rel="stylesheet" href="demo-look.css"><!-- только для демо -->
+  <script src="demo-look.js"></script><!-- только для демо; первым — сохранённые цвета применяются до отрисовки -->
+  <script src="a11y.js"></script><!-- версия для слабовидящих: сохранённые настройки — до отрисовки -->
+  <script src="school-data.js"></script>
+  <script src="components.js"></script>
+  <script src="layout.js"></script>
+</head>
+<!-- Карта сайта: все разделы меню списком. Собирается скриптом page-sitemap.js из NAV (school-data.js) — того же источника, что и меню,
+     поэтому при изменении разделов карта обновляется сама. В CMS — тот же шаблон по дереву разделов -->
+<body data-nav="">
+
+<!-- Общие части (сайдбар, шапка, подвал) — теги-заглушки, разметку подставляет layout.js -->
+<div class="app">
+  <site-sidebar></site-sidebar>
+  <div class="main">
+    <site-header></site-header>
+
+    <main class="content" id="main">
+
+      <!-- ================= ЗАГОЛОВОК СТРАНИЦЫ: хлебные крошки + h1 ================= -->
+      <div class="page-head">
+        <nav class="crumbs" aria-label="Хлебные крошки">
+          <ol>
+            <li><a href="./">Главная</a></li>
+            <li><span aria-current="page">Карта сайта</span></li>
+          </ol>
+        </nav>
+        <h1 class="page-title">Карта сайта</h1>
+      </div>
+
+      <!-- ================= РАЗДЕЛЫ: группы меню колонками, в каждой — разделы и подразделы списком ================= -->
+      <div class="sitemap" id="sitemap"></div>
+
+    </main>
+
+    <site-footer></site-footer>
+  </div>
+</div>
+
+<demo-look></demo-look><!-- только для демо: панель «Внешний вид» -->
+
+<script src="page-sitemap.js"></script>
+<script src="site.js"></script>
+</body>
+</html>

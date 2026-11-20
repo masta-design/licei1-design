@@ -418,3 +418,76 @@
   --side-bg: #8a1550; --side-text: #fff1f8; --side-text-secondary: #f2cbdf; --side-label: #e5acc9; --side-icon: #e5acc9; --side-accent: #ffc6e2; --side-hover: #a02a67; --side-active: #a02a67;
   --shadow-rgb: 58 18 40;
 }
+
+
+/* ============================================================
+   9. ВЕРСИЯ ДЛЯ СЛАБОВИДЯЩИХ
+   Включается атрибутом data-a11y на <html> (ставит a11y.js, там же — панель настроек). В этом режиме:
+   — цвета: одна из схем ниже — фон --a11y-bg и текст --a11y-fg; все роли выводятся из этой пары, акцент = цвет текста,
+     тени и блики убраны, вместо «толщины» кнопок — рамка. Темы демо-панели этот режим перекрывает (селектор сильнее);
+   — размер: текст — шкала кеглей × --a11y-k, заголовки — свои кегли × --a11y-hk (процент от обычного размера / 100; ставит скрипт);
+   — шрифт: один для текста и заголовков — без засечек (Golos Text) или с засечками (PT Serif), атрибут data-a11y-font.
+   Межбуквенный и межстрочный интервалы, изображения — в site.css, раздел 22
+   ============================================================ */
+
+/* Схемы: пара «фон / текст». Атрибут data-a11y-scheme — и на <html>, и на образцах в панели (образец берёт те же цвета) */
+[data-a11y-scheme="bw"]    { --a11y-bg: #ffffff; --a11y-fg: #000000; }   /* чёрным по белому — обычная контрастная */
+[data-a11y-scheme="wb"]    { --a11y-bg: #000000; --a11y-fg: #ffffff; }   /* белым по чёрному — светобоязнь, катаракта, глаукома */
+[data-a11y-scheme="yb"]    { --a11y-bg: #000000; --a11y-fg: #ffff00; }   /* жёлтым по чёрному — очень слабое зрение, самый высокий контраст */
+[data-a11y-scheme="blue"]  { --a11y-bg: #9dd1ff; --a11y-fg: #063462; }   /* тёмно-синим по голубому — мягкая схема из ГОСТ */
+[data-a11y-scheme="beige"] { --a11y-bg: #f7f3d6; --a11y-fg: #4d4b43; }   /* коричневым по бежевому — утомляемость глаз, дислексия */
+[data-a11y-scheme="green"] { --a11y-bg: #3b2716; --a11y-fg: #a9e44d; }   /* зелёным по тёмно-коричневому — тёмная схема из ГОСТ */
+
+html[data-a11y] {
+  /* цвета — из пары фон / текст */
+  --brand: var(--a11y-fg);
+  --bg-page: var(--a11y-bg); --bg-surface: var(--a11y-bg); --bg-subtle: var(--a11y-bg); --bg-canvas: var(--a11y-bg);
+  --bg-inverse: var(--a11y-bg); --bg-media: var(--a11y-bg);
+  --text-primary: var(--a11y-fg); --text-secondary: var(--a11y-fg); --text-tertiary: var(--a11y-fg); --text-brand: var(--a11y-fg);
+  --text-on-brand: var(--a11y-bg);
+  --text-inverse-strong: var(--a11y-fg); --text-inverse: var(--a11y-fg); --text-inverse-secondary: var(--a11y-fg); --text-inverse-tertiary: var(--a11y-fg);
+  --icon-secondary: var(--a11y-fg);
+  --side-bg: var(--a11y-bg); --side-text: var(--a11y-fg); --side-text-secondary: var(--a11y-fg); --side-label: var(--a11y-fg);
+  --side-icon: var(--a11y-fg); --side-accent: var(--a11y-fg);
+  --side-hover: color-mix(in srgb, var(--a11y-fg) 15%, var(--a11y-bg)); --side-active: color-mix(in srgb, var(--a11y-fg) 10%, var(--a11y-bg));
+  --fill-subtle: color-mix(in srgb, var(--a11y-fg) 6%, var(--a11y-bg));
+  --fill-muted: color-mix(in srgb, var(--a11y-fg) 12%, var(--a11y-bg));
+  --fill-medium: color-mix(in srgb, var(--a11y-fg) 18%, var(--a11y-bg));
+  --fill-strong: color-mix(in srgb, var(--a11y-fg) 40%, var(--a11y-bg));
+  --fill-stronger: color-mix(in srgb, var(--a11y-fg) 55%, var(--a11y-bg));
+  --border-subtle: var(--a11y-fg); --border-default: var(--a11y-fg); --border-hover: var(--a11y-fg); --border-focus: var(--a11y-fg);
+  --action: var(--a11y-fg); --action-hover: var(--a11y-fg); --action-subtle: color-mix(in srgb, var(--a11y-fg) 15%, var(--a11y-bg));
+  --focus: var(--a11y-fg);
+  /* без теней и бликов: граница шапки — сплошная линия, у кнопок — рамка */
+  --header-shadow: 0 2px 0 var(--a11y-fg);
+  --shadow-raised: none; --shadow-drawer: none;
+  --shadow-pop: 0 0 0 2px var(--a11y-fg); --shadow-panel: 0 0 0 2px var(--a11y-fg);
+  --hl: inset 0 0 0 0 transparent; --hl-soft: inset 0 0 0 0 transparent;
+  --edge: inset 0 0 0 2px var(--a11y-fg); --edge-soft: inset 0 0 0 2px var(--a11y-fg);
+  --sheen: linear-gradient(transparent, transparent);
+
+  /* сайдбар шире — крупный текст меню помещается; ширина постоянная, от размера шрифта не зависит — панель настроек не сдвигается */
+  --size-sidebar: 360px;
+
+  /* шрифт: один для текста и заголовков */
+  --font-text: 'Golos Text', Arial, sans-serif; --font-head: 'Golos Text', Arial, sans-serif;
+
+  /* размер: текст — шкала --fs-* × --a11y-k, заголовки — плавные --fs-fluid-* и h4 × --a11y-hk (процент от обычного / 100) */
+  --fs-12: calc(12px * var(--a11y-k, 1.25)); --fs-14: calc(14px * var(--a11y-k, 1.25)); --fs-16: calc(16px * var(--a11y-k, 1.25));
+  --fs-20: calc(20px * var(--a11y-k, 1.25)); --fs-24: calc(24px * var(--a11y-k, 1.25)); --fs-28: calc(28px * var(--a11y-k, 1.25));
+  --fs-fluid-s: calc(clamp(22px, 18.6px + .92vw, 42px) * var(--a11y-hk, 1));
+  --fs-fluid-m: calc(clamp(32px, 28.5px + 1.04vw, 55px) * var(--a11y-hk, 1));
+  --fs-fluid-l: calc(clamp(32px, 23.9px + 1.89vw, 76px) * var(--a11y-hk, 1));
+  --fs-fluid-xl: calc(clamp(36px, 28px + 1.9vw, 76px) * var(--a11y-hk, 1));
+  --type-h4: 700 calc(24px * var(--a11y-hk, 1))/1.25 var(--font-head);   /* h4 — тоже заголовок, растёт вместе с ними */
+}
+/* Панель настроек — постоянного вида: её размер и шрифт не зависят от выбранных настроек (иначе кнопки «уезжают» из-под курсора) */
+:root {
+  --a11y-ui-font: 'Golos Text', Arial, sans-serif;
+  --a11y-ui-fs: 18px;      /* кнопки, подписи групп, значения */
+  --a11y-ui-fs-sm: 16px;   /* подсказка к схеме */
+  --a11y-ui-fs-lg: 22px;   /* заголовок панели; знаки − и + */
+  --a11y-ui-h: 48px;       /* высота кнопок и образцов цвета */
+  --a11y-ui-h-sq: 46px;    /* квадратные кнопки − и + */
+}
+html[data-a11y][data-a11y-font="serif"] { --font-text: 'PT Serif', Georgia, serif; --font-head: 'PT Serif', Georgia, serif; }

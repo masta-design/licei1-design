@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="site.css">
   <link rel="stylesheet" href="demo-look.css"><!-- только для демо -->
   <script src="demo-look.js"></script><!-- только для демо; первым — сохранённые цвета применяются до отрисовки -->
+  <script src="a11y.js"></script><!-- версия для слабовидящих: сохранённые настройки — до отрисовки -->
   <script src="school-data.js"></script>
   <script src="components.js"></script>
   <script src="layout.js"></script>
@@ -31,15 +32,31 @@
       <!-- ================= СЛАЙДЕР НА ВСЮ ШИРИНУ: главные сообщения, заголовок и дата — поверх картинки (заголовки слайдов — h2) ================= -->
       <section class="slider" data-slider aria-roledescription="карусель" aria-label="Главные новости">
         <div class="slides">
-          <a class="slide is-active" href="#" aria-roledescription="слайд" aria-label="1 из 3">
+          <a class="slide is-active" href="#" aria-roledescription="слайд" aria-label="1 из 7">
+            <div class="slide-media"><img class="bg" src="images/news/full/school-wide-16x9.jpg" alt=""><img class="fg" src="images/news/full/school-wide-16x9.jpg" alt="Урок биологии: ученики с учительницей изучают строение клетки и экосистемы"></div>
+            <div class="slide-caption"><time class="slide-date" datetime="2026-11-18">18 ноября 2026</time><h2 class="slide-title">Неделя естественных наук: лицеисты исследуют строение клетки и экосистемы</h2></div>
+          </a>
+          <a class="slide" href="#" aria-roledescription="слайд" aria-label="2 из 7">
+            <div class="slide-media"><img class="bg" src="images/news/full/school-horizontal-4x3.jpg" alt=""><img class="fg" src="images/news/full/school-horizontal-4x3.jpg" alt="Ученики выходят из здания школы после уроков"></div>
+            <div class="slide-caption"><time class="slide-date" datetime="2026-11-16">16 ноября 2026</time><h2 class="slide-title">После каникул: лицеисты вернулись к занятиям</h2></div>
+          </a>
+          <a class="slide" href="#" aria-roledescription="слайд" aria-label="3 из 7">
+            <div class="slide-media"><img class="bg" src="images/news/full/school-square-1x1.jpg" alt=""><img class="fg" src="images/news/full/school-square-1x1.jpg" alt="Ученики беседуют у входа в лицей"></div>
+            <div class="slide-caption"><time class="slide-date" datetime="2026-11-14">14 ноября 2026</time><h2 class="slide-title">День открытых дверей для будущих пятиклассников</h2></div>
+          </a>
+          <a class="slide" href="#" aria-roledescription="слайд" aria-label="4 из 7">
+            <div class="slide-media"><img class="bg" src="images/news/full/school-vertical-3x4.jpg" alt=""><img class="fg" src="images/news/full/school-vertical-3x4.jpg" alt="Ученики с новыми учебниками в классе"></div>
+            <div class="slide-caption"><time class="slide-date" datetime="2026-11-10">10 ноября 2026</time><h2 class="slide-title">Школьная библиотека пополнилась новыми учебниками</h2></div>
+          </a>
+          <a class="slide" href="#" aria-roledescription="слайд" aria-label="5 из 7">
             <div class="slide-media"><img class="bg" src="prototype/slider3.jpg" alt=""><img class="fg" src="prototype/slider3.jpg" alt="Плакат: сроки подачи заявлений на итоговое сочинение"></div>
             <div class="slide-caption"><time class="slide-date">13 октября 2026</time><h2 class="slide-title">Определены сроки подачи заявлений на итоговое сочинение в 2026–2027 учебном году</h2></div>
           </a>
-          <a class="slide" href="#" aria-roledescription="слайд" aria-label="2 из 3">
+          <a class="slide" href="#" aria-roledescription="слайд" aria-label="6 из 7">
             <div class="slide-media"><img class="bg" src="prototype/slider2.jpg" alt=""><img class="fg" src="prototype/slider2.jpg" alt="Открытка ко Дню учителя"></div>
             <div class="slide-caption"><time class="slide-date">5 октября 2026</time><h2 class="slide-title">С Днём учителя! Поздравляем педагогов лицея</h2></div>
           </a>
-          <a class="slide" href="#" aria-roledescription="слайд" aria-label="3 из 3">
+          <a class="slide" href="#" aria-roledescription="слайд" aria-label="7 из 7">
             <div class="slide-media"><img class="bg" src="prototype/slider1.jpg" alt=""><img class="fg" src="prototype/slider1.jpg" alt="Логотип Года единства народов России"></div>
             <div class="slide-caption"><time class="slide-date">2026</time><h2 class="slide-title">2026 — Год единства народов России</h2></div>
           </a>

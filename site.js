@@ -43,14 +43,7 @@ document.getElementById('nav').addEventListener('click', e => {
   box.addEventListener('keydown', e => { if (e.key === 'Escape' && box.classList.contains('is-open')) { set(false); btn.focus(); } });
 })();
 
-/* --- Версия для слабовидящих: переключатель в сайдбаре; если их несколько — синхронны (в демо режим только запоминает состояние) --- */
-(function () {
-  const sw = document.querySelectorAll('[data-a11y]');
-  sw.forEach(b => b.addEventListener('click', () => {
-    const on = b.getAttribute('aria-checked') !== 'true';
-    sw.forEach(x => x.setAttribute('aria-checked', on));
-  }));
-})();
+/* --- Версия для слабовидящих: переключатель в сайдбаре и панель настроек — a11y.js --- */
 
 /* --- Мобильное меню --- */
 const body = document.body;
