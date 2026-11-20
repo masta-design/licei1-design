@@ -910,7 +910,23 @@ a.card:hover .card-title { color: var(--text-brand); }
 /* В тексте — только абзацы одного стиля (без фото, видео, ссылок и кнопок), под ними «Подробнее» */
 .about-text { padding: 0; max-width: 980px; }
 .about-text p { margin: 0 0 var(--space-20); font: var(--type-prose); font-size: clamp(var(--fs-16), 12px + .3125vw, var(--fs-20)); }   /* резиновый: 16px до экрана 1280px, растёт до 20px на 2560px */
-.about-text .more { margin-top: var(--space-8); }
+.about-links { margin-top: var(--space-8); }
+/* телефон: текст свёрнут до 10 строк (низ растворяется), под ним «Развернуть / Свернуть» рядом с «Подробнее».
+   Кнопку показывает site.js, только если текст длиннее 10 строк; на больших экранах её нет */
+.about-clamp { font: var(--type-prose); }   /* тот же межстрочный, что у абзацев: 10lh — ровно 10 их строк */
+.about-toggle { margin-right: var(--space-24); padding: 0; border: 0; background: none; font-family: inherit; cursor: pointer; }
+.about-toggle[aria-expanded="true"] .i { transform: rotate(180deg); }
+.about-toggle:hover .i { transform: translateY(2px); }
+.about-toggle[aria-expanded="true"]:hover .i { transform: rotate(180deg) translateY(2px); }
+.about-toggle[hidden] { display: none; }   /* у .more свой display — без этого атрибут hidden не сработал бы */
+@media (min-width: 768px) { .about-toggle { display: none; } }   /* на планшете и ПК текст целиком — кнопки нет */
+@media (max-width: 767px) {
+  .about-toggle { padding-block: var(--space-12); }
+  .about-clamp.is-clamped:not(.is-open) {
+    max-height: 10lh; overflow: hidden;
+    -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent); mask-image: linear-gradient(180deg, #000 55%, transparent);
+  }
+}
 
 
 /* ================= 17. Фото и видео ================= */

@@ -138,6 +138,30 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') setNav(false
   go(0);
 })();
 
+/* --- «Об учреждении» на телефоне: текст свёрнут до 10 строк (CSS), кнопка «Развернуть / Свернуть» — только если текст длиннее.
+       Длину проверяем при каждой смене ширины: на планшете и ПК текст не сворачивается, кнопки нет --- */
+(function () {
+  const box = document.getElementById('about-clamp');
+  const btn = document.querySelector('.about-toggle');
+  if (!box || !btn) return;
+  const phone = matchMedia('(max-width: 767px)');
+  const check = () => {
+    if (box.classList.contains('is-open')) return;
+    box.classList.add('is-clamped');
+    btn.hidden = !(phone.matches && box.scrollHeight > box.clientHeight + 1);
+    if (btn.hidden) box.classList.remove('is-clamped');
+  };
+  btn.addEventListener('click', () => {
+    const open = !box.classList.contains('is-open');
+    box.classList.toggle('is-open', open);
+    btn.setAttribute('aria-expanded', open);
+    btn.querySelector('span').textContent = open ? 'Свернуть' : 'Развернуть';
+    if (!open) box.closest('.about-text').scrollIntoView({ block: 'nearest' });   // свернули — текст не уезжает из виду
+  });
+  new ResizeObserver(check).observe(box.parentElement);
+  phone.addEventListener('change', check);   // переход через границу телефона — проверяем заново
+})();
+
 /* --- Вкладки фото / видео --- */
 (function () {
   const tabs = [...document.querySelectorAll('[role="tab"]')];
