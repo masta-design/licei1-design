@@ -481,26 +481,24 @@ h4, .type-h4 { font: var(--type-h4); letter-spacing: normal; }
 a.card { color: inherit; text-decoration: none !important; }
 
 
-/* ================= 8. Первый экран: слайдер и виджет Госуслуг ================= */
-/* Сетка колонок — в разделе 10: слайдер занимает все колонки, кроме последней, виджет — последнюю.
-   Контент уже 760px — виджет под слайдером. Высота виджета — по его содержимому, с высотой слайдера не связана */
-.hero { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; gap: var(--space-grid-y) var(--space-grid-x); margin-top: var(--space-page-x); }
-@media (max-width: 959px) { .hero { margin-top: var(--space-48); } }   /* телефон и планшет: одинаковые 48px от линии шапки (поле ×3 на планшете давало до ~100px) */
-
-/* Слайдер. Листается только вручную: стрелки, точки, свайп (site.js). Картинка — 3:2, любые пропорции изображения вписываются в неё;
-   заголовок и дата — под картинкой; на картинке внизу точки слева и стрелки справа. --media-h — высота картинки (2/3 ширины слайдера) */
-.slider { container: slider / inline-size; position: relative; min-width: 0; }
-.slider > * { --media-h: calc(100cqi * 2 / 3); }
+/* ================= 8. Слайдер на всю ширину (первый блок главной) ================= */
+/* Как в первой версии: на всю ширину контента, заголовок и дата — поверх картинки. Заголовок — --type-display (на 20% меньше, чем в v1, резиновый) */
+/* Листается только вручную: стрелки, точки, свайп (site.js). Картинки слайдов — любых пропорций */
+.slider {
+  position: relative; overflow: hidden;
+  margin: 0 calc(-1 * var(--page-x));
+  --media-h: clamp(340px, 36vw, 860px);
+  background: var(--bg-media); color: var(--text-on-brand);
+}
 .slides { display: grid; }
 .slide {
   --shade: 10 25 48;   /* цвет затемнения; скрипт заменяет его затемнённым средним цветом картинки слайда */
-  grid-area: 1 / 1; display: block;
-  visibility: hidden; transition: visibility .6s;
-  color: var(--text-primary); text-decoration: none !important;
+  grid-area: 1 / 1; position: relative; display: block; height: var(--media-h);
+  opacity: 0; visibility: hidden; transition: opacity .6s ease, visibility .6s;
+  color: inherit; text-decoration: none !important;
 }
-.slide.is-active { visibility: visible; }
-.slide-media { position: relative; aspect-ratio: 3 / 2; overflow: hidden; border-radius: var(--radius-lg); background: var(--bg-media); opacity: 0; transition: opacity .6s ease; }
-.slide.is-active .slide-media { opacity: 1; }
+.slide.is-active { opacity: 1; visibility: visible; }
+.slide-media { position: absolute; inset: 0; overflow: hidden; }
 /* размытая подложка из той же картинки — любая пропорция изображения смотрится аккуратно */
 .slide-media .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: blur(28px) brightness(.75) saturate(1.2); transform: scale(1.25); }
 /* картинка целиком, по центру; маска растворяет её края в подложке по S-кривой (smoothstep), без «излома» на границах */
@@ -510,99 +508,95 @@ a.card { color: inherit; text-decoration: none !important; }
   -webkit-mask-image: linear-gradient(90deg, transparent 0, rgb(0 0 0 / .16) 3.5%, rgb(0 0 0 / .5) 7%, rgb(0 0 0 / .84) 10.5%, #000 14%, #000 86%, rgb(0 0 0 / .84) 89.5%, rgb(0 0 0 / .5) 93%, rgb(0 0 0 / .16) 96.5%, transparent 100%);
           mask-image: linear-gradient(90deg, transparent 0, rgb(0 0 0 / .16) 3.5%, rgb(0 0 0 / .5) 7%, rgb(0 0 0 / .84) 10.5%, #000 14%, #000 86%, rgb(0 0 0 / .84) 89.5%, rgb(0 0 0 / .5) 93%, rgb(0 0 0 / .16) 96.5%, transparent 100%);
 }
-/* картинка шире области (класс ставит скрипт): во всю ширину, растворяются верх и низ */
+/* картинка шире слайда (часто на телефоне; класс ставит скрипт): во всю ширину, растворяются верх и низ */
 .slide.is-wide .fg {
   top: 50%; transform: translate(-50%, -50%);
   width: 100%; height: auto; max-height: 100%;
   -webkit-mask-image: linear-gradient(180deg, transparent 0, rgb(0 0 0 / .16) 3.5%, rgb(0 0 0 / .5) 7%, rgb(0 0 0 / .84) 10.5%, #000 14%, #000 86%, rgb(0 0 0 / .84) 89.5%, rgb(0 0 0 / .5) 93%, rgb(0 0 0 / .16) 96.5%, transparent 100%);
           mask-image: linear-gradient(180deg, transparent 0, rgb(0 0 0 / .16) 3.5%, rgb(0 0 0 / .5) 7%, rgb(0 0 0 / .84) 10.5%, #000 14%, #000 86%, rgb(0 0 0 / .84) 89.5%, rgb(0 0 0 / .5) 93%, rgb(0 0 0 / .16) 96.5%, transparent 100%);
 }
-/* поверх картинки: затемнение снизу под точками и чёрный 6% на всю площадь — картинка с чистым белым фоном не сливается со страницей */
-.slide-media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgb(var(--shade) / .5) 0%, rgb(var(--shade) / 0) 25%), rgb(var(--photo-rgb) / .06); }
-/* подпись под картинкой: заголовок, под ним дата (стиль даты — общий с новостями, раздел 11) */
-.slide-caption { padding-top: var(--space-16); }
-.slide-date { display: block; }
-/* смена подписи: старая быстро гаснет на месте (сдвиг вниз — уже невидимой), новая проявляется и поднимается; дата — чуть позже заголовка */
-.slide-title, .slide-date { opacity: 0; transform: translateY(var(--space-12)); transition: opacity .15s ease, transform 0s .15s; }
-.slide.is-active .slide-title { opacity: 1; transform: none; transition: opacity .3s ease-out .12s, transform .3s ease-out .12s; }
-.slide.is-active .slide-date { opacity: 1; transform: none; transition: opacity .3s ease-out .18s, transform .3s ease-out .18s; }
-.slide-title {   /* h2: слайды — главные сообщения страницы после h1 */
-  margin: var(--space-8) 0 0; font: var(--type-h3);
-  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
-  padding-bottom: .1em;    /* хвосты у, р, д — без запаса их срезает обрезка до 3 строк */
+.slide-media::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, rgb(var(--shade) / .65) 0%, rgb(var(--shade) / .48) 35%, rgb(var(--shade) / .18) 60%, rgb(var(--shade) / 0) 80%),
+              linear-gradient(0deg, rgb(var(--shade) / .5) 0%, rgb(var(--shade) / 0) 55%);
 }
-.slide:hover .slide-title { text-decoration: underline; text-decoration-thickness: 1px; text-decoration-color: color-mix(in srgb, currentColor 25%, transparent); text-underline-offset: 6px; }
-/* стрелки — в правом нижнем углу картинки */
-.slider-arrow { position: absolute; top: calc(var(--media-h) - var(--size-control-lg) - var(--space-16)); z-index: 3; }
-.slider-arrow.next { right: var(--space-16); }
-.slider-arrow.prev { right: calc(var(--space-16) + var(--size-control-lg) + var(--space-8)); }
-/* точки — в левом нижнем углу картинки: отступы слева и снизу равны, низ точек на одной линии с низом стрелок; 8px — высота точки */
-.slider-dots { position: absolute; left: var(--space-16); top: calc(var(--media-h) - var(--space-16) - var(--space-8)); display: flex; gap: var(--space-8); align-items: center; z-index: 3; }
+/* тень — фильтром на обёртке: у заголовка overflow: hidden (обрезка до 3 строк), text-shadow на нём срезался бы по краям */
+.slide-caption {
+  /* без ограничения ширины: справа только место под стрелки (2 × 48px + 8px) и зазор 96px */
+  position: absolute; z-index: 2; left: var(--page-x); right: calc(var(--page-x) + 200px); bottom: 28px;
+  filter: drop-shadow(0 1px 2px rgb(var(--photo-rgb) / .35)) drop-shadow(0 2px 14px rgb(var(--photo-rgb) / .4));
+}
+.slide-date { font-size: var(--fs-14); letter-spacing: .04em; opacity: .85; font-weight: 600; }
+.slide-title {   /* h2: слайды — главные сообщения страницы после h1 */
+  margin: var(--space-8) 0 0; font: var(--type-display); letter-spacing: var(--type-display-tracking);
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  padding-bottom: .1em;    /* при LH 1 хвосты у, р, д выходят за строку на ~.1em — без запаса их срезает обрезка до 3 строк */
+}
+.slide:hover .slide-title { text-decoration: underline; text-decoration-thickness: 1px; text-decoration-color: rgb(255 255 255 / .25); text-underline-offset: 6px; }
+/* ПК: стрелки (белые кнопки 48px) — справа внизу, точки — под стрелками, по правому краю */
+.slider-arrow { position: absolute; bottom: 52px; z-index: 3; }
+.slider-arrow.next { right: var(--page-x); }
+.slider-arrow.prev { right: calc(var(--page-x) + 56px); }
+.slider-dots { position: absolute; right: var(--page-x); bottom: 28px; display: flex; gap: var(--space-8); align-items: center; z-index: 3; }
 .slider-dots button {
   width: 8px; height: 8px; border-radius: var(--radius-full); border: 0; padding: 0; cursor: pointer;
   background: rgb(255 255 255 / .55); box-shadow: 0 1px 2px rgb(var(--photo-rgb) / .25); transition: width .25s, background .25s;
 }
 .slider-dots button[aria-current="true"] { width: 28px; background: var(--text-on-brand); }
+/* планшет и телефон: точки и стрелки — под картинкой, на белом: точки слева, стрелки 48px справа в стиле secondary без тени */
+@media (max-width: 959px) {
+  .slider { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; column-gap: var(--space-8); background: none; overflow: visible; }
+  .slides { grid-column: 1 / -1; overflow: hidden; background: var(--bg-media); color: var(--text-on-brand); }
+  .slide-caption { right: var(--page-x); bottom: 24px; }   /* справа больше нечему мешать */
+  .slider-dots, .slider .slider-arrow { position: static; grid-row: 2; margin-top: var(--space-12); }
+  .slider-dots { grid-column: 1; padding-left: var(--page-x); }
+  .slider .slider-arrow.prev { grid-column: 2; }
+  .slider .slider-arrow.next { grid-column: 3; margin-right: var(--page-x); }
+  .slider .slider-arrow { width: var(--size-control-lg); height: var(--size-control-lg); }
+  .slider .btn-white, .slider .btn-white:hover { color: var(--text-primary); box-shadow: var(--hl-soft), var(--edge-soft); }   /* как .btn-secondary */
+  .slider .btn-white { background: linear-gradient(180deg, var(--fill-subtle), var(--fill-muted)); }
+  .slider .btn-white:hover { background: linear-gradient(180deg, var(--fill-muted), var(--fill-medium)); }
+  .slider-dots button { background: var(--fill-strong); box-shadow: none; }
+  .slider-dots button[aria-current="true"] { background: var(--action); }
+}
 @media (max-width: 767px) {
-  /* точка 8px — зона нажатия больше самой точки */
+  .slide-caption { bottom: 20px; }
+  .slide-media::after { background: linear-gradient(0deg, rgb(var(--shade) / .78) 0%, rgb(var(--shade) / .4) 55%, rgb(var(--shade) / .05) 100%); }
+  /* точка 10px — зона нажатия больше самой точки */
   .slider-dots button { position: relative; }
   .slider-dots button::after { content: ""; position: absolute; inset: -12px -4px; }
-}
-/* телефон: вместо перелистывания — лента со свайпом, как у фото и видео (раздел «Фото и видео»); стрелки и точки не нужны */
-@container content (max-width: 559px) {
-  .slider { container-type: normal; }
-  .slides {
-    display: flex; gap: var(--space-12); overflow-x: auto; scroll-snap-type: x mandatory;
-    margin: 0 calc(-1 * var(--page-x)); padding: 0 var(--page-x) var(--space-8); scroll-padding-inline: var(--page-x); scrollbar-width: none;
-  }
-  .slides::-webkit-scrollbar { display: none; }
-  .slide { flex: 0 0 80%; scroll-snap-align: start; visibility: visible; transition: none; }
-  .slide .slide-media, .slide .slide-title, .slide .slide-date { opacity: 1; transform: none; transition: none; }
-  /* подпись — как у альбомов и видео в той же ленте: .media-card .body, .card-title, .media-card .meta */
-  .slide .slide-caption { padding-top: var(--space-12); }
-  .slide .slide-title { margin: 0; padding-bottom: 0; font: var(--type-title); letter-spacing: normal; }
-  .slide .slide-date { margin-top: var(--space-4); }
-  .slider-arrow, .slider-dots { display: none; }
-  .slide-media::after { background: rgb(var(--photo-rgb) / .06); }   /* точек нет — затемнение снизу не нужно, остаётся только чёрный 6% */
 }
 
 
 /* ================= 10. Об учреждении, директор и объявления ================= */
-/* Объявления — в правой колонке первого экрана (.hero-side), под баннером Госуслуг, без заголовка; «Все объявления» — под списком.
-   «Об учреждении» с директором — во всю ширину контента */
+/* Под слайдером — сетка из 6 колонок: слева 4 — «Об учреждении» с директором, справа 2 — баннер Госуслуг и под ним объявления (без заголовка;
+   «Все объявления» — под списком). Между частями — дополнительный отступ около 2.2vw (margin у левой части). Контент уже 760px — друг под другом:
+   сначала «Об учреждении», потом баннер и объявления */
+.about-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-section); align-items: start; }
 .about-main, .ann { min-width: 0; }
-.hero-side { display: grid; gap: var(--space-40); align-content: start; min-width: 0; container: side / inline-size; }
+.hero-side { display: grid; gap: var(--space-40); align-content: start; min-width: 0; }
 .ann-more { display: inline-flex; margin-top: var(--space-24); }
-/* Левая часть: заголовок, под ним текст и карточка директора. Директор встаёт справа от текста (вровень с первым абзацем),
+@container content (min-width: 760px) {
+  .about-row { grid-template-columns: repeat(6, minmax(0, 1fr)); column-gap: var(--space-grid-x); }
+  .about-main { grid-column: 1 / span 4; grid-row: 1; margin-right: clamp(var(--space-24), 2.2vw, var(--space-56)); }
+  .hero-side { grid-column: 5 / span 2; grid-row: 1; }
+}
+/* «Об учреждении»: заголовок, под ним текст; карточка директора — справа, верх фото вровень с заголовком,
    только если самой части хватает ширины — иначе текст стал бы слишком узким; тогда директор под текстом.
-   Решает ширина самой части (container about), а не окна: так раскладка одинаково работает и рядом с объявлениями, и под ними */
+   Решает ширина самой части (container about), а не окна. Сетка — на внутренней обёртке .about-grid (контейнер сам себя не стилизует) */
 .about-main { container: about / inline-size; }
-.about-body { display: grid; grid-template-columns: minmax(0, 1fr); column-gap: clamp(var(--space-32), 3.4vw, var(--space-72)); align-items: start; }
 .about-body .director { margin-top: var(--space-grid-y); }
 @container about (min-width: 640px) {
-  .about-body { grid-template-columns: minmax(0, 1fr) clamp(220px, 32%, 260px); }   /* тексту остаётся не меньше ~380px */
-  .about-body .director { margin-top: 0; flex-direction: column; }
+  .about-grid {
+    display: grid; grid-template-columns: minmax(0, 1fr) clamp(220px, 32%, 260px); grid-template-rows: auto 1fr;   /* 1fr: если директор выше текста, лишнее уходит во 2-ю строку — отступ под заголовком не растёт */
+    column-gap: clamp(var(--space-32), 3.4vw, var(--space-72)); align-items: start;
+  }
+  .about-grid > .section-head { grid-column: 1; grid-row: 1; }
+  .about-body { display: contents; }
+  .about-text { grid-column: 1; grid-row: 2; }
+  .about-body .director { grid-column: 2; grid-row: 1 / span 2; margin-top: 0; flex-direction: column; }
   .about-body .director .photo { width: 100%; }
   .about-body .director .body { padding: var(--space-16) 0 0; align-self: auto; }
-}
-
-/* «Об учреждении» на той же сетке, что первый экран: заголовок и текст — 4 колонки (под слайдером),
-   директор — 2 колонки справа (под объявлениями), верх фото вровень с заголовком секции */
-@container content (min-width: 760px) {
-  .about-main { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-template-rows: auto 1fr; column-gap: var(--space-grid-x); align-items: start; }   /* 1fr: если директор выше текста, лишняя высота уходит во 2-ю строку — отступ под заголовком не растёт */
-  .about-main > .section-head, .about-text { grid-column: 1 / span 4; margin-right: clamp(var(--space-24), 2.2vw, var(--space-56)); }
-  .about-body { display: contents; }
-  .about-body .director { grid-column: 5 / span 2; grid-row: 1 / span 2; margin-top: 0; flex-direction: column; }
-  .about-body .director .photo { width: 100%; max-width: 320px; }
-  .about-body .director .body { padding: var(--space-16) 0 0; align-self: auto; }
-}
-
-/* Первый экран (раздел 8): слайдер — 4 колонки, правая колонка (баннер Госуслуг и объявления) — 2 */
-@container content (min-width: 760px) {
-  .hero { grid-template-columns: repeat(6, minmax(0, 1fr)); }
-  .slider { grid-column: span 4; }
-  .hero-side { grid-column: span 2; }
-  .hero .slider { margin-right: clamp(var(--space-24), 2.2vw, var(--space-56)); }   /* margin, а не padding: у слайдера от внутренней ширины считается высота картинки */
 }
 
 /* Всегда три объявления друг под другом, заголовки у всех одного размера */
@@ -611,17 +605,6 @@ a.card { color: inherit; text-decoration: none !important; }
   display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-32);
 }
 .ann-list > :nth-child(n+4) { display: none; }
-/* правая колонка первого экрана узкая — объявлений меньше, чтобы колонка не была сильно длиннее слайдера: уже 375px — два, уже 310px — одно
-   (при сайдбаре 296px это окно примерно 1380–1600px и 1150–1380px).
-   Только пока первый экран делится на колонки (content от 760px): на телефоне колонка тоже узкая, но там объявлений три */
-@container content (min-width: 760px) {
-  @container side (width < 375px) {
-    .ann-list > :nth-child(3) { display: none; }
-  }
-  @container side (width < 310px) {   /* совсем узкая (окно ~1150–1380px) — одно объявление */
-    .ann-list > :nth-child(2) { display: none; }
-  }
-}
 /* карточка: дата и время, заголовок целиком, текст — не больше 3 строк; ссылка — вся карточка */
 .ann-card { display: flex; flex-direction: column; gap: var(--space-8); color: var(--text-primary); text-decoration: none !important; }
 /* дата одной строкой: «22 октября 2026 в 12:10», время — серым */
@@ -647,7 +630,7 @@ a.card { color: inherit; text-decoration: none !important; }
 .director .role { font-size: var(--fs-14); color: var(--text-secondary); margin-top: var(--space-2); }
 /* контакты директора — без подписей, телефон и почта узнаются сами */
 .director-contacts { list-style: none; margin: var(--space-16) 0 0; padding: 0; display: grid; gap: var(--space-4); }
-.director-contacts a { color: var(--text-primary); font-size: var(--fs-16); font-weight: 600; overflow-wrap: anywhere; }
+.director-contacts a { color: var(--text-primary); font-size: var(--fs-14); font-weight: 600; overflow-wrap: anywhere; }
 .director-contacts a:hover { color: var(--text-brand); }
 
 
@@ -663,8 +646,8 @@ a.card { color: inherit; text-decoration: none !important; }
 .news-card:hover .thumb img { transform: scale(1.04); }
 .news-card .body { padding: var(--space-16) 0 0; display: flex; flex-direction: column; gap: var(--space-8); }
 /* дата — сразу после текста карточки (заголовка, у крупной новости — анонса) */
-.news-card time, .slide-date { margin-top: var(--space-2); font-size: var(--fs-14); color: var(--text-secondary); }
-.news-card--featured time, .slide-date { margin-top: var(--space-8); }
+.news-card time { margin-top: var(--space-2); font-size: var(--fs-14); color: var(--text-secondary); }
+.news-card--featured time { margin-top: var(--space-8); }
 /* заголовок карточки (новость, фотоальбом, видео) — .card-title; уровень тега — по месту: h3 под заголовком секции, h2 в списке новостей */
 .card-title { font: var(--type-title); letter-spacing: normal; }
 a.card:hover .card-title { color: var(--text-brand); }

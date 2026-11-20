@@ -144,7 +144,7 @@
   --fs-fluid-xl: clamp(36px, 28px + 1.9vw, 76px);
 
   /* ----- 2б. Стили текста: насыщенность кегль/межстрочный шрифт; разрядка — отдельно (не входит в font) ----- */
-  --type-display-size: var(--fs-fluid-l);                              /* на телефоне меньше — см. ниже */
+  --type-display-size: calc(var(--fs-fluid-l) * .8);   /* заголовок слайда: 25,6px на телефоне → 60,8px на самом широком экране, резиновый */
   --type-display: 700 var(--type-display-size)/1 var(--font-head);     /* заголовок слайда поверх фото */
   --type-display-tracking: -.005em;
   --type-h1: 700 var(--fs-fluid-xl)/1.1 var(--font-head);              /* h1 страницы */
@@ -240,7 +240,6 @@
   :root {
     --space-page-x: var(--space-16);    /* поля контента, слайдера и подвала; у шапки свои */
     --space-section: var(--space-64);   /* 80px на экране 375px — слишком рыхло */
-    --type-display-size: var(--fs-28);   /* при 32px заголовок слайда обрезался уже на 2-й–3-й строке */
     --type-h4: 700 var(--fs-20)/1.25 var(--font-head);   /* h3 на телефоне — 22–25px, h4 должен быть мельче */
   }
 }
