@@ -1,7 +1,7 @@
 # Сборка сайта для GitHub Pages: Pages напрямую показывает только одну ветку,
-# поэтому ветка main (первая версия) кладётся в корень сайта, а ветки v2, v3 и v4 — в папки /v2/, /v3/ и /v4/.
+# поэтому ветка main (первая версия) кладётся в корень сайта, а ветки v2–v5 — в папки /v2/–/v5/.
 # Публикация запускается только из main: окружение github-pages защищено и разрешает её лишь с основной ветки.
-# После отправки изменений в v2, v3 или v4 запустите вручную: gh workflow run pages.yml --ref main
+# После отправки изменений в v2–v5 запустите вручную: gh workflow run pages.yml --ref main
 name: Публикация
 
 on:
@@ -41,8 +41,12 @@ jobs:
         with:
           ref: v4
           path: site/v4
+      - uses: actions/checkout@v4
+        with:
+          ref: v5
+          path: site/v5
       - name: Убрать служебные файлы
-        run: rm -rf site/.git site/.github site/v2/.git site/v2/.github site/v3/.git site/v3/.github site/v4/.git site/v4/.github
+        run: rm -rf site/.git site/.github site/v2/.git site/v2/.github site/v3/.git site/v3/.github site/v4/.git site/v4/.github site/v5/.git site/v5/.github
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
