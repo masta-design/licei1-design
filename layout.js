@@ -21,7 +21,7 @@ const definePart = (tag, html) => customElements.define(tag, class extends HTMLE
   connectedCallback() { this.outerHTML = html(); }
 });
 
-const a11ySwitch = `<button class="btn btn-lg btn-a11y" type="button" role="switch" aria-checked="false" data-a11y><span class="switch" aria-hidden="true"></span><span>Версия для<br>слабовидящих</span></button>`;
+const a11ySwitch = `<button class="btn btn-lg btn-a11y" type="button" role="switch" aria-checked="false" data-a11y><span class="switch" aria-hidden="true"></span><span>Версия для слабовидящих</span></button>`;
 const loginIcon = `<i class="i i-login" aria-hidden="true"></i>`;
 
 /* --- Меню сайдбара из NAV. path — путь к текущей странице внутри этого уровня, например ['Наша жизнь', 'Новости']:
@@ -74,7 +74,7 @@ function contactsBarHTML(c) {
 definePart('site-sidebar', () => `
   <a class="btn btn-primary skip-link" href="#main">Перейти к содержимому</a>
   <aside class="sidebar" id="sidebar" aria-label="Основная навигация">
-    <div class="side-scroll">   <!-- прокручиваются логотип и меню; кнопки ниже стоят на месте -->
+    <div class="side-scroll">   <!-- прокручивается всё: логотип, меню и кнопки под ним -->
     <div class="brand-wrap">
       <a class="brand" href="./" title="На главную">
         <img src="${SCHOOL.logo}" alt="${esc(SCHOOL.logoAlt)}">
@@ -82,11 +82,11 @@ definePart('site-sidebar', () => `
       </a>
     </div>
     <nav class="nav" id="nav">${navHTML((document.body.dataset.nav || '').split('/').filter(Boolean))}</nav>
-    </div>
-    <!-- «Версия для слабовидящих» и «Войти» — внизу сайдбара на всех ширинах, вне прокрутки -->
+    <!-- «Версия для слабовидящих» и под ней «Войти» — в конце меню, прокручиваются вместе с ним -->
     <div class="side-tools">
       ${a11ySwitch}
       <a class="btn btn-secondary" href="#">${loginIcon}Войти</a>
+    </div>
     </div>
   </aside>
   <div class="scrim" data-nav-close></div>

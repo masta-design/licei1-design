@@ -177,7 +177,7 @@ h4, .type-h4 { font: var(--type-h4); letter-spacing: normal; }
 
 /* ================= 4. Сайдбар ================= */
 /* Меню строится из NAV (school-data.js) скриптом layout.js; раскрытие разделов — site.js */
-/* Сайдбар — колонка во всю высоту экрана: сверху прокручиваемая часть (логотип и меню, .side-scroll), снизу кнопки (.side-tools) */
+/* Сайдбар — колонка во всю высоту экрана; прокручивается целиком (.side-scroll): логотип, меню, под ним кнопки (.side-tools) */
 .sidebar {
   position: sticky; top: 0;
   height: 100vh;
@@ -250,20 +250,19 @@ h4, .type-h4 { font: var(--type-h4); letter-spacing: normal; }
 .nav .nav-sub .nav-sub { margin-left: var(--space-16); border-left: 1px solid color-mix(in srgb, var(--side-text) 14%, transparent); }
 .nav-sub .nav-item.is-open > .nav-sub-wrap > .nav-sub { margin-top: var(--space-4); margin-bottom: var(--space-8); }
 
-/* «Версия для слабовидящих» и «Войти» — внизу сайдбара, вне прокрутки (на всех ширинах) */
+/* «Версия для слабовидящих» и под ней «Войти» — в конце меню, без своей подложки; прокручиваются вместе с меню */
 .side-tools {
-  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-8);
-  position: relative; flex-shrink: 0;
-  padding: var(--space-12) var(--space-16) calc(var(--space-12) + env(safe-area-inset-bottom));
-  background: var(--side-active); box-shadow: 0 -8px 24px rgb(var(--shadow-rgb) / .08);   /* тень вместо линии-разделителя */
+  display: grid; justify-items: start; gap: var(--space-8);
+  margin-top: calc(var(--space-24) - var(--space-48));   /* у меню снизу 48px — кнопки ближе к нему */
+  padding: 0 calc(var(--space-16) - 10px) calc(var(--space-32) + env(safe-area-inset-bottom));   /* 10px — зазор под полосу прокрутки, как у меню */
   /* кнопки внутри — цветами меню, как в подвале: компоненты те же, роли переназначены только здесь */
   color: var(--side-text); --text-primary: var(--side-text); --text-brand: var(--side-accent); --focus: var(--side-accent);
-  --fill-subtle: color-mix(in srgb, var(--side-text) 6%, var(--side-active)); --fill-muted: color-mix(in srgb, var(--side-text) 12%, var(--side-active));
-  --fill-strong: color-mix(in srgb, var(--side-text) 28%, var(--side-active)); --fill-stronger: color-mix(in srgb, var(--side-text) 40%, var(--side-active));
-  --hl-soft: inset 0 1px 0 color-mix(in srgb, #fff 16%, var(--side-active));
+  --fill-subtle: color-mix(in srgb, var(--side-text) 6%, var(--side-bg)); --fill-muted: color-mix(in srgb, var(--side-text) 12%, var(--side-bg));
+  --fill-strong: color-mix(in srgb, var(--side-text) 28%, var(--side-bg)); --fill-stronger: color-mix(in srgb, var(--side-text) 40%, var(--side-bg));
+  --hl-soft: inset 0 1px 0 color-mix(in srgb, #fff 16%, var(--side-bg));
 }
-.side-tools .btn-a11y { justify-content: flex-start; padding: 0 var(--space-4); }
-.side-tools .btn-secondary { align-self: center; }   /* «Войти» — обычного размера 40px */
+.side-tools .btn-a11y { justify-content: flex-start; padding: 0 var(--space-12); }   /* переключатель — вровень с текстом пунктов меню */
+.side-tools .btn-secondary { margin-left: var(--space-12); }   /* «Войти» — обычного размера 40px, тоже вровень с пунктами */
 
 .scrim { display: none; }
 
@@ -1201,8 +1200,8 @@ html[data-a11y] .brand-name { max-width: none; font-size: min(var(--fs-16), 22px
 /* кнопки растут вместе с текстом: высота — не меньше обычной, а не ровно обычная (иначе крупный текст вылезает за кнопку и плашку) */
 html[data-a11y] .btn:not(.btn-icon) { height: auto; min-height: var(--size-control); padding-block: var(--space-8); }
 html[data-a11y] .btn-lg:not(.btn-icon) { min-height: var(--size-control-lg); }
-/* плашка «Слабовидящим / Войти» внизу сайдбара: вместо тени — линия сверху */
-html[data-a11y] .side-tools { box-shadow: none; border-top: 2px solid var(--text-primary); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; }   /* крупный текст: «Войти» уходит на следующую строку, а не наезжает */
+/* «Слабовидящим / Войти» в конце меню: отделены от него линией сверху */
+html[data-a11y] .side-tools { margin-top: 0; padding-top: var(--space-24); border-top: 2px solid var(--text-primary); }
 /* сайдбар отделён от страницы линией справа, поле поиска — рамкой */
 html[data-a11y] .sidebar { border-right: 2px solid var(--text-primary); }
 html[data-a11y] .search input { border: 2px solid var(--text-primary); }
