@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=PT+Serif:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="tokens.css">
   <link rel="stylesheet" href="site.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.15/dist/fancybox/fancybox.css"><!-- плеер видео Fancybox -->
   <link rel="stylesheet" href="demo-look.css"><!-- только для демо -->
   <script src="demo-look.js"></script><!-- только для демо; первым — сохранённые цвета применяются до отрисовки -->
   <script src="a11y.js"></script><!-- версия для слабовидящих: сохранённые настройки — до отрисовки -->
@@ -124,46 +125,10 @@
           <section class="ann" id="ann" aria-labelledby="ann-title">
           <div class="section-head ann-head">
             <h2 id="ann-title">Объявления</h2>
-            <a class="more" href="#">Смотреть все <i class="i i-right" aria-hidden="true"></i></a>
+            <a class="more" href="announcements.html">Смотреть все <i class="i i-right" aria-hidden="true"></i></a>
           </div>
             <!-- последние объявления (показываются три, лишние скрывает CSS), самое свежее — крупнее; карточка — ссылка целиком; текста может не быть (только файл); пометка — если есть вложения -->
-            <ul class="ann-list">
-              <li class="ann-main">
-                <a class="ann-card" href="#">
-                  <time class="ann-date" datetime="2026-10-22T12:10">22 октября 2026 <span class="t">в 12:10</span></time>
-                  <h3 class="ann-title">«Школа доверия»</h3>
-                  <p class="ann-text">«Школа доверия» — это всероссийская линия психологической помощи, которую запустило Минпросвещения России 11 сентября 2026 года. Её цель — дать школьникам, их родителям и педагогам единый бесплатный канал, чтобы получить поддержку в сложных ситуациях, которые возникают в образовательной среде.</p>
-                </a>
-              </li>
-              <li>
-                <a class="ann-card" href="#">
-                  <time class="ann-date" datetime="2026-02-12T12:02">12 февраля 2026 <span class="t">в 12:02</span></time>
-                  <h3 class="ann-title">Психолого-педагогическая помощь для детей и родителей</h3>
-                  <span class="ann-file"><i class="i i-file" aria-hidden="true"></i>ЦИФРОВОЙ_<wbr>ПСИХОЛОГ.pdf</span>
-                </a>
-              </li>
-              <li>
-                <a class="ann-card" href="#">
-                  <time class="ann-date" datetime="2026-02-06T12:02">6 февраля 2026 <span class="t">в 12:02</span></time>
-                  <h3 class="ann-title">Логопедическая олимпиада среди обучающихся с ограниченными возможностями здоровья</h3>
-                  <p class="ann-text">С 11 по 18 марта 2026 года в Лицее № 1 г. Горно-Алтайска проводится Логопедическая олимпиада среди обучающихся с ограниченными возможностями здоровья в целях развития интеллектуального и творческого потенциала личности учащегося, повышения уровня мотивации к познавательной деятельности.</p>
-                </a>
-              </li>
-              <li>
-                <a class="ann-card" href="#">
-                  <time class="ann-date" datetime="2026-01-28T09:30">28 января 2026 <span class="t">в 09:30</span></time>
-                  <h3 class="ann-title">Запись в первый класс на 2026–2027 учебный год</h3>
-                  <p class="ann-text">Приём заявлений о зачислении в первый класс начинается 1 апреля 2026 года. Подать заявление можно через портал Госуслуг или лично в приёмной лицея с понедельника по пятницу с 9:00 до 17:00.</p>
-                </a>
-              </li>
-              <li>
-                <a class="ann-card" href="#">
-                  <time class="ann-date" datetime="2026-01-15T14:00">15 января 2026 <span class="t">в 14:00</span></time>
-                  <h3 class="ann-title">График консультаций по подготовке к ГИА</h3>
-                  <span class="ann-file"><i class="i i-file" aria-hidden="true"></i>График_<wbr>консультаций_<wbr>ГИА.pdf</span>
-                </a>
-              </li>
-            </ul>
+            <ul class="ann-list" id="ann-list"><!-- строится из ANNOUNCEMENTS (ann-data.js) шаблоном annCard(), page-home.js --></ul>
           </section>
         </div>
 
@@ -182,29 +147,13 @@
       <!-- ================= ФОТО И ВИДЕО ================= -->
       <section class="section" aria-labelledby="media-title">
         <div class="section-head">
-          <h2 id="media-title" class="title-tabs"><span role="tablist" aria-label="Фото и видео"><button role="tab" id="tab-photo" aria-controls="panel-photo" aria-selected="true" data-more="Все фотоальбомы">Фото</button><span class="sep" aria-hidden="true"> / </span><button role="tab" id="tab-video" aria-controls="panel-video" aria-selected="false" data-more="Все видео" tabindex="-1">Видео</button></span></h2>
-          <a class="more" href="#" id="media-more">Все фотоальбомы <i class="i i-right" aria-hidden="true"></i></a>
+          <h2 id="media-title" class="title-tabs"><span role="tablist" aria-label="Фото и видео"><button role="tab" id="tab-photo" aria-controls="panel-photo" aria-selected="true" data-more="Все фотоальбомы" data-href="photos.html">Фото</button><span class="sep" aria-hidden="true"> / </span><button role="tab" id="tab-video" aria-controls="panel-video" aria-selected="false" data-more="Все видео" data-href="videos.html" tabindex="-1">Видео</button></span></h2>
+          <a class="more" href="photos.html" id="media-more">Все фотоальбомы <i class="i i-right" aria-hidden="true"></i></a>
         </div>
 
-        <div class="media-grid" id="panel-photo" role="tabpanel" aria-labelledby="tab-photo">
-          <a class="media-card card" href="#"><div class="thumb"><img src="images/photo/album/turslet.jpg" alt="" loading="lazy"><span class="badge"><i class="i i-camera" aria-hidden="true"></i>34</span></div><div class="body"><h3 class="card-title">Турслет-2026</h3><div class="meta">1 сентября 2026</div></div></a>
-          <a class="media-card card" href="#"><div class="thumb"><img src="images/photo/album/licey.jpg" alt="" loading="lazy"><span class="badge"><i class="i i-camera" aria-hidden="true"></i>66</span></div><div class="body"><h3 class="card-title">Лицей</h3><div class="meta">24 сентября 2026</div></div></a>
-          <a class="media-card card" href="#"><div class="thumb"><img src="images/photo/album/meropriyatiya-2.jpg" alt="" loading="lazy"><span class="badge"><i class="i i-camera" aria-hidden="true"></i>1359</span></div><div class="body"><h3 class="card-title">Разное 2</h3><div class="meta">20 сентября 2026</div></div></a>
-          <a class="media-card card" href="#"><div class="thumb"><img src="images/photo/album/meropriyatia.jpg" alt="" loading="lazy"><span class="badge"><i class="i i-camera" aria-hidden="true"></i>792</span></div><div class="body"><h3 class="card-title">Разное</h3><div class="meta">5 октября 2026</div></div></a>
-          <a class="media-card card" href="#"><div class="thumb"><img src="images/photo/album/nou.jpg" alt="" loading="lazy"><span class="badge"><i class="i i-camera" aria-hidden="true"></i>58</span></div><div class="body"><h3 class="card-title">НОУ — 2026</h3><div class="meta">28 сентября 2026</div></div></a>
-          <a class="media-card card" href="#"><div class="thumb"><img src="images/photo/album/otrkritie.jpg" alt="" loading="lazy"><span class="badge"><i class="i i-camera" aria-hidden="true"></i>166</span></div><div class="body"><h3 class="card-title">Открытие лицея</h3><div class="meta">15 июня 2026</div></div></a>
-        </div>
+        <div class="media-grid" id="panel-photo" role="tabpanel" aria-labelledby="tab-photo"><!-- строится из ALBUMS (photo-data.js) шаблоном albumCard(), page-home.js --></div>
 
-        <div class="media-grid" id="panel-video" role="tabpanel" aria-labelledby="tab-video" hidden>
-          <a class="media-card video card" href="#"><div class="thumb"><img src="images/video/video1.jpeg" alt="" loading="lazy"><span class="play"><i class="i i-play" aria-hidden="true"></i></span><span class="badge duration">3:24</span></div><div class="body"><h3 class="card-title">Добро пожаловать в лицей</h3><div class="meta">2 сентября 2026</div></div></a>
-          <a class="media-card video card" href="#"><div class="thumb"><img src="images/video/video2.jpeg" alt="" loading="lazy"><span class="play"><i class="i i-play" aria-hidden="true"></i></span><span class="badge duration">5:10</span></div><div class="body"><h3 class="card-title">Безопасность в интернете</h3><div class="meta">18 сентября 2026</div></div></a>
-          <a class="media-card video card" href="#"><div class="thumb"><img src="images/video/video3.jpeg" alt="" loading="lazy"><span class="play"><i class="i i-play" aria-hidden="true"></i></span><span class="badge duration">12:47</span></div><div class="body"><h3 class="card-title">Открытый урок</h3><div class="meta">25 сентября 2026</div></div></a>
-          <a class="media-card video card" href="#"><div class="thumb"><img src="images/video/video4.jpeg" alt="" loading="lazy"><span class="play"><i class="i i-play" aria-hidden="true"></i></span><span class="badge duration">4:02</span></div><div class="body"><h3 class="card-title">Наставничество</h3><div class="meta">30 сентября 2026</div></div></a>
-          <a class="media-card video card" href="#"><div class="thumb"><img src="images/video/video5.jpeg" alt="" loading="lazy"><span class="play"><i class="i i-play" aria-hidden="true"></i></span><span class="badge duration">2:58</span></div><div class="body"><h3 class="card-title">Творческая мастерская</h3><div class="meta">3 октября 2026</div></div></a>
-          <a class="media-card video card" href="#"><div class="thumb"><img src="images/video/video6.jpeg" alt="" loading="lazy"><span class="play"><i class="i i-play" aria-hidden="true"></i></span><span class="badge duration">6:31</span></div><div class="body"><h3 class="card-title">Робототехника в «Точке роста»</h3><div class="meta">8 октября 2026</div></div></a>
-          <a class="media-card video card" href="#"><div class="thumb"><img src="images/video/video7.jpeg" alt="" loading="lazy"><span class="play"><i class="i i-play" aria-hidden="true"></i></span><span class="badge duration">3:45</span></div><div class="body"><h3 class="card-title">Турнир школьного спортклуба</h3><div class="meta">14 октября 2026</div></div></a>
-          <a class="media-card video card" href="#"><div class="thumb"><img src="images/video/video8.jpeg" alt="" loading="lazy"><span class="play"><i class="i i-play" aria-hidden="true"></i></span><span class="badge duration">8:20</span></div><div class="body"><h3 class="card-title">Классный час</h3><div class="meta">20 октября 2026</div></div></a>
-        </div>
+        <div class="media-grid" id="panel-video" role="tabpanel" aria-labelledby="tab-video" hidden><!-- строится из VIDEOS (video-data.js) шаблоном videoCard(), page-home.js --></div>
       </section>
 
       <!-- ================= ПОЛЕЗНЫЕ РЕСУРСЫ ================= -->
@@ -242,6 +191,11 @@
 
 <script src="news-data.js"></script>
 <script src="news-articles.js"></script>
+<script src="ann-data.js"></script>
+<script src="photo-data.js"></script>
+<script src="video-data.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.15/dist/fancybox/fancybox.umd.js"></script>
+<script src="fancybox-setup.js"></script>
 <script src="page-home.js"></script>
 <script src="site.js"></script>
 </body>

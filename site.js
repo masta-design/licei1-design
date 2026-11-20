@@ -151,6 +151,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') setNav(false
       document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
     });
     more.firstChild.textContent = tab.dataset.more + ' ';
+    more.href = tab.dataset.href;   // «Все фотоальбомы» — на фотогалерею, «Все видео» — на страницу видео
   }));
 })();
 

@@ -31,6 +31,36 @@ const newsCard = (n, { featured = false, lazy = false, level = 3 } = {}) => `<a 
     <div class="body"><h${level} class="card-title">${esc(n.title)}</h${level}>${n.text ? `<p>${esc(n.text)}</p>` : ''}<time datetime="${n.date}">${fmtDate(n.date)}</time></div>
   </a>`;
 
+/* --- Карточка фотоальбома (site.css → «17. Фото и видео»): та же разметка, что у карточек «Фото» на главной.
+       a — запись из ALBUMS (photo-data.js). Обложка — <папка>-cover.webp альбома, а если её не загрузили — первое фото.
+       level — уровень заголовка: 3 под заголовком секции (по умолчанию), 2 в списке под h1 страницы --- */
+const albumHref = a => `album.html?id=${encodeURIComponent(a.id)}`;
+const albumCover = a => PHOTO_DIR + a.dir + '/' + (a.cover || a.photos[0][0]);
+const albumCard = (a, { lazy = true, level = 3 } = {}) => `<a class="media-card card" href="${albumHref(a)}">
+    <div class="thumb"><img src="${albumCover(a)}" alt=""${lazy ? ' loading="lazy"' : ''}><span class="badge"><i class="i i-camera" aria-hidden="true"></i>${a.count}</span></div>
+    <div class="body"><h${level} class="card-title">${esc(a.title)}</h${level}><div class="meta"><time datetime="${a.date}">${fmtDate(a.date)}</time></div></div>
+  </a>`;
+
+/* --- Карточка видео (site.css → «17. Фото и видео»): та же разметка, что у карточек «Видео» на главной.
+       v — запись из VIDEOS (video-data.js): обложка, кнопка «play», длительность. Ссылка ведёт на файл видео:
+       по data-fancybox его открывает плеер Fancybox (fancybox-setup.js), без скрипта — браузер --- */
+const videoCard = (v, { lazy = true, level = 3 } = {}) => `<a class="media-card video card" href="${v.src ? VIDEO_DIR + v.src : '#'}" data-fancybox="video" data-caption="${esc(v.title)}">
+    <div class="thumb"><img src="${VIDEO_DIR + v.cover}" alt=""${lazy ? ' loading="lazy"' : ''}><span class="play"><i class="i i-play" aria-hidden="true"></i></span><span class="badge duration"><span class="sr-only">Длительность </span>${v.duration}</span></div>
+    <div class="body"><h${level} class="card-title">${esc(v.title)}</h${level}><div class="meta"><time datetime="${v.date}">${fmtDate(v.date)}</time></div></div>
+  </a>`;
+
+/* --- Объявление (site.css → «10. Объявления»): одна разметка на главной и на странице «Объявления».
+       a — запись из ANNOUNCEMENTS (ann-data.js). Дата и время одной строкой, заголовок целиком, текст — начало (CSS обрезает до 3 строк),
+       вложения — имена файлов (переносятся по «_»). Ссылка — вся карточка, ведёт на страницу объявления.
+       level — уровень заголовка: 3 на главной под «Объявлениями» и в ленте под заголовком месяца --- */
+const annHref = a => `announcement.html?id=${a.id}`;
+const annText = a => (a.body || []).join(' ').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();   // начало текста без разметки
+const annFile = name => `<span class="ann-file"><i class="i i-file" aria-hidden="true"></i>${esc(name).replace(/_/g, '_<wbr>')}</span>`;
+const annCard = (a, { level = 3 } = {}) => `<a class="ann-card" href="${annHref(a)}">
+    <time class="ann-date" datetime="${a.date}">${fmtDate(a.date.slice(0, 10))} <span class="t">в ${a.date.slice(11, 16)}</span></time>
+    <h${level} class="ann-title">${esc(a.title)}</h${level}>${annText(a) ? `<p class="ann-text">${esc(annText(a))}</p>` : ''}${(a.files || []).map(annFile).join('')}
+  </a>`;
+
 /* --- Пагинация (site.css → «14. Пагинация») по Контур.Гайдам (guides.kontur.ru/components/navigation/paging/):
        — одна страница — пейджинг не показываем;
        — до 7 страниц — все номера; больше — первая и последняя плюс по две соседние с текущей, пропуски — «…»;

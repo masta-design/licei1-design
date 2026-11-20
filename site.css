@@ -237,7 +237,7 @@ h4, .type-h4 { font: var(--type-h4); letter-spacing: normal; }
 .nav .nav-sub { min-height: 0; overflow: hidden; margin: 0 0 0 var(--space-12); transition: margin-top .25s ease, margin-bottom .25s ease; }
 .nav-item.is-open > .nav-sub-wrap > .nav-sub { margin-top: var(--space-8); margin-bottom: var(--space-12); }
 .nav-sub a { display: block; padding: var(--space-8) var(--space-12); font-size: var(--fs-14); line-height: 1.3; color: var(--side-text-secondary); border-radius: var(--radius-md); }
-@media (max-width: 767px) { .nav-row > a, .nav-row > button, .nav-sub a, .nav-sub .nav-row > button { font-size: var(--fs-16); } }   /* телефон: пункты меню — 16px */
+@media (max-width: 767px) { .nav-row > a, .nav-row > button, .nav-sub a, .nav .nav-sub .nav-row > button { font-size: var(--fs-16); } }   /* .nav впереди — правило подпунктов-разделов ниже по файлу иначе перебивает */   /* телефон: пункты меню — 16px */
 .nav-sub a:hover { color: var(--side-accent); background: var(--side-hover); text-decoration: none; }
 .nav-sub a[aria-current="page"] { color: var(--side-accent); font-weight: 600; background: var(--side-hover); }   /* текущая страница (путь — в data-nav у <body>) */
 /* третий уровень: подраздел внутри раскрытого раздела */
@@ -548,6 +548,11 @@ a.card { color: inherit; text-decoration: none !important; }
   padding-bottom: .1em;    /* при LH 1 хвосты у, р, д выходят за строку на ~.1em — без запаса их срезает обрезка до 3 строк */
 }
 .slide:hover .slide-title { text-decoration: underline; text-decoration-thickness: 1px; text-decoration-color: rgb(255 255 255 / .25); text-underline-offset: 6px; }
+/* смена слайда (как в v2–v4): у уходящего дата и заголовок быстро гаснут, у нового — проявляются, поднимаясь снизу:
+   сначала дата (она выше), следом заголовок */
+.slide-title, .slide-date { opacity: 0; transform: translateY(var(--space-12)); transition: opacity .15s ease, transform 0s .15s; }
+.slide.is-active .slide-date { opacity: .85; transform: none; transition: opacity .3s ease-out .12s, transform .3s ease-out .12s; }
+.slide.is-active .slide-title { opacity: 1; transform: none; transition: opacity .3s ease-out .18s, transform .3s ease-out .18s; }
 /* ПК: стрелки (белые кнопки 48px) — справа внизу, точки — под стрелками, по правому краю */
 .slider-arrow { position: absolute; bottom: 52px; z-index: 3; }
 .slider-arrow.next { right: var(--page-x); }
@@ -1207,7 +1212,7 @@ html[data-a11y] .slide-media .fg, html[data-a11y] .slide.is-wide .fg {
   -webkit-mask-image: none; mask-image: none;
 }
 html[data-a11y] .slide-caption { position: static; filter: none; color: var(--text-primary); align-self: center; }   /* дата и заголовок — по центру миниатюры; текст выше неё задаёт высоту строки и начинается вровень с ней */
-html[data-a11y] .slide-date { opacity: 1; }
+html[data-a11y] :is(.slide-date, .slide-title) { opacity: 1; transform: none; }   /* слайды — списком: подписи видны у всех, без анимации смены */
 html[data-a11y] .slide-title { display: block; -webkit-line-clamp: none; overflow: visible; margin-top: var(--space-4); font: var(--type-h3); }   /* как заголовок карточки, а не «афиша» */
 html[data-a11y] :is(.slider-arrow, .slider-dots) { display: none; }
 @container content (max-width: 559px) {
@@ -1248,3 +1253,32 @@ html[data-a11y][data-a11y-img="off"] .a11y-alt {
 .sitemap ul ul a { font-size: var(--fs-14); color: var(--text-secondary); }
 .sitemap a { color: var(--text-primary); }
 .sitemap a:hover { color: var(--text-brand); }
+
+/* ================= 24. Фотогалерея, альбом и видео ================= */
+/* списки альбомов и видео: та же сетка и карточки, что в блоке «Фото / Видео» на главной, но показаны все карточки страницы, и на телефоне — сетка, а не лента */
+.media-list .media-grid > * { display: flex; }
+@container content (max-width: 559px) {
+  .media-list .media-grid { display: grid; overflow: visible; margin: 0; padding: 0; gap: var(--space-grid-y) var(--space-grid-x); }
+  .media-list .media-grid > * { flex: none; }
+}
+/* видео на телефоне — по одному в ряд */
+@container content (max-width: 559px) { .media-list--video .media-grid { grid-template-columns: minmax(0, 1fr); } }
+/* альбом: фото в своих пропорциях колонками (как на unsplash.com). Число колонок — --cols: его читает page-album.js и раскладывает фото */
+.photo-masonry { --cols: 2; display: flex; align-items: flex-start; gap: var(--space-grid-x); }
+@container content (min-width: 900px) { .photo-masonry { --cols: 3; } }
+@container content (min-width: 1400px) { .photo-masonry { --cols: 4; } }
+.photo-col { flex: 1 1 0; min-width: 0; display: grid; gap: var(--space-grid-x); }
+.photo-item { display: block; overflow: hidden; border-radius: var(--radius-lg); background: var(--fill-medium); }
+.photo-item img { display: block; width: 100%; height: auto; transition: transform .4s; }
+.photo-item:hover img { transform: scale(1.03); }
+/* телефон: фото мелкие — промежутки между ними 8px */
+@container content (max-width: 559px) { .photo-masonry, .photo-col { gap: var(--space-8); } }
+
+/* ================= 25. Объявления: лента ================= */
+/* одна колонка шириной как текст статьи; объявления сгруппированы по месяцам: название месяца — над объявлениями, без линий.
+   Карточки — те же .ann-card, что на главной, промежутки между ними — как на главной (32px); между месяцами — заметно больше */
+.ann-feed { max-width: 720px; display: grid; gap: clamp(var(--space-56), 4.4vw, var(--space-96)); }
+.ann-month { margin: 0 0 var(--space-24); font: var(--type-h4); color: var(--text-secondary); }
+.ann-feed .ann-list > li { display: block; }   /* на главной видно только 3 — здесь все */
+/* страница объявления: заголовок «Файлы» — небольшой, как «Объявления» на главной */
+.ann-files h2 { font: var(--type-h4); letter-spacing: normal; }

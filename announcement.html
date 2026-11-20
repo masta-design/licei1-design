@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Объявление — Лицей №1 им. М.В. Карамаева (v5)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=PT+Serif:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="site.css">
+  <link rel="stylesheet" href="demo-look.css"><!-- только для демо -->
+  <script src="demo-look.js"></script><!-- только для демо; первым — сохранённые цвета применяются до отрисовки -->
+  <script src="a11y.js"></script><!-- версия для слабовидящих: сохранённые настройки — до отрисовки -->
+  <script src="school-data.js"></script>
+  <script src="components.js"></script>
+  <script src="layout.js"></script>
+</head>
+<body data-nav="Наша жизнь/Объявления">
+
+<!-- Общие части (сайдбар, шапка, подвал) — теги-заглушки, разметку подставляет layout.js -->
+<div class="app">
+  <site-sidebar></site-sidebar>
+  <div class="main">
+    <site-header></site-header>
+
+    <main class="content" id="main">
+
+      <!-- ================= ОБЪЯВЛЕНИЕ: крошки, заголовок, дата и время, текст, файлы ================= -->
+      <article class="article" aria-labelledby="article-title">
+        <div class="page-head">
+          <nav class="crumbs" aria-label="Хлебные крошки">
+            <ol>
+              <li><a href="./">Главная</a></li>
+              <li><a href="#">Наша жизнь</a></li>
+              <li><a href="announcements.html">Объявления</a></li>
+            </ol>
+          </nav>
+          <h1 class="page-title article-title" id="article-title"></h1>
+          <div class="article-meta"><time id="article-date"></time></div>
+        </div>
+        <div class="article-main">
+          <div class="article-body prose" id="article-body"></div><!-- текст из CMS: стили .prose; если текста нет — блока нет -->
+          <section class="article-body prose ann-files" id="ann-files" aria-labelledby="ann-files-title" hidden>
+            <h2 id="ann-files-title">Файлы</h2>
+            <ul class="docs" id="ann-files-list"></ul><!-- список документов — как на типовой странице (.prose .docs) -->
+          </section>
+          <a class="more more--back article-back" href="announcements.html"><i class="i i-left" aria-hidden="true"></i>Все объявления</a>
+        </div>
+      </article>
+
+    </main>
+
+    <site-footer></site-footer>
+  </div>
+</div>
+
+<demo-look></demo-look><!-- только для демо: панель «Внешний вид» -->
+
+<script src="ann-data.js"></script>
+<script src="page-announcement.js"></script>
+<script src="site.js"></script>
+</body>
+</html>
