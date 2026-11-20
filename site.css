@@ -915,9 +915,10 @@ a.card:hover .card-title { color: var(--text-brand); }
    Кнопку показывает site.js, только если текст длиннее 10 строк; на больших экранах её нет */
 .about-clamp { font: var(--type-prose); }   /* тот же межстрочный, что у абзацев: 10lh — ровно 10 их строк */
 .about-toggle { margin-right: var(--space-24); padding: 0; border: 0; background: none; font-family: inherit; cursor: pointer; }
-.about-toggle[aria-expanded="true"] .i { transform: rotate(180deg); }
-.about-toggle:hover .i { transform: translateY(2px); }
-.about-toggle[aria-expanded="true"]:hover .i { transform: rotate(180deg) translateY(2px); }
+/* стрелка без анимации: «вниз» — свёрнуто, «вверх» — развёрнуто. Сдвиг стрелки при наведении у .more здесь отключён:
+   на телефоне наведение «залипает» после нажатия, и стрелка стояла бы криво */
+.about-toggle .i, .about-toggle:hover .i { transform: none; transition: none; }
+.about-toggle[aria-expanded="true"] .i, .about-toggle[aria-expanded="true"]:hover .i { transform: rotate(180deg); }
 .about-toggle[hidden] { display: none; }   /* у .more свой display — без этого атрибут hidden не сработал бы */
 @media (min-width: 768px) { .about-toggle { display: none; } }   /* на планшете и ПК текст целиком — кнопки нет */
 @media (max-width: 767px) {

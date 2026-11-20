@@ -160,6 +160,8 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') setNav(false
   });
   new ResizeObserver(check).observe(box.parentElement);
   phone.addEventListener('change', check);   // переход через границу телефона — проверяем заново
+  addEventListener('load', check);   // и после загрузки страницы и шрифтов: до них длина текста бывает ещё не та
+  if (document.fonts) document.fonts.ready.then(check);
 })();
 
 /* --- Вкладки фото / видео --- */
