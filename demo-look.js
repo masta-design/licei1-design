@@ -45,12 +45,23 @@ const LOOK_FONTS = [
   { name: 'M PLUS Rounded 1c', family: "'M PLUS Rounded 1c', system-ui, sans-serif" },
   { name: 'Merriweather', family: "'Merriweather', Georgia, serif" },
 ];
-const lookFontUrl = names => 'https://fonts.googleapis.com/css2?' + names.map(n => `family=${n.replace(/ /g, '+')}:wght@400;700`).join('&') + '&display=swap';
-const lookLoadFonts = (names, id) => {
-  if (document.getElementById(id)) return;
-  const l = document.createElement('link');
-  l.id = id; l.rel = 'stylesheet'; l.href = lookFontUrl(names);
-  document.head.appendChild(l);
+/* шрифт заголовков — файл fonts/head-<имя>.css: он и загружает шрифт, и задаёт --font-head. PT Serif — без файла (он в fonts/fonts.css).
+   Подключён всегда один файл: при смене шрифта меняется адрес у той же ссылки; на сайте так же поступает CMS по настройке */
+const lookFontFile = name => `fonts/head-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.css`;
+/* образцы в панели: из файлов шрифтов берём только @font-face, без --font-head — иначе образцы переключили бы шрифт заголовков */
+const lookLoadSamples = () => {
+  if (document.getElementById('look-samples')) return;
+  const st = document.createElement('style'); st.id = 'look-samples'; document.head.appendChild(st);
+  LOOK_FONTS.filter(f => f.name !== LOOK_DEFAULT.font).forEach(f => fetch(lookFontFile(f.name)).then(r => r.text()).then(css => {
+    const base = lookFontFile(f.name).replace(/[^/]+$/, '');   // пути к woff2 в файле — от папки fonts/
+    st.textContent += css.replace(/:root\s*\{[^}]*\}/, '').replace(/url\(([\w.-]+\.woff2)\)/g, `url(${base}$1)`);
+  }));
+};
+const lookSetFont = name => {
+  let l = document.getElementById('look-font');
+  if (name === LOOK_DEFAULT.font) { if (l) l.remove(); return; }
+  if (!l) { l = document.createElement('link'); l.id = 'look-font'; l.rel = 'stylesheet'; document.head.appendChild(l); }
+  l.href = lookFontFile(name);
 };
 
 /* Применить выбор к странице; вызывается и до отрисовки, и из панели */
@@ -58,8 +69,7 @@ function lookApply(st) {
   const root = document.documentElement;
   if (st.theme !== 'base' && LOOK_THEMES.some(x => x.id === st.theme)) root.dataset.theme = st.theme; else delete root.dataset.theme;
   const f = LOOK_FONTS.find(x => x.name === st.font);
-  if (f && f.name !== LOOK_DEFAULT.font) { lookLoadFonts([f.name], 'look-font-' + f.name.replace(/ /g, '-')); root.style.setProperty('--font-head', f.family); }
-  else root.style.removeProperty('--font-head');
+  lookSetFont(f ? f.name : LOOK_DEFAULT.font);
   if (st.radius !== LOOK_DEFAULT.radius) root.dataset.radius = st.radius; else delete root.dataset.radius;
 }
 
@@ -144,7 +154,7 @@ function initLook() {
   const toggle = open => {
     panel.hidden = !open; fab.setAttribute('aria-expanded', open);
     if (open) {
-      lookLoadFonts(LOOK_FONTS.filter(f => f.name !== LOOK_DEFAULT.font).map(f => f.name), 'look-fonts-all');   // образцы всех шрифтов — только когда панель открыли
+      lookLoadSamples();   // образцы всех шрифтов — только когда панель открыли
       panel.querySelector('input:checked').focus({ preventScroll: true });
     }
   };

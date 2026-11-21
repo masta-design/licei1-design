@@ -1,6 +1,7 @@
 /* ============================================================
    ВЕРСИЯ ДЛЯ СЛАБОВИДЯЩИХ: включение, панель настроек, сохранение выбора.
-   Подключается в <head> после demo-look.js: сохранённые настройки применяются до первой отрисовки, без мигания.
+   Подключается в <head>: сохранённые настройки применяются до первой отрисовки, без мигания.
+   Тема, шрифт заголовков и скругления сайта в этом режиме не мешают: его значения в tokens.css (раздел 9) сильнее.
    Режим — атрибуты на <html>: data-a11y (включён), data-a11y-scheme (цвета), data-a11y-img (изображения), data-a11y-font (шрифт);
    размер и интервалы — переменные --a11y-k / --a11y-hk, --a11y-ls / --a11y-hls, --a11y-lh / --a11y-hlh (текст / заголовки).
    Как они меняют вид — tokens.css (раздел 9) и site.css (раздел 22).
@@ -14,7 +15,7 @@ const A11Y_DEFAULT = { v: A11Y_V, on: false, size: 115, hsize: 100, scheme: 'bw'
 /* Размеры — в процентах от обычного размера на сайте: 100% — как в обычной версии. У заголовков обычный размер ещё и меняется
    с шириной экрана, поэтому пиксели ничего не говорят. size / hsize — текст / заголовки, шаг 5%;
    ls / hls — буквы, шаг 0,02em; lh / hlh — межстрочный текста / заголовков × 10 */
-const A11Y_RANGE = { size: [100, 200], hsize: [80, 200], ls: [0, 10], hls: [0, 10], lh: [12, 25], hlh: [10, 20] };
+const A11Y_RANGE = { size: [100, 150], hsize: [80, 150], ls: [0, 10], hls: [0, 10], lh: [12, 25], hlh: [10, 20] };
 const A11Y_STEP = { size: 5, hsize: 5 };   // остальные — по 1
 
 /* Цветовые схемы: цвета — в tokens.css ([data-a11y-scheme="…"]), здесь — названия (для экранного диктора и всплывающей подсказки) */
@@ -54,11 +55,9 @@ function a11yApply(st) {
     root.style.setProperty('--a11y-hls', (st.hls * .02).toFixed(2) + 'em');
     root.style.setProperty('--a11y-lh', st.lh / 10);
     root.style.setProperty('--a11y-hlh', st.hlh / 10);
-    root.style.removeProperty('--font-head');   // шрифт из демо-панели «Внешний вид» в этом режиме не действует
   } else {
     ['a11y', 'a11yScheme', 'a11yImg', 'a11yFont'].forEach(k => delete root.dataset[k]);
     ['--a11y-k', '--a11y-hk', '--a11y-ls', '--a11y-hls', '--a11y-lh', '--a11y-hlh'].forEach(p => root.style.removeProperty(p));
-    if (typeof lookApply === 'function') lookApply(lookLoad());   // вернуть выбор демо-панели
   }
   document.querySelectorAll('[data-a11y]:not(html)').forEach(b => b.setAttribute('aria-checked', st.on));
 }

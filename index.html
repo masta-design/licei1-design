@@ -5,12 +5,10 @@
   <meta name="robots" content="noindex, nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Лицей №1 им. М.В. Карамаева — демо главной (v5)</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=PT+Serif:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="fonts/fonts.css"><!-- шрифты — с сервера сайта -->
   <link rel="stylesheet" href="tokens.css">
   <link rel="stylesheet" href="site.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.15/dist/fancybox/fancybox.css"><!-- плеер видео Fancybox -->
+  <link rel="stylesheet" href="vendor/fancybox/fancybox.css"><!-- плеер видео Fancybox -->
   <link rel="stylesheet" href="demo-look.css"><!-- только для демо -->
   <script src="demo-look.js"></script><!-- только для демо; первым — сохранённые цвета применяются до отрисовки -->
   <script src="a11y.js"></script><!-- версия для слабовидящих: сохранённые настройки — до отрисовки -->
@@ -30,35 +28,37 @@
       <!-- h1 главной: видимого заголовка у главной нет по дизайну, но поисковикам и скринридерам он нужен -->
       <h1 class="sr-only">Официальный сайт МБОУ «Лицей №1 имени М.В. Карамаева города Горно-Алтайска»</h1>
 
-      <!-- ================= СЛАЙДЕР НА ВСЮ ШИРИНУ: главные сообщения, заголовок и дата — поверх картинки (заголовки слайдов — h2) ================= -->
+      <!-- ================= СЛАЙДЕР НА ВСЮ ШИРИНУ: главные сообщения, заголовок и дата — поверх картинки (заголовки слайдов — h2) =================
+           Картинка первого слайда — в src, у остальных — в data-src: их подставляет site.js, когда слайд показывается (и следующий заранее),
+           в версии для слабовидящих — сразу все. Так главная не качает при открытии картинки всех слайдов -->
       <section class="slider" data-slider aria-roledescription="карусель" aria-label="Главные новости">
         <div class="slides">
           <a class="slide is-active" href="#" aria-roledescription="слайд" aria-label="1 из 7">
-            <div class="slide-media"><img class="bg" src="images/slider/school-wide-16x9.jpg" alt=""><img class="fg" src="images/slider/school-wide-16x9.jpg" alt="Урок биологии: ученики с учительницей изучают строение клетки и экосистемы"></div>
+            <div class="slide-media"><img class="bg" src="images/slider/school-wide-16x9.webp" alt=""><img class="fg" src="images/slider/school-wide-16x9.webp" alt="Урок биологии: ученики с учительницей изучают строение клетки и экосистемы"></div>
             <div class="slide-caption"><time class="slide-date" datetime="2026-11-18">18 ноября 2026</time><h2 class="slide-title">Неделя естественных наук: лицеисты исследуют строение клетки и экосистемы</h2></div>
           </a>
           <a class="slide" href="#" aria-roledescription="слайд" aria-label="2 из 7">
-            <div class="slide-media"><img class="bg" src="images/slider/school-horizontal-4x3.jpg" alt=""><img class="fg" src="images/slider/school-horizontal-4x3.jpg" alt="Ученики выходят из здания школы после уроков"></div>
+            <div class="slide-media"><img class="bg" data-src="images/slider/school-horizontal-4x3.webp" alt=""><img class="fg" data-src="images/slider/school-horizontal-4x3.webp" alt="Ученики выходят из здания школы после уроков"></div>
             <div class="slide-caption"><time class="slide-date" datetime="2026-11-16">16 ноября 2026</time><h2 class="slide-title">После каникул: лицеисты вернулись к занятиям</h2></div>
           </a>
           <a class="slide" href="#" aria-roledescription="слайд" aria-label="3 из 7">
-            <div class="slide-media"><img class="bg" src="images/slider/school-square-1x1.jpg" alt=""><img class="fg" src="images/slider/school-square-1x1.jpg" alt="Ученики беседуют у входа в лицей"></div>
+            <div class="slide-media"><img class="bg" data-src="images/slider/school-square-1x1.webp" alt=""><img class="fg" data-src="images/slider/school-square-1x1.webp" alt="Ученики беседуют у входа в лицей"></div>
             <div class="slide-caption"><time class="slide-date" datetime="2026-11-14">14 ноября 2026</time><h2 class="slide-title">День открытых дверей для будущих пятиклассников</h2></div>
           </a>
           <a class="slide" href="#" aria-roledescription="слайд" aria-label="4 из 7">
-            <div class="slide-media"><img class="bg" src="images/slider/school-vertical-3x4.jpg" alt=""><img class="fg" src="images/slider/school-vertical-3x4.jpg" alt="Ученики с новыми учебниками в классе"></div>
+            <div class="slide-media"><img class="bg" data-src="images/slider/school-vertical-3x4.webp" alt=""><img class="fg" data-src="images/slider/school-vertical-3x4.webp" alt="Ученики с новыми учебниками в классе"></div>
             <div class="slide-caption"><time class="slide-date" datetime="2026-11-10">10 ноября 2026</time><h2 class="slide-title">Школьная библиотека пополнилась новыми учебниками</h2></div>
           </a>
           <a class="slide" href="#" aria-roledescription="слайд" aria-label="5 из 7">
-            <div class="slide-media"><img class="bg" src="images/slider/slider3.jpg" alt=""><img class="fg" src="images/slider/slider3.jpg" alt="Плакат: сроки подачи заявлений на итоговое сочинение"></div>
+            <div class="slide-media"><img class="bg" data-src="images/slider/slider3.webp" alt=""><img class="fg" data-src="images/slider/slider3.webp" alt="Плакат: сроки подачи заявлений на итоговое сочинение"></div>
             <div class="slide-caption"><time class="slide-date">13 октября 2026</time><h2 class="slide-title">Определены сроки подачи заявлений на итоговое сочинение в 2026–2027 учебном году</h2></div>
           </a>
           <a class="slide" href="#" aria-roledescription="слайд" aria-label="6 из 7">
-            <div class="slide-media"><img class="bg" src="images/slider/slider2.jpg" alt=""><img class="fg" src="images/slider/slider2.jpg" alt="Открытка ко Дню учителя"></div>
+            <div class="slide-media"><img class="bg" data-src="images/slider/slider2.webp" alt=""><img class="fg" data-src="images/slider/slider2.webp" alt="Открытка ко Дню учителя"></div>
             <div class="slide-caption"><time class="slide-date">5 октября 2026</time><h2 class="slide-title">С Днём учителя! Поздравляем педагогов лицея</h2></div>
           </a>
           <a class="slide" href="#" aria-roledescription="слайд" aria-label="7 из 7">
-            <div class="slide-media"><img class="bg" src="images/slider/slider1.jpg" alt=""><img class="fg" src="images/slider/slider1.jpg" alt="Логотип Года единства народов России"></div>
+            <div class="slide-media"><img class="bg" data-src="images/slider/slider1.webp" alt=""><img class="fg" data-src="images/slider/slider1.webp" alt="Логотип Года единства народов России"></div>
             <div class="slide-caption"><time class="slide-date">2026</time><h2 class="slide-title">2026 — Год единства народов России</h2></div>
           </a>
         </div>
@@ -90,7 +90,7 @@
 
               <!-- Фото и имя ведут на страницу директора; контакты — отдельные ссылки (вложенные ссылки недопустимы) -->
               <div class="director">
-                <a class="photo" href="#" tabindex="-1" aria-hidden="true"><img src="images/other/director.png" alt=""></a>
+                <a class="photo" href="#" tabindex="-1" aria-hidden="true"><img src="images/other/director.webp" alt=""></a>
                 <div class="body">
                   <a class="name" href="#">Старикова Елена Михайловна</a>
                   <div class="role">Директор</div>
@@ -199,7 +199,7 @@
 <script src="ann-data.js"></script>
 <script src="photo-data.js"></script>
 <script src="video-data.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.15/dist/fancybox/fancybox.umd.js"></script>
+<script src="vendor/fancybox/fancybox.umd.js"></script>
 <script src="fancybox-setup.js"></script>
 <script src="page-home.js"></script>
 <script src="site.js"></script>

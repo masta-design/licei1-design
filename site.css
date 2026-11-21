@@ -1186,6 +1186,8 @@ html[data-a11y] .a11y-panel, html[data-a11y] .a11y-panel * { font-family: var(--
   .a11y-exit-text, .a11y-long { display: none; }
   .a11y-short { display: inline; }
 }
+/* самые узкие телефоны (320px): три кнопки в строку не помещаются — «Свернуть» уходит на вторую строку, а не за край экрана */
+@container main (max-width: 359px) { .a11y-head { flex-wrap: wrap; } }
 
 /* ----- общее: интервалы, фокус, ссылки, без анимаций и украшений ----- */
 html[data-a11y] body * { transition: none !important; animation: none !important; }
@@ -1198,7 +1200,16 @@ html[data-a11y] :is(.more, .ann-title, .director .name) { text-decoration: under
 html[data-a11y] :is(.look-fab, #look) { display: none !important; }
 /* контакты в шапке и баннер Госуслуг при крупном шрифте переносятся, а не уходят за край */
 html[data-a11y] .topbar, html[data-a11y] .tb-contacts { flex-wrap: wrap !important; }
+/* крупные заголовки: длинное слово («персональных») может не поместиться в ширину телефона — переносим по слогам, а если нельзя — по буквам */
+html[data-a11y] :is(h1, h2, h3, h4, .card-title, .ann-title) { hyphens: auto; overflow-wrap: anywhere; }   /* anywhere — и в строке с кнопкой (шапка секции) заголовок сжимается, а не выталкивает её */
+html[data-a11y] .card .body { min-width: 0; }   /* карточка в строку (фото слева): длинное слово не растягивает текстовую часть шире экрана */
 html[data-a11y] .tb-contacts .tbc-item { flex-shrink: 1 !important; min-width: 0; }
+/* телефон: при крупном тексте подпись и значение в строку не помещаются (телефон не переносится) — подпись над значением, без точек-выносок */
+@media (max-width: 767px) {
+  html[data-a11y] .tbc-item { flex-direction: column; align-items: flex-start; gap: 0; }
+  html[data-a11y] .tbc-item::before { display: none; }
+  html[data-a11y] .tbc-value { text-align: left; }
+}
 html[data-a11y] .brand-name { max-width: none; font-size: min(var(--fs-16), 22px); }
 /* кнопки растут вместе с текстом: высота — не меньше обычной, а не ровно обычная (иначе крупный текст вылезает за кнопку и плашку) */
 html[data-a11y] .btn:not(.btn-icon) { height: auto; min-height: var(--size-control); padding-block: var(--space-8); }
@@ -1329,3 +1340,100 @@ html[data-a11y][data-a11y-img="off"] .a11y-alt {
 /* версия для слабовидящих: цвета схемы, рамка вместо тени */
 html[data-a11y] .cookie-note { box-shadow: none; border: 2px solid var(--text-primary); background: var(--bg-page); }
 html[data-a11y] .cookie-text { color: var(--text-primary); }
+
+/* ================= 27. Поиск и страница 404 ================= */
+/* поле с запросом под заголовком: то же поле .search, что в шапке, и кнопка «Найти» */
+.search-form { display: flex; gap: var(--space-8); max-width: 720px; margin-top: var(--space-24); }
+.search-form .search { flex: 1; min-width: 0; }
+/* результаты — одной колонкой, как лента объявлений; карточка результата — та же .ann-card */
+.search-results { max-width: 720px; }
+.search-summary { margin: 0 0 var(--space-16); color: var(--text-secondary); }
+.search-summary b { color: var(--text-primary); font-weight: 600; }
+/* фильтр по типу: кнопки-«пилюли» с числом результатов; выбранный тип — основная кнопка, остальные — второстепенные */
+.search-filters { display: flex; flex-wrap: wrap; gap: var(--space-8); margin-bottom: var(--space-32); }
+.search-filters .btn { border-radius: var(--radius-full); }
+.search-count { font-weight: 400; opacity: .75; }
+.search-results .ann-list > li { display: block; }   /* на главной видно только 3 — здесь все */
+.search-path { font-size: var(--fs-14); line-height: 1.4; color: var(--text-secondary); }   /* у страниц раздела — путь в меню */
+/* подсветка найденных слов — бледный оттенок темы под словом */
+mark.hl { background: var(--action-subtle); color: inherit; border-radius: 3px; padding: 0 .08em; }
+.search-empty-title { margin: 0 0 var(--space-12); font: var(--type-h4); }
+.search-tips { margin: 0; padding-left: 1.2em; color: var(--text-secondary); }
+.search-tips li + li { margin-top: var(--space-4); }
+@media (max-width: 559px) {
+  .search-filters { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: calc(-1 * var(--page-x)); padding-inline: var(--page-x); }   /* телефон: фильтр прокручивается вбок */
+  .search-filters .btn { flex-shrink: 0; }
+}
+
+/* 404: крупный код бледным цветом темы, заголовок, пояснение, поиск, кнопки */
+.e404-code { margin: 0; font: 700 calc(var(--fs-fluid-xl) * 2)/1 var(--font-head); color: color-mix(in srgb, var(--text-brand) 22%, transparent); }
+.e404-text { max-width: 560px; margin: var(--space-16) 0 0; font: var(--type-body-lg); font-weight: 400; color: var(--text-secondary); }
+.e404-actions { display: flex; flex-wrap: wrap; gap: var(--space-8); margin-top: var(--space-24); }
+@media (max-width: 559px) {
+  .search-form { flex-direction: column; }
+  .e404-actions { flex-direction: column; }
+}
+html[data-a11y] .e404-code { color: var(--text-primary); }
+
+/* ================= 28. Формы ================= */
+/* Поле — блок .field: подпись, сам элемент, подсказка или ошибка. Обязательное поле — звёздочка .req в подписи и required у элемента.
+   Ошибка — класс is-error у .field и текст .field-error (у элемента — aria-invalid и aria-describedby на текст ошибки).
+   Размеры и цвета — из токенов: высота как у крупных кнопок, рамка --border-default, фокус — рамка и ореол цвета темы, как у поиска */
+.form { display: grid; gap: var(--space-24); max-width: 640px; }
+.field { display: grid; gap: var(--space-8); min-width: 0; }
+.field-label { font-size: var(--fs-14); font-weight: 600; line-height: 1.3; color: var(--text-primary); }
+.req { color: var(--danger-text); }
+.field-hint { margin: 0; font-size: var(--fs-14); line-height: 1.4; color: var(--text-secondary); }
+.field-error { margin: 0; font-size: var(--fs-14); line-height: 1.4; color: var(--danger-text); }
+/* поле ввода, многострочное поле, список */
+.input, .textarea, .select select {
+  width: 100%; min-height: var(--size-control-lg); padding: 0 var(--space-16);
+  border: 1px solid var(--border-default); border-radius: var(--radius-md); background: var(--bg-surface);
+  font: inherit; font-size: var(--fs-16); line-height: 1.5; color: var(--text-primary);
+  transition: border-color .2s, box-shadow .2s;
+}
+.textarea { min-height: 160px; padding-block: var(--space-12); resize: vertical; display: block; }
+.input::placeholder, .textarea::placeholder { color: var(--text-tertiary); }
+:is(.input, .textarea, .select select):hover { border-color: var(--border-hover); }
+:is(.input, .textarea, .select select):focus { outline: none; border-color: var(--border-focus); box-shadow: 0 0 0 4px var(--action-subtle); }
+:is(.input, .textarea, .select select):disabled { background: var(--fill-subtle); color: var(--text-tertiary); border-color: var(--border-subtle); cursor: not-allowed; }
+.field.is-error :is(.input, .textarea, .select select) { border-color: var(--danger-border); }
+.field.is-error :is(.input, .textarea, .select select):focus { box-shadow: 0 0 0 4px var(--danger-bg); }
+/* список: свой шеврон справа вместо системной стрелки */
+.select { position: relative; }
+.select select { appearance: none; padding-right: var(--space-48); cursor: pointer; }
+.select .i { position: absolute; right: var(--space-16); top: 50%; translate: 0 -50%; --i-size: var(--size-icon-md); color: var(--text-secondary); pointer-events: none; }
+/* флажок и переключатель-вариант: настоящий input скрыт, но в фокусе; рисуем квадрат / круг рядом с текстом.
+   Подпись — весь label, поэтому зона нажатия — вся строка */
+.check { position: relative; display: flex; align-items: flex-start; gap: var(--space-12); font-size: var(--fs-16); line-height: 1.5; color: var(--text-primary); cursor: pointer; }
+.check input { position: absolute; width: 1px; height: 1px; opacity: 0; margin: 0; }
+.check-box {
+  flex: none; display: grid; place-items: center; width: 22px; height: 22px; margin-top: .1em;
+  border: 1.5px solid var(--border-default); border-radius: calc(var(--radius-md) / 2); background: var(--bg-surface);
+  transition: background-color .15s, border-color .15s;
+}
+.check-box .i { --i-size: 16px; color: var(--text-on-brand); opacity: 0; }
+.check input[type="radio"] + .check-box { border-radius: 50%; }
+.check input[type="radio"] + .check-box::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--text-on-brand); opacity: 0; }
+.check:hover .check-box { border-color: var(--border-hover); }
+.check input:checked + .check-box { background: var(--action); border-color: var(--action); }
+.check input:checked + .check-box .i, .check input[type="radio"]:checked + .check-box::after { opacity: 1; }
+.check input:focus-visible + .check-box { box-shadow: 0 0 0 4px var(--action-subtle); border-color: var(--border-focus); }
+.check input:disabled + .check-box { background: var(--fill-subtle); border-color: var(--border-subtle); }
+.check:has(input:disabled) { color: var(--text-tertiary); cursor: not-allowed; }
+.field.is-error .check-box { border-color: var(--danger-border); }
+.checks { display: grid; gap: var(--space-12); border: 0; margin: 0; padding: 0; min-width: 0; }   /* группа вариантов: fieldset, подпись — legend.field-label */
+.checks > legend { padding: 0; margin-bottom: var(--space-8); }
+/* файл: кнопка «Выбрать файл» и имя выбранного файла (подставляет site.js); сам input скрыт */
+.file { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-12); }
+.file input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.file .btn { cursor: pointer; }
+.file input:focus-visible + .btn { outline: 2px solid var(--focus); outline-offset: 2px; }
+.file-name { font-size: var(--fs-14); color: var(--text-secondary); overflow-wrap: anywhere; }
+/* низ формы: кнопка отправки и пояснение про обязательные поля */
+.form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-12) var(--space-24); }
+.form-note { margin: 0; font-size: var(--fs-14); color: var(--text-secondary); }
+@media (max-width: 559px) { .form-actions .btn { width: 100%; } }
+/* версия для слабовидящих: рамки полей — цветом текста, толще */
+html[data-a11y] :is(.input, .textarea, .select select) { border: 2px solid var(--text-primary); }
+html[data-a11y] .check-box { border: 2px solid var(--text-primary); }

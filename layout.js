@@ -94,7 +94,7 @@ definePart('site-sidebar', () => `
         <span><span class="brand-name">${esc(SCHOOL.name)}</span></span>
       </a>
     </div>
-    <nav class="nav" id="nav">${navHTML((document.body.dataset.nav || '').split('/').filter(Boolean))}</nav>
+    <nav class="nav" id="nav" aria-label="Разделы сайта">${navHTML((document.body.dataset.nav || '').split('/').filter(Boolean))}</nav>
     <!-- «Версия для слабовидящих» и под ней «Войти» — в конце меню, прокручиваются вместе с ним -->
     <div class="side-tools">
       ${a11ySwitch}
@@ -118,10 +118,10 @@ definePart('site-header', () => `
       </a>
       <!-- поиск занимает всё свободное место в строке: шире 280px — поле, уже — кнопка-лупа (site.css, раздел 5) -->
       <div class="search-box">
-        <form class="search" role="search" onsubmit="return false">
+        <form class="search" role="search" action="search.html">   <!-- запрос уходит на страницу результатов: search.html?q=… -->
           <label class="sr-only" for="q">Поиск по сайту</label>
           <i class="i i-search" aria-hidden="true"></i>
-          <input id="q" type="search" placeholder="Поиск по сайту">
+          <input id="q" name="q" type="search" placeholder="Поиск по сайту">
         </form>
         <button class="btn btn-lg btn-icon btn-secondary search-toggle" type="button" aria-label="Открыть поиск" aria-controls="q" aria-expanded="false" data-search-toggle>
           <i class="i ico-open i-search" aria-hidden="true"></i><i class="i ico-close i-x" aria-hidden="true"></i>

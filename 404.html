@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Страница не найдена — Лицей №1 им. М.В. Карамаева (v5)</title>
+  <link rel="stylesheet" href="fonts/fonts.css"><!-- шрифты — с сервера сайта -->
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="site.css">
+  <link rel="stylesheet" href="demo-look.css"><!-- только для демо -->
+  <script src="demo-look.js"></script><!-- только для демо; первым — сохранённые цвета применяются до отрисовки -->
+  <script src="a11y.js"></script><!-- версия для слабовидящих: сохранённые настройки — до отрисовки -->
+  <script src="school-data.js"></script>
+  <script src="components.js"></script>
+  <script src="layout.js"></script>
+</head>
+<body>
+
+<!-- Общие части (сайдбар, шапка, подвал) — теги-заглушки, разметку подставляет layout.js -->
+<div class="app">
+  <site-sidebar></site-sidebar>
+  <div class="main">
+    <site-header></site-header>
+
+    <main class="content" id="main">
+
+      <!-- ================= СТРАНИЦА 404: крупный код, заголовок, пояснение, поиск, кнопки. Сайдбар, шапка и подвал — как везде ================= -->
+      <div class="page-head e404">
+        <p class="e404-code" aria-hidden="true">404</p>
+        <h1 class="page-title">Страница не найдена</h1>
+        <p class="e404-text">Возможно, её удалили или в адресе опечатка. Найдите нужное через поиск или начните с главной.</p>
+        <form class="search-form" role="search" action="search.html">
+          <div class="search">
+            <label class="sr-only" for="search-q">Поиск по сайту</label>
+            <i class="i i-search" aria-hidden="true"></i>
+            <input id="search-q" name="q" type="search" placeholder="Что найти?">
+          </div>
+          <button class="btn btn-lg btn-primary" type="submit">Найти</button>
+        </form>
+        <div class="e404-actions">
+          <a class="btn btn-lg btn-primary" href="./">На главную</a>
+          <a class="btn btn-lg btn-secondary" href="sitemap.html">Карта сайта</a>
+        </div>
+      </div>
+
+    </main>
+
+    <site-footer></site-footer>
+  </div>
+</div>
+
+<demo-look></demo-look><!-- только для демо: панель «Внешний вид» -->
+
+<script src="site.js"></script>
+</body>
+</html>

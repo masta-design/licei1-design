@@ -5,9 +5,7 @@
   <meta name="robots" content="noindex, nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Дизайн-система — Лицей №1 им. М.В. Карамаева (v5)</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=PT+Serif:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="fonts/fonts.css"><!-- шрифты — с сервера сайта -->
   <link rel="stylesheet" href="tokens.css">
   <link rel="stylesheet" href="site.css">
   <link rel="stylesheet" href="demo-look.css"><!-- только для демо -->
@@ -40,6 +38,7 @@
     .ds-icon .i { --i-size: var(--size-icon-xl); color: var(--text-primary); }
     .ds-photo { padding: 24px; border-radius: var(--radius-md); background: linear-gradient(135deg, #3b5b7d, #1b2433); }
     .ds-example + details { margin-top: 12px; }
+    [data-contacts-demo] .tb-contacts { flex-wrap: wrap; }   /* в примере пунктов больше, чем в шапке: на широком экране переносятся, а не вылезают за ширину */
     details summary { cursor: pointer; font-size: var(--fs-14); color: var(--text-brand); font-weight: 600; }
     details pre { margin: 8px 0 0; padding: 16px; max-height: 360px; overflow: auto; background: var(--fill-subtle); border-radius: var(--radius-md); font-size: 12px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
     .ds-table { width: 100%; border-collapse: collapse; font-size: var(--fs-14); }
@@ -80,7 +79,7 @@
         <p class="ds-lead">Токены (tokens.css) и компоненты (site.css, components.js) сайта. Значения — живые: попробуйте поменять тему в панели «Внешний вид» справа внизу. Правила — в README.md.</p>
         <nav class="ds-nav" aria-label="Разделы каталога">
           <a href="#colors">Цвет</a><a href="#type">Типографика</a><a href="#space">Отступы</a><a href="#radius">Скругления и тени</a>
-          <a href="#icons">Иконки</a><a href="#buttons">Кнопки и ссылки</a><a href="#cards">Карточки</a><a href="#navigation">Навигация</a><a href="#widths">Ширины</a>
+          <a href="#icons">Иконки</a><a href="#buttons">Кнопки и ссылки</a><a href="#cards">Карточки</a><a href="#navigation">Навигация</a><a href="#forms">Формы</a><a href="#widths">Ширины</a>
         </nav>
       </div>
 
@@ -251,6 +250,97 @@
         <h3 class="ds-h3">Контакты в шапке — функция contactsBarHTML() в layout.js</h3>
         <div class="ds-example" data-contacts-demo></div>
         <p class="ds-note">В примере контактов больше лимита: появляется ссылка «Все контакты». Сайдбар, шапка и подвал — на этой же странице: их строит layout.js.</p>
+      </section>
+
+      <!-- ================= ФОРМЫ ================= -->
+      <section class="section" id="forms" aria-labelledby="forms-title">
+        <div class="section-head"><h2 id="forms-title">Формы</h2></div>
+        <p class="ds-note">Для форм на страницах: обращения, «Задать вопрос», запись. Поле — блок .field: подпись, элемент, подсказка или ошибка. Обязательное поле — звёздочка .req и required; ошибка — .field.is-error, текст .field-error, у элемента aria-invalid и aria-describedby. Подпись всегда видна — плейсхолдер её не заменяет.</p>
+
+        <h3 class="ds-h3">Поле ввода — подсказка, ошибка, недоступное</h3>
+        <div class="ds-example form">
+          <div class="field">
+            <label class="field-label" for="f-name">Имя и фамилия <span class="req" aria-hidden="true">*</span></label>
+            <input class="input" id="f-name" type="text" autocomplete="name" required placeholder="Иван Петров">
+          </div>
+          <div class="field">
+            <label class="field-label" for="f-phone">Телефон</label>
+            <input class="input" id="f-phone" type="tel" autocomplete="tel" placeholder="8 (900) 123-45-67" aria-describedby="f-phone-hint">
+            <p class="field-hint" id="f-phone-hint">Перезвоним, если понадобится уточнить вопрос</p>
+          </div>
+          <div class="field is-error">
+            <label class="field-label" for="f-email">E-mail <span class="req" aria-hidden="true">*</span></label>
+            <input class="input" id="f-email" type="email" autocomplete="email" required value="ivan@mail" aria-invalid="true" aria-describedby="f-email-err">
+            <p class="field-error" id="f-email-err">Проверьте адрес: в нём нет домена, например ivan@mail.ru</p>
+          </div>
+          <div class="field">
+            <label class="field-label" for="f-class">Класс</label>
+            <input class="input" id="f-class" type="text" value="Заполняется автоматически" disabled>
+          </div>
+        </div>
+
+        <h3 class="ds-h3">Многострочное поле — для больших сообщений</h3>
+        <div class="ds-example form">
+          <div class="field">
+            <label class="field-label" for="f-msg">Сообщение <span class="req" aria-hidden="true">*</span></label>
+            <textarea class="textarea" id="f-msg" required placeholder="Опишите вопрос или предложение" aria-describedby="f-msg-hint"></textarea>
+            <p class="field-hint" id="f-msg-hint">Высоту поля можно увеличить, потянув за правый нижний угол</p>
+          </div>
+        </div>
+
+        <h3 class="ds-h3">Список</h3>
+        <div class="ds-example form">
+          <div class="field">
+            <label class="field-label" for="f-topic">Тема обращения</label>
+            <div class="select">
+              <select id="f-topic">
+                <option>Учебный процесс</option>
+                <option>Приём в лицей</option>
+                <option>Питание</option>
+                <option>Другое</option>
+              </select>
+              <i class="i i-down" aria-hidden="true"></i>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="ds-h3">Флажки и варианты</h3>
+        <div class="ds-example form">
+          <label class="check"><input type="checkbox" checked><span class="check-box" aria-hidden="true"><i class="i i-check"></i></span><span>Получать ответ на e-mail</span></label>
+          <label class="check"><input type="checkbox"><span class="check-box" aria-hidden="true"><i class="i i-check"></i></span><span>Подписаться на новости лицея</span></label>
+          <label class="check"><input type="checkbox" disabled><span class="check-box" aria-hidden="true"><i class="i i-check"></i></span><span>Недоступный вариант</span></label>
+          <fieldset class="checks">
+            <legend class="field-label">Кто вы</legend>
+            <label class="check"><input type="radio" name="f-who" checked><span class="check-box" aria-hidden="true"></span><span>Родитель (законный представитель)</span></label>
+            <label class="check"><input type="radio" name="f-who"><span class="check-box" aria-hidden="true"></span><span>Обучающийся</span></label>
+            <label class="check"><input type="radio" name="f-who"><span class="check-box" aria-hidden="true"></span><span>Другое</span></label>
+          </fieldset>
+        </div>
+
+        <h3 class="ds-h3">Файл</h3>
+        <div class="ds-example form">
+          <div class="field">
+            <span class="field-label" id="f-file-label">Приложить файл</span>
+            <label class="file">
+              <input type="file" multiple aria-labelledby="f-file-label" aria-describedby="f-file-hint">
+              <span class="btn btn-secondary"><i class="i i-file" aria-hidden="true"></i>Выбрать файл</span>
+              <span class="file-name">Файл не выбран</span>
+            </label>
+            <p class="field-hint" id="f-file-hint">PDF, DOC или JPG, до 10 МБ</p>
+          </div>
+        </div>
+
+        <h3 class="ds-h3">Согласие и отправка — низ любой формы</h3>
+        <div class="ds-example form">
+          <div class="field is-error">
+            <label class="check"><input type="checkbox" required aria-invalid="true" aria-describedby="f-agree-err"><span class="check-box" aria-hidden="true"><i class="i i-check"></i></span><span>Согласен на обработку персональных данных в соответствии с <a href="privacy.html">Политикой обработки персональных данных</a></span></label>
+            <p class="field-error" id="f-agree-err">Без согласия отправить форму нельзя</p>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-lg btn-primary" type="button">Отправить</button>
+            <p class="form-note"><span class="req">*</span> — обязательные поля</p>
+          </div>
+        </div>
       </section>
 
       <!-- ================= ШИРИНЫ ================= -->

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Поиск — Лицей №1 им. М.В. Карамаева (v5)</title>
+  <link rel="stylesheet" href="fonts/fonts.css"><!-- шрифты — с сервера сайта -->
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="site.css">
+  <link rel="stylesheet" href="vendor/fancybox/fancybox.css"><!-- плеер для найденных видео -->
+  <link rel="stylesheet" href="demo-look.css"><!-- только для демо -->
+  <script src="demo-look.js"></script><!-- только для демо; первым — сохранённые цвета применяются до отрисовки -->
+  <script src="a11y.js"></script><!-- версия для слабовидящих: сохранённые настройки — до отрисовки -->
+  <script src="school-data.js"></script>
+  <script src="components.js"></script>
+  <script src="layout.js"></script>
+</head>
+<body>
+
+<!-- Общие части (сайдбар, шапка, подвал) — теги-заглушки, разметку подставляет layout.js -->
+<div class="app">
+  <site-sidebar></site-sidebar>
+  <div class="main">
+    <site-header></site-header>
+
+    <main class="content" id="main">
+
+      <!-- ================= ЗАГОЛОВОК: крошки, h1, поле с запросом ================= -->
+      <div class="page-head">
+        <nav class="crumbs" aria-label="Хлебные крошки">
+          <ol>
+            <li><a href="./">Главная</a></li>
+            <li><span aria-current="page">Поиск</span></li>
+          </ol>
+        </nav>
+        <h1 class="page-title">Поиск</h1>
+        <!-- поле с текстом запроса — уточнить его, не возвращаясь к шапке (то же поле .search, что в шапке, и кнопка) -->
+        <form class="search-form" role="search" action="search.html">
+          <div class="search">
+            <label class="sr-only" for="search-q">Поиск по сайту</label>
+            <i class="i i-search" aria-hidden="true"></i>
+            <input id="search-q" name="q" type="search" placeholder="Что найти?">
+          </div>
+          <button class="btn btn-lg btn-primary" type="submit">Найти</button>
+        </form>
+      </div>
+
+      <!-- ================= РЕЗУЛЬТАТЫ: итог, фильтр по типу, список, пагинация; пусто — «ничего не нашлось». Строит page-search.js ================= -->
+      <section class="search-results" aria-label="Результаты поиска">
+        <p class="search-summary" id="search-summary" aria-live="polite"></p>
+        <nav class="search-filters" id="search-filters" aria-label="Тип результатов"></nav>
+        <ul class="ann-list search-list" id="search-list"></ul>
+        <div class="search-empty" id="search-empty" hidden></div>
+        <nav class="pager" id="pager" aria-label="Страницы результатов"></nav>
+      </section>
+
+    </main>
+
+    <site-footer></site-footer>
+  </div>
+</div>
+
+<demo-look></demo-look><!-- только для демо: панель «Внешний вид» -->
+
+<script src="news-data.js"></script>
+<script src="news-articles.js"></script>
+<script src="ann-data.js"></script>
+<script src="photo-data.js"></script>
+<script src="video-data.js"></script>
+<script src="vendor/fancybox/fancybox.umd.js"></script>
+<script src="fancybox-setup.js"></script>
+<script src="page-search.js"></script>
+<script src="site.js"></script>
+</body>
+</html>

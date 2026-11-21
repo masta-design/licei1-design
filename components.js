@@ -17,7 +17,7 @@ const telHref = v => { let d = v.replace(/\D/g, ''); if (d[0] === '8') d = '7' +
 
 /* --- Соцсети: ссылки-иконки. mono — одноцветный вариант (.socials--mono): силуэт задаётся маской --m --- */
 const socialsHTML = (list, { mono = false } = {}) => list.map(s =>
-  `<a href="${s.href}" aria-label="${esc(s.t)}"${mono ? ` style="--m: url(${s.mono})"` : ''}><img src="${s.icon}" alt=""></a>`).join('');
+  `<a href="${s.href}" aria-label="${esc(s.t)}"${mono ? ` style="--m: url(${new URL(s.mono, document.baseURI).href})"` : ''}><img src="${s.icon}" alt=""></a>`).join('');   // адрес маски — полный: url() в переменной браузер считает от файла стилей, а не от страницы
 
 /* --- Карточка новости (site.css → «11. Новости»).
        n — запись из NEWS (news-data.js): { id, date, title, text?, img?, typical? }. Нет обложки (img) — на её месте заглушка .ph.

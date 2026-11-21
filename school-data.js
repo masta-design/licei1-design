@@ -67,6 +67,8 @@ const NAV = [
   { group: 'Шаблоны', items: [
     { t: 'Типовая страница раздела', href: 'page.html' },
     { t: 'Типовая страница новости', href: 'news-item.html?id=752333' },
+    { t: 'Результаты поиска', href: 'search.html?q=гиа' },
+    { t: 'Страница 404', href: '404.html' },
     { t: 'UI-kit проекта', href: 'components.html' },
   ]},
 ];

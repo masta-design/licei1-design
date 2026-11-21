@@ -70,8 +70,16 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') setNav(false
   });
   const dots = [...dotsWrap.children];
 
+  // картинки слайдов со второго — в data-src: подставляем, когда слайд показывается, и следующий заранее, чтобы листание было без задержки
+  const load = s => s.querySelectorAll('img[data-src]').forEach(img => { img.src = img.dataset.src; img.removeAttribute('data-src'); });
+  // версия для слабовидящих показывает слайды списком — там нужны все картинки сразу
+  const loadAll = () => { if (document.documentElement.hasAttribute('data-a11y')) slides.forEach(load); };
+  new MutationObserver(loadAll).observe(document.documentElement, { attributes: true, attributeFilter: ['data-a11y'] });
+  loadAll();
+
   function go(i) {
     idx = (i + slides.length) % slides.length;
+    load(slides[idx]); load(slides[(idx + 1) % slides.length]);
     slides.forEach((s, n) => s.classList.toggle('is-active', n === idx));
     dots.forEach((d, n) => d.setAttribute('aria-current', n === idx));
   }
@@ -132,7 +140,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') setNav(false
   slides.forEach(s => {
     const img = s.querySelector('.fg');
     const ready = () => { shade(img); fit(); };
-    if (img.complete && img.naturalWidth) ready(); else img.addEventListener('load', ready, { once: true });
+    if (img.complete && img.naturalWidth) ready(); else img.addEventListener('load', ready, { once: true });   // у отложенных — сработает, когда подставим src
   });
 
   go(0);
@@ -281,3 +289,11 @@ document.querySelectorAll('.banner').forEach(b => {
     }
   });
 })();
+
+/* --- Поле «Файл» (site.css «28. Формы»): под кнопкой «Выбрать файл» — имена выбранных файлов. Делегирование — работает для любых форм --- */
+document.addEventListener('change', e => {
+  const input = e.target.closest('.file input[type="file"]');
+  if (!input) return;
+  const out = input.closest('.file').querySelector('.file-name');
+  if (out) out.textContent = input.files.length ? [...input.files].map(f => f.name).join(', ') : 'Файл не выбран';
+});
