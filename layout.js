@@ -68,6 +68,19 @@ function contactsBarHTML(c) {
   return `<address class="tb-contacts">${left ? `<div class="tbc-group tbc-left">${left}</div>` : ''}${right ? `<div class="tbc-group tbc-right">${right}</div>` : ''}</address>`;
 }
 
+/* ================= Уведомление о cookie (site.css → «26. Уведомление о cookie», поведение — site.js) =================
+   Карточка внизу экрана: показывается, пока посетитель не выбрал «Принять» или «Только необходимые»; выбор хранится в localStorage «cookies5».
+   Не модальное окно: сайт остаётся доступен. Заголовок — не h2, чтобы не попадать в структуру заголовков каждой страницы.
+   Ссылка «Подробнее» ведёт на страницу согласия (cookies.html) — по 152-ФЗ согласие оформляется отдельным документом */
+const cookieNote = `<section class="cookie-note" id="cookie-note" aria-label="Уведомление о cookie" hidden>
+    <p class="cookie-title">Мы используем cookie</p>
+    <p class="cookie-text">Они нужны, чтобы сайт работал и запоминал ваши настройки, например версию для слабовидящих. С вашего согласия мы также подключаем Яндекс Метрику — она показывает, какие разделы читают чаще. <a href="cookies.html">Подробнее</a></p>
+    <div class="cookie-actions">
+      <button class="btn btn-primary" type="button" data-cookie="all">Принять</button>
+      <button class="btn btn-secondary" type="button" data-cookie="necessary">Только необходимые</button>
+    </div>
+  </section>`;
+
 /* ================= Сайдбар (+ затемнение и крестик мобильного меню) =================
    Первая ссылка страницы — «Перейти к содержимому»: видна только при фокусе с клавиатуры, позволяет пропустить меню.
    Ведёт на <main id="main"> — он должен быть на каждой странице */
@@ -124,7 +137,12 @@ definePart('site-footer', () => `
   <footer class="footer">
     <div class="footer-bottom">
       <span>${esc(SCHOOL.copyright)}</span>
-      <nav aria-label="Служебные ссылки"><a href="sitemap.html">Карта сайта</a></nav>
+      <nav aria-label="Служебные ссылки">
+        <a href="sitemap.html">Карта сайта</a>
+        <a href="privacy.html">Политика обработки персональных данных</a>
+        <button class="footer-link" type="button" data-cookie-open>Настройки cookie</button>
+      </nav>
       ${(CONTACTS.socials || []).length ? `<div class="socials socials--mono" aria-label="Мы в соцсетях" role="group">${socialsHTML(CONTACTS.socials, { mono: true })}</div>` : ''}
     </div>
-  </footer>`);
+  </footer>
+  ${cookieNote}`);

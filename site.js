@@ -243,3 +243,41 @@ document.querySelectorAll('.banner').forEach(b => {
     b.querySelector('img').style.transformOrigin = `${ox}px ${oy}px`;
   });
 });
+
+/* --- Уведомление о cookie (разметка — layout.js, стили — site.css «26»).
+       Выбор хранится в localStorage «cookies5»: { v — версия текста согласия, analytics — разрешена ли Яндекс Метрика, date }.
+       Пока выбора нет или текст согласия обновился (COOKIE_V) — карточка показывается. «Настройки cookie» в подвале открывают её снова.
+       Необходимые данные (выбор по cookie, настройки версии для слабовидящих) хранятся всегда — согласие на них не нужно.
+       Счётчик Метрики подключается только после «Принять»: в демо его нет, на сайте вместо заглушки — код счётчика --- */
+(function () {
+  const COOKIE_V = 1;
+  const KEY = 'cookies5';
+  const note = document.getElementById('cookie-note');
+  if (!note) return;
+  const read = () => { try { const c = JSON.parse(localStorage.getItem(KEY)); return c && c.v === COOKIE_V ? c : null; } catch (e) { return null; } };
+  const loadAnalytics = () => { /* здесь подключается счётчик Яндекс Метрики */ };
+  const show = () => {
+    note.hidden = false;
+    requestAnimationFrame(() => requestAnimationFrame(() => note.classList.add('is-shown')));   // два кадра — чтобы сработал переход
+  };
+  const hide = () => { note.classList.remove('is-shown'); note.hidden = true; };
+
+  const saved = read();
+  if (saved) { if (saved.analytics) loadAnalytics(); }
+  else setTimeout(show, 500);
+
+  document.addEventListener('click', e => {
+    const choice = e.target.closest('[data-cookie]');
+    if (choice) {
+      const analytics = choice.dataset.cookie === 'all';
+      try { localStorage.setItem(KEY, JSON.stringify({ v: COOKIE_V, analytics, date: new Date().toISOString() })); } catch (err) {}
+      if (analytics) loadAnalytics();
+      hide();
+      return;
+    }
+    if (e.target.closest('[data-cookie-open]')) {
+      show();
+      note.querySelector('[data-cookie="all"]').focus();   // открыли с клавиатуры из подвала — фокус сразу на выборе
+    }
+  });
+})();
